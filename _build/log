@@ -1,0 +1,5 @@
+# dune init project ocamlrbx
+# OCAMLPARAM: unset
+# Shared cache: disabled
+# Workspace root: /home/coder/github/ocaml/ocamlrbx
+# Auto-detected concurrency: 8
