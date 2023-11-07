@@ -1,8 +1,0 @@
-lib: [
-  "_build/install/default/lib/ocamlrbx/META"
-  "_build/install/default/lib/ocamlrbx/dune-package"
-  "_build/install/default/lib/ocamlrbx/opam"
-]
-bin: [
-  "_build/install/default/bin/ocamlrbx"
-]
