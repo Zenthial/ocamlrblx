@@ -1,0 +1,4 @@
+(lang dune 3.11)
+(name ocamlrbx)
+(sections (lib .) (bin ../../bin))
+(files (lib (META dune-package opam)) (bin (ocamlrbx)))
