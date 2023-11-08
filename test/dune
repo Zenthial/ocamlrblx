@@ -1,2 +1,6 @@
-(test
- (name ocamlrbx))
+(library
+ (name test)
+ (libraries ocamlrbx)
+ (inline_tests)
+ (preprocess
+  (pps ppx_inline_test)))
