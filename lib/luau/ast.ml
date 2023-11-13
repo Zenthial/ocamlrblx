@@ -5,7 +5,12 @@ type expression =
   | Assignment of assignment
   (* Binary expression *)
   | BinExp of expression * bin_op * expression
+  (* Unary expression *)
+  | UnExp of unary_op * expression
   | Identifier of identifier
+  | If of if_expression
+  | Array of array
+  | Map of map
   | Unknown (* Placeholder *)
 
 and literal =
@@ -33,6 +38,13 @@ and bin_op =
   | Eq
   | Ne
 
+and unary_op =
+  | Not
+  (* not *)
+  | Pound
+  (* # *)
+  | Negate (* - *)
+
 and assignment = { aname : string; value : expression }
 
 and func_decl = {
@@ -42,5 +54,26 @@ and func_decl = {
   statements : expression list;
 }
 
+and if_expression = {
+  condition : expression;
+      (* This really isn't an expression, but the OCaml side of things will handle the  *)
+  body : expression;
+  else_block : expression option;
+      (* There's no concept of else if in ocaml, just
+         if condition then
+
+         else
+           if condition then else
+      *)
+}
+
+and array = {
+  array_members: expression list
+}
+
+and map = {
+  map_members: (string * expression) list
+}
+
 and identifier = string
-and func_call = { ident : identifier; cparameters : expression list }
+and func_call = { ident : identifier; cparameters : expression list; }
