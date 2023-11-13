@@ -54,7 +54,7 @@ let rec render_expression ident expression =
   | FuncCall c -> render_func_call ident c
   | If e -> render_if ident e
   | Array a -> render_array ident a
-    | Map m -> render_map ident m
+  | Map m -> render_map ident m
   | Unknown -> "unknown"
 
 and render_function ident fn_decl =
@@ -94,10 +94,16 @@ and render_if ident if_expression =
       e
   | None -> rendered_expression ^ Ident.statement ident "end"
 
-and render_array ident array = 
+and render_array ident array =
   sprintf "{%s}" (render_call_parameters ident array.array_members)
 
-and render_map _ _ = ""
+and mapper ident (k, v) = "\n" ^ Ident.block ident (sprintf "[\"%s\"] = %s" k (render_expression ident v))
+
+and render_map ident map =
+  let members =
+    List.map (mapper ident) map.map_members |> String.concat ","
+  in
+  sprintf "{%s\n}" members
 
 and render_call_parameters ident params =
   List.map (render_expression ident) params |> String.concat ", "
