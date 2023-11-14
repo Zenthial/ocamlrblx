@@ -97,12 +97,12 @@ and render_if ident if_expression =
 and render_array ident array =
   sprintf "{%s}" (render_call_parameters ident array.array_members)
 
-and mapper ident (k, v) = "\n" ^ Ident.block ident (sprintf "[\"%s\"] = %s" k (render_expression ident v))
+and mapper ident (k, v) =
+  "\n"
+  ^ Ident.block ident (sprintf "[\"%s\"] = %s" k (render_expression ident v))
 
 and render_map ident map =
-  let members =
-    List.map (mapper ident) map.map_members |> String.concat ","
-  in
+  let members = List.map (mapper ident) map.map_members |> String.concat "," in
   sprintf "{%s\n}" members
 
 and render_call_parameters ident params =
