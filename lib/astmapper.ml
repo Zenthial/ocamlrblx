@@ -75,7 +75,7 @@ let structure_item (item : Parsetree.structure_item) =
       handle_value rec_flag value_binding_list
   | _ -> Ast.Unknown
 
-let entry structure =
+let map structure =
   let luau_ast = List.map structure_item structure in
   let renders = List.map Renderer.render luau_ast in
   List.iter print_endline renders
