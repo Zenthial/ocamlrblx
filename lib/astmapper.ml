@@ -110,5 +110,4 @@ let structure_item (item : Parsetree.structure_item) =
 
 let map structure =
   let luau_ast = List.map structure_item structure in
-  let renders = List.map Renderer.render luau_ast in
-  List.iter print_endline renders
+  luau_ast
