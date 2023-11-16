@@ -57,6 +57,7 @@ let rec render_expression ident expression =
   | Identifier i -> i
   | FuncCall c -> render_func_call ident c
   | If e -> render_if ident e
+  | Match m -> render_match ident m
   | Array a -> render_array ident a
   | Map m -> render_map ident m
   | FuncDef _ | Block _ ->
@@ -102,6 +103,33 @@ and render_if ident if_expression =
       Ident.decrement ident;
       e
   | None -> rendered_expression ^ Ident.statement ident "end"
+
+and render_if_case ident con exp =
+  let header =
+    Ident.statement ident (sprintf "if %s then\n" (render_expression ident con))
+  in
+  let body = Ident.block ident (render_expression ident exp ^ "\n") in
+  header ^ body ^ Ident.statement ident "else"
+
+and render_match indent match_exp =
+  let cases =
+    String.concat ""
+      (List.map (fun (c, e) -> render_if_case indent c e) match_exp.cases)
+  in
+  let default =
+    match match_exp.default_case with
+    | Some d ->
+        let body = Ident.block indent (render_expression indent d) in
+        body ^ "end"
+    | None ->
+        let body =
+          "\n"
+          ^ Ident.block indent
+              "error(\"Exhaustive match was not exhaustive?\")\n"
+        in
+        body ^ "end"
+  in
+  cases ^ default
 
 and render_array ident array =
   sprintf "{%s}" (render_call_parameters ident array.array_members)

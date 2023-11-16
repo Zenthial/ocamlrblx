@@ -9,6 +9,7 @@ type expression =
   | UnExp of unary_op * expression
   | Identifier of identifier
   | If of if_expression
+  | Match of match_expression
   | Array of array
   | Map of map
   | FuncDef of func_definition (* This is not a concrete type *)
@@ -66,6 +67,11 @@ and if_expression = {
          else
            if condition then else
       *)
+}
+
+and match_expression = {
+  cases : (expression * expression) list;
+  default_case : expression option;
 }
 
 and array = { array_members : expression list }

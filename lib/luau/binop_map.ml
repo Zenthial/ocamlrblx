@@ -1,6 +1,7 @@
 open Ast
 
-let binops = [ ("^", Concat) ]
+let binops =
+  [ ("^", Concat); ("+", Add); ("-", Sub); ("*", Mul); ("/", Div); ("%", Mod) ]
 
 let rec is_binop func lib =
   match lib with

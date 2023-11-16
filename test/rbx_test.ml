@@ -141,3 +141,28 @@ let%test "render map" =
 
   print_endline result;
   result = expected
+
+let%test "render match" =
+  let eq_check =
+    BinExp (Literal (String "test"), Eq, Literal (String "test"))
+  in
+  let print =
+    FuncCall { ident = "print"; cparameters = [ Literal (String "equal") ] }
+  in
+  let m =
+    Match
+      { cases = [ (eq_check, print); (eq_check, print) ]; default_case = None }
+  in
+  let result = render m in
+  let expected =
+    "if \"test\" == \"test\" then\n\
+    \  print(\"equal\")\n\
+     elseif \"test\" == \"test\" then\n\
+    \  print(\"equal\")\n\
+     else\n\
+    \  error(\"Exhaustive match was not exhaustive?\")\n\
+     end"
+  in
+
+  print_endline result;
+  result = expected
