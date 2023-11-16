@@ -67,19 +67,11 @@ and if_expression = {
       *)
 }
 
-and array = {
-  array_members: expression list
-}
-
-and map = {
-  map_members: (string * expression) list
-}
-
+and array = { array_members : expression list }
+and map = { map_members : (string * expression) list }
 and identifier = string
-and func_call = { ident : identifier; cparameters : expression list; }
+and func_call = { ident : identifier; cparameters : expression list }
 
-let to_string (exp: expression) = 
-  match exp with
-    | Identifier i -> i 
-    | _ -> exit 1;
+let to_string (exp : expression) =
+  match exp with Identifier i -> i | _ -> exit 1
 
