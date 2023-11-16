@@ -6,6 +6,7 @@ clean:
 
 parse:
     ocamlc -dparsetree test.ml &> parsetree.out && rm test.cm* && rm a.out
+    just -f {{justfile()}} print
 
 print:
     bat parsetree.out
