@@ -54,7 +54,7 @@ let rec parse_expression (expression : Parsetree.expression) =
   | Pexp_constant const -> parse_constant const
   | _ -> Ast.Unknown
 
-(* https://v2.ocaml.org/releases/4.12/api/compilerlibref/Parsetree.html#TYPEvalue_binding *)
+(* https://v2.ocaml.org/api/compilerlibref/Parsetree.html#TYPEvalue_binding *)
 let value_binding (binding : Parsetree.value_binding) =
   let exp = parse_expression binding.pvb_expr in
   let transformed_value_binding = parse_binding_pattern binding.pvb_pat exp in
@@ -68,7 +68,7 @@ let handle_value flag binding_list =
   let luau_binding_ast = value_binding (List.hd binding_list) in
   luau_binding_ast
 
-(* https://v2.ocaml.org/releases/4.12/api/compilerlibref/Parsetree.html#TYPEstructure_item_desc *)
+(* https://v2.ocaml.org/api/compilerlibref/Parsetree.html#TYPEstructure_item_desc *)
 let structure_item (item : Parsetree.structure_item) =
   match item.pstr_desc with
   | Pstr_value (rec_flag, value_binding_list) ->
