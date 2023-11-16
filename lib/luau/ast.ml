@@ -77,3 +77,9 @@ and map = {
 
 and identifier = string
 and func_call = { ident : identifier; cparameters : expression list; }
+
+let to_string (exp: expression) = 
+  match exp with
+    | Identifier i -> i 
+    | _ -> exit 1;
+

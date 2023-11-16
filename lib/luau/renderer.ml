@@ -41,7 +41,11 @@ let rec render_expression ident expression =
       Ident.set ident 0;
       let assignment = render_expression ident a.value in
       Ident.set ident old;
-      Ident.statement ident (sprintf "local %s = %s" a.aname assignment)
+      let arender =
+        if a.aname = "_" then sprintf "%s" assignment
+        else sprintf "local %s = %s" a.aname assignment
+      in
+      Ident.statement ident arender
   | Func f -> render_function ident f
   | BinExp (left, op, right) ->
       sprintf "%s %s %s"
