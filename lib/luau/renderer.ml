@@ -59,6 +59,9 @@ let rec render_expression ident expression =
   | If e -> render_if ident e
   | Array a -> render_array ident a
   | Map m -> render_map ident m
+  | FuncDef _ | Block _ ->
+      print_endline "FuncDefs and Blocks cannot be rendered alone";
+      exit 1
   | Unknown -> "unknown"
 
 and render_function ident fn_decl =
@@ -66,14 +69,16 @@ and render_function ident fn_decl =
     Ident.statement ident
       (sprintf "%sfunction %s(%s)"
          (if fn_decl.local then "local " else "")
-         fn_decl.fnname
-         (render_parameters fn_decl.dparameters))
+         fn_decl.fn_name
+         (render_parameters fn_decl.definition.dparameters))
   in
-  if List.length fn_decl.statements = 0 then header ^ " end"
+  if List.length fn_decl.definition.statements = 0 then header ^ " end"
   else
     let _ = Ident.increment ident in
     let block =
-      List.map (fun s -> render_expression ident s ^ "\n") fn_decl.statements
+      List.map
+        (fun s -> render_expression ident s ^ "\n")
+        fn_decl.definition.statements
       |> String.concat ""
     in
     Ident.decrement ident;

@@ -1,3 +1,6 @@
+(*
+   Hooks into the OCaml compiler to parse an OCaml file
+*)
 let read_file file =
   let in_chan = open_in_bin file in
   let len = in_channel_length in_chan in

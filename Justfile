@@ -5,7 +5,11 @@ clean:
     rm -rf _build
 
 parse:
-    ocamlc -dparsetree test.ml &> parsetree.out && rm test.cm* && rm a.out
+    #!/usr/bin/env bash
+
+    ocamlc -dparsetree test.ml &> parsetree.out
+    rm test.cm*
+    rm a.out
     just -f {{justfile()}} print
 
 print:

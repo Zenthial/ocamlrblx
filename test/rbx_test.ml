@@ -5,9 +5,8 @@ let%test "no-body function" =
   let func =
     {
       local = true;
-      fnname = "add";
-      dparameters = [ "x"; "y" ];
-      statements = [];
+      fn_name = "add";
+      definition = { dparameters = [ "x"; "y" ]; statements = [] };
     }
   in
   let ident = Ocamlrbx.Ident.create () in
@@ -18,10 +17,13 @@ let%test "function body" =
   let func =
     {
       local = true;
-      fnname = "add";
-      dparameters = [ "x"; "y" ];
-      statements =
-        [ Assignment { aname = "one"; value = Literal (Number "1") } ];
+      fn_name = "add";
+      definition =
+        {
+          dparameters = [ "x"; "y" ];
+          statements =
+            [ Assignment { aname = "one"; value = Literal (Number "1") } ];
+        };
     }
   in
   let ident = Ocamlrbx.Ident.create () in
@@ -37,13 +39,16 @@ let%test "test render of a function" =
     Func
       {
         local = true;
-        fnname = "add";
-        dparameters = [ "x"; "y" ];
-        statements =
-          [
-            Assignment { aname = "one"; value = call };
-            Assignment { aname = "one_str"; value = Literal (String "1") };
-          ];
+        fn_name = "add";
+        definition =
+          {
+            dparameters = [ "x"; "y" ];
+            statements =
+              [
+                Assignment { aname = "one"; value = call };
+                Assignment { aname = "one_str"; value = Literal (String "1") };
+              ];
+          };
       }
   in
   let result = render func in
@@ -82,18 +87,21 @@ let%test "render nested function call" =
     Func
       {
         local = true;
-        fnname = "d";
-        dparameters = [];
-        statements = [ Assignment { aname = "one_str"; value = arr }; expr ];
+        fn_name = "d";
+        definition =
+          {
+            dparameters = [];
+            statements = [ Assignment { aname = "one_str"; value = arr }; expr ];
+          };
       }
   in
   let func =
     Func
       {
         local = true;
-        fnname = "add";
-        dparameters = [ "x"; "y" ];
-        statements = [ nested_func ];
+        fn_name = "add";
+        definition =
+          { dparameters = [ "x"; "y" ]; statements = [ nested_func ] };
       }
   in
 

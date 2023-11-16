@@ -11,6 +11,8 @@ type expression =
   | If of if_expression
   | Array of array
   | Map of map
+  | FuncDef of func_definition (* This is not a concrete type *)
+  | Block of expression list (* This is not a concrete type *)
   | Unknown (* Placeholder *)
 
 and literal =
@@ -46,10 +48,9 @@ and unary_op =
   | Negate (* - *)
 
 and assignment = { aname : string; value : expression }
+and func_decl = { local : bool; fn_name : string; definition : func_definition }
 
-and func_decl = {
-  local : bool;
-  fnname : string;
+and func_definition = {
   dparameters : string list;
   statements : expression list;
 }
@@ -74,4 +75,3 @@ and func_call = { ident : identifier; cparameters : expression list }
 
 let to_string (exp : expression) =
   match exp with Identifier i -> i | _ -> exit 1
-
