@@ -113,6 +113,17 @@ let rec parse_expression (expression : Parsetree.expression) =
       Ast.Block (List.append bindings tail)
   | Pexp_match (match_e, cases) ->
       let mapped_e = parse_expression match_e in
+
+      let rec find_default (cs : Parsetree.case list) acc =
+        match cs with
+        | c :: cs' ->
+            if c.pc_lhs.ppat_desc = Parsetree.Ppat_any then
+              (Some c.pc_rhs, List.append cs' acc)
+            else find_default cs' (c :: acc)
+        | _ -> (None, acc)
+      in
+
+      let default, cases = find_default cases [] in
       let cs =
         List.map
           (fun (c : Parsetree.case) ->
@@ -120,7 +131,8 @@ let rec parse_expression (expression : Parsetree.expression) =
               parse_expression c.pc_rhs ))
           cases
       in
-      Ast.Match { default_case = None; cases = cs }
+      let default = Option.map (fun o -> parse_expression o) default in
+      Ast.Match { default_case = default; cases = cs }
   | _ -> Ast.Unknown
 
 (* https://v2.ocaml.org/api/compilerlibref/Parsetree.html#TYPEvalue_binding *)

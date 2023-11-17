@@ -1,12 +1,10 @@
 function fib(n)
-  if n == 0 then
-    return 0
-  elseif n == 1 then
+  if n == 1 then
     return 1
-  elseif n == n then
-    return fib(n - 1) + fib(n - 2)
+  elseif n == 0 then
+    return 0
   else
-    error("Exhaustive match was not exhaustive?")
+    return fib(n - 1) + fib(n - 2)
   end
 end
 

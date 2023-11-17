@@ -108,27 +108,33 @@ and render_if_case ident con exp =
   let header =
     Ident.statement ident (sprintf "if %s then\n" (render_expression ident con))
   in
-  let body = Ident.block ident ("return " ^(render_expression ident exp ^ "\n")) in
+  let body =
+    Ident.block ident ("return " ^ render_expression ident exp ^ "\n")
+  in
   header ^ body ^ Ident.statement ident "else"
 
 and render_match indent match_exp =
   let cases =
     String.concat ""
-      (List.map (fun s -> String.trim s)(List.map (fun (c, e) -> render_if_case indent c e) match_exp.cases))
+      (List.map
+         (fun s -> String.trim s)
+         (List.map (fun (c, e) -> render_if_case indent c e) match_exp.cases))
   in
   let cases = Ident.statement indent cases in
   let default =
     match match_exp.default_case with
     | Some d ->
-        let body = Ident.block indent (render_expression indent d) in
-        body ^ (Ident.statement indent "end")
+        let body =
+          Ident.block indent ("return " ^ render_expression indent d)
+        in
+        "\n" ^ body ^ "\n" ^ Ident.statement indent "end"
     | None ->
         let body =
           "\n"
           ^ Ident.block indent
               "error(\"Exhaustive match was not exhaustive?\")\n"
         in
-        body ^ (Ident.statement indent "end")
+        body ^ Ident.statement indent "end"
   in
   cases ^ default
 

@@ -28,7 +28,7 @@
                   Pexp_constant PConst_int (1,None)
               <case>
                 pattern (transpile/fib.ml[1,0+47]..[1,0+48])
-                  Ppat_var "n" (transpile/fib.ml[1,0+47]..[1,0+48])
+                  Ppat_any
                 expression (transpile/fib.ml[1,0+52]..[1,0+77])
                   Pexp_apply
                   expression (transpile/fib.ml[1,0+64]..[1,0+65])
