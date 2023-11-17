@@ -7,7 +7,7 @@ clean:
 parse:
     #!/usr/bin/env bash
 
-    ocamlc -dparsetree transpile/fib.ml &> parsetree.out
+    ocamlc -dparsetree transpile/multi_params.ml &> parsetree.out
     rm transpile/*.cm*
     rm a.out
     just -f {{justfile()}} print

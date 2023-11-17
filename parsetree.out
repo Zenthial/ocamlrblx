@@ -1,113 +1,64 @@
 [
-  structure_item (transpile/fib.ml[1,0+0]..[1,0+77])
-    Pstr_value Rec
-    [
-      <def>
-        pattern (transpile/fib.ml[1,0+8]..[1,0+11])
-          Ppat_var "fib" (transpile/fib.ml[1,0+8]..[1,0+11])
-        expression (transpile/fib.ml[1,0+12]..[1,0+77]) ghost
-          Pexp_fun
-          Nolabel
-          None
-          pattern (transpile/fib.ml[1,0+12]..[1,0+13])
-            Ppat_var "n" (transpile/fib.ml[1,0+12]..[1,0+13])
-          expression (transpile/fib.ml[1,0+16]..[1,0+77])
-            Pexp_match
-            expression (transpile/fib.ml[1,0+22]..[1,0+23])
-              Pexp_ident "n" (transpile/fib.ml[1,0+22]..[1,0+23])
-            [
-              <case>
-                pattern (transpile/fib.ml[1,0+29]..[1,0+30])
-                  Ppat_constant PConst_int (0,None)
-                expression (transpile/fib.ml[1,0+34]..[1,0+35])
-                  Pexp_constant PConst_int (0,None)
-              <case>
-                pattern (transpile/fib.ml[1,0+38]..[1,0+39])
-                  Ppat_constant PConst_int (1,None)
-                expression (transpile/fib.ml[1,0+43]..[1,0+44])
-                  Pexp_constant PConst_int (1,None)
-              <case>
-                pattern (transpile/fib.ml[1,0+47]..[1,0+48])
-                  Ppat_var "n" (transpile/fib.ml[1,0+47]..[1,0+48])
-                expression (transpile/fib.ml[1,0+52]..[1,0+77])
-                  Pexp_apply
-                  expression (transpile/fib.ml[1,0+64]..[1,0+65])
-                    Pexp_ident "+" (transpile/fib.ml[1,0+64]..[1,0+65])
-                  [
-                    <arg>
-                    Nolabel
-                      expression (transpile/fib.ml[1,0+52]..[1,0+63])
-                        Pexp_apply
-                        expression (transpile/fib.ml[1,0+52]..[1,0+55])
-                          Pexp_ident "fib" (transpile/fib.ml[1,0+52]..[1,0+55])
-                        [
-                          <arg>
-                          Nolabel
-                            expression (transpile/fib.ml[1,0+56]..[1,0+63])
-                              Pexp_apply
-                              expression (transpile/fib.ml[1,0+59]..[1,0+60])
-                                Pexp_ident "-" (transpile/fib.ml[1,0+59]..[1,0+60])
-                              [
-                                <arg>
-                                Nolabel
-                                  expression (transpile/fib.ml[1,0+57]..[1,0+58])
-                                    Pexp_ident "n" (transpile/fib.ml[1,0+57]..[1,0+58])
-                                <arg>
-                                Nolabel
-                                  expression (transpile/fib.ml[1,0+61]..[1,0+62])
-                                    Pexp_constant PConst_int (1,None)
-                              ]
-                        ]
-                    <arg>
-                    Nolabel
-                      expression (transpile/fib.ml[1,0+66]..[1,0+77])
-                        Pexp_apply
-                        expression (transpile/fib.ml[1,0+66]..[1,0+69])
-                          Pexp_ident "fib" (transpile/fib.ml[1,0+66]..[1,0+69])
-                        [
-                          <arg>
-                          Nolabel
-                            expression (transpile/fib.ml[1,0+70]..[1,0+77])
-                              Pexp_apply
-                              expression (transpile/fib.ml[1,0+73]..[1,0+74])
-                                Pexp_ident "-" (transpile/fib.ml[1,0+73]..[1,0+74])
-                              [
-                                <arg>
-                                Nolabel
-                                  expression (transpile/fib.ml[1,0+71]..[1,0+72])
-                                    Pexp_ident "n" (transpile/fib.ml[1,0+71]..[1,0+72])
-                                <arg>
-                                Nolabel
-                                  expression (transpile/fib.ml[1,0+75]..[1,0+76])
-                                    Pexp_constant PConst_int (2,None)
-                              ]
-                        ]
-                  ]
-            ]
-    ]
-  structure_item (transpile/fib.ml[2,78+0]..[2,78+26])
+  structure_item (transpile/multi_params.ml[1,0+0]..[1,0+33])
     Pstr_value Nonrec
     [
       <def>
-        pattern (transpile/fib.ml[2,78+4]..[2,78+5])
+        pattern (transpile/multi_params.ml[1,0+4]..[1,0+5])
+          Ppat_var "p" (transpile/multi_params.ml[1,0+4]..[1,0+5])
+        expression (transpile/multi_params.ml[1,0+6]..[1,0+33]) ghost
+          Pexp_fun
+          Nolabel
+          None
+          pattern (transpile/multi_params.ml[1,0+6]..[1,0+7])
+            Ppat_var "x" (transpile/multi_params.ml[1,0+6]..[1,0+7])
+          expression (transpile/multi_params.ml[1,0+8]..[1,0+33]) ghost
+            Pexp_fun
+            Nolabel
+            None
+            pattern (transpile/multi_params.ml[1,0+8]..[1,0+9])
+              Ppat_var "y" (transpile/multi_params.ml[1,0+8]..[1,0+9])
+            expression (transpile/multi_params.ml[1,0+12]..[1,0+33])
+              Pexp_apply
+              expression (transpile/multi_params.ml[1,0+12]..[1,0+25])
+                Pexp_ident "print_endline" (transpile/multi_params.ml[1,0+12]..[1,0+25])
+              [
+                <arg>
+                Nolabel
+                  expression (transpile/multi_params.ml[1,0+26]..[1,0+33])
+                    Pexp_apply
+                    expression (transpile/multi_params.ml[1,0+29]..[1,0+30])
+                      Pexp_ident "^" (transpile/multi_params.ml[1,0+29]..[1,0+30])
+                    [
+                      <arg>
+                      Nolabel
+                        expression (transpile/multi_params.ml[1,0+27]..[1,0+28])
+                          Pexp_ident "x" (transpile/multi_params.ml[1,0+27]..[1,0+28])
+                      <arg>
+                      Nolabel
+                        expression (transpile/multi_params.ml[1,0+31]..[1,0+32])
+                          Pexp_ident "y" (transpile/multi_params.ml[1,0+31]..[1,0+32])
+                    ]
+              ]
+    ]
+  structure_item (transpile/multi_params.ml[2,34+0]..[2,34+23])
+    Pstr_value Nonrec
+    [
+      <def>
+        pattern (transpile/multi_params.ml[2,34+4]..[2,34+5])
           Ppat_any
-        expression (transpile/fib.ml[2,78+8]..[2,78+26])
+        expression (transpile/multi_params.ml[2,34+8]..[2,34+23])
           Pexp_apply
-          expression (transpile/fib.ml[2,78+8]..[2,78+17])
-            Pexp_ident "print_int" (transpile/fib.ml[2,78+8]..[2,78+17])
+          expression (transpile/multi_params.ml[2,34+8]..[2,34+9])
+            Pexp_ident "p" (transpile/multi_params.ml[2,34+8]..[2,34+9])
           [
             <arg>
             Nolabel
-              expression (transpile/fib.ml[2,78+18]..[2,78+26])
-                Pexp_apply
-                expression (transpile/fib.ml[2,78+19]..[2,78+22])
-                  Pexp_ident "fib" (transpile/fib.ml[2,78+19]..[2,78+22])
-                [
-                  <arg>
-                  Nolabel
-                    expression (transpile/fib.ml[2,78+23]..[2,78+25])
-                      Pexp_constant PConst_int (10,None)
-                ]
+              expression (transpile/multi_params.ml[2,34+10]..[2,34+15])
+                Pexp_constant PConst_string("one",(transpile/multi_params.ml[2,34+11]..[2,34+14]),None)
+            <arg>
+            Nolabel
+              expression (transpile/multi_params.ml[2,34+16]..[2,34+23])
+                Pexp_constant PConst_string("+ two",(transpile/multi_params.ml[2,34+17]..[2,34+22]),None)
           ]
     ]
 ]

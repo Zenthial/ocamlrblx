@@ -34,6 +34,19 @@ let parse_constant (const : Parsetree.constant) =
 (*   (* | Ppat_any -> Ast.Assignment *) *)
 (*   | _ -> Ast.Unknown *)
 
+let rec unwrap_func_def def =
+  match def with
+  | Ast.FuncDef d ->
+      let p = d.dparameters in
+      let ps, definition =
+        if List.length d.statements = 1 then
+          unwrap_func_def (List.nth d.statements 0)
+        else ([], d.statements)
+      in
+      (List.append p ps, definition)
+  | Ast.Block b -> ([], b)
+  | _ -> ([], [ def ])
+
 (* https://v2.ocaml.org/api/compilerlibref/Parsetree.html#TYPEpattern *)
 let parse_binding_pattern (pattern : Parsetree.pattern) e =
   match pattern.ppat_desc with
@@ -43,7 +56,13 @@ let parse_binding_pattern (pattern : Parsetree.pattern) e =
       let var =
         match e with
         | Ast.FuncDef def ->
-            Ast.Func { fn_name = loc.txt; local = false; definition = def }
+            let params, def = unwrap_func_def (Ast.FuncDef def) in
+            Ast.Func
+              {
+                fn_name = loc.txt;
+                local = false;
+                definition = { dparameters = params; statements = def };
+              }
         | _ -> Ast.Assignment { aname = loc.txt; value = e }
       in
       var
