@@ -9,6 +9,7 @@ let repeat s n =
 let get_tabs level = repeat "  " level
 let get_level t = t.level
 let statement t str = get_tabs t.level ^ str
+let statement_where t str where = if where then statement t str else str
 let block t str = get_tabs (t.level + 1) ^ str
 let increment t = t.level <- t.level + 1
 let decrement t = t.level <- t.level - 1

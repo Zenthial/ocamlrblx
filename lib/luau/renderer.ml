@@ -49,9 +49,9 @@ let rec render_expression ident expression =
   | Func f -> render_function ident f
   | BinExp (left, op, right) ->
       sprintf "%s %s %s"
-        (render_expression ident left)
+        (String.trim (render_expression ident left))
         (render_bin_op op)
-        (render_expression ident right)
+        (String.trim (render_expression ident right))
   | UnExp (op, right) ->
       sprintf "%s%s" (render_un_op op) (render_expression ident right)
   | Identifier i -> i
@@ -108,26 +108,27 @@ and render_if_case ident con exp =
   let header =
     Ident.statement ident (sprintf "if %s then\n" (render_expression ident con))
   in
-  let body = Ident.block ident (render_expression ident exp ^ "\n") in
+  let body = Ident.block ident ("return " ^(render_expression ident exp ^ "\n")) in
   header ^ body ^ Ident.statement ident "else"
 
 and render_match indent match_exp =
   let cases =
     String.concat ""
-      (List.map (fun (c, e) -> render_if_case indent c e) match_exp.cases)
+      (List.map (fun s -> String.trim s)(List.map (fun (c, e) -> render_if_case indent c e) match_exp.cases))
   in
+  let cases = Ident.statement indent cases in
   let default =
     match match_exp.default_case with
     | Some d ->
         let body = Ident.block indent (render_expression indent d) in
-        body ^ "end"
+        body ^ (Ident.statement indent "end")
     | None ->
         let body =
           "\n"
           ^ Ident.block indent
               "error(\"Exhaustive match was not exhaustive?\")\n"
         in
-        body ^ "end"
+        body ^ (Ident.statement indent "end")
   in
   cases ^ default
 

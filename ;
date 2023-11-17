@@ -68,11 +68,11 @@ let parse_binding_pattern (pattern : Parsetree.pattern) e =
       var
   | _ -> Ast.Unknown
 
-let parse_condition_pattern (pattern : Parsetree.pattern) =
+let parse_condition_pattern (pattern: Parsetree.pattern) =
   match pattern.ppat_desc with
   | Ppat_any -> Ast.Identifier "_"
-  | Ppat_var loc -> Ast.Identifier loc.txt
-  | Ppat_constant c -> parse_constant c
+    | Ppat_var loc -> Ast.Identifier loc.txt
+    | Ppat_constant c -> parse_constant c
   | _ -> Ast.Unknown
 
 let pattern_val_to_string (pat : Parsetree.pattern) =
@@ -111,16 +111,10 @@ let rec parse_expression (expression : Parsetree.expression) =
       let exp = parse_expression tail_expression in
       let tail = match exp with Ast.Block e_list -> e_list | _ -> [ exp ] in
       Ast.Block (List.append bindings tail)
-  | Pexp_match (match_e, cases) ->
-      let mapped_e = parse_expression match_e in
-      let cs =
-        List.map
-          (fun (c : Parsetree.case) ->
-            ( Ast.BinExp (mapped_e, Ast.Eq, parse_condition_pattern c.pc_lhs),
-              parse_expression c.pc_rhs ))
-          cases
-      in
-      Ast.Match { default_case = None; cases = cs }
+  | Pexp_match (match_e, cases) -> 
+    let mapped_e = parse_expression match_e in
+    let cases = List.map (fun c -> (Ast.BinExp (mapped_e, Ast.Eq, parse_expression c.pc_lhs), c.pc_rhs)) cases in
+    Ast.Match {default_case = None; cases};
   | _ -> Ast.Unknown
 
 (* https://v2.ocaml.org/api/compilerlibref/Parsetree.html#TYPEvalue_binding *)
