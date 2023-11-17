@@ -1,10 +1,11 @@
 function fib(n)
+  local _2
   if n == 1 then
-    return 1
+    _2 = 1
   elseif n == 0 then
-    return 0
+    _2 = 0
   else
-    return fib(n - 1) + fib(n - 2)
+    _2 = fib(n - 1) + fib(n - 2)
   end
 end
 

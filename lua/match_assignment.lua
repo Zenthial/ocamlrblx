@@ -1,8 +1,9 @@
 function p(x)
-  local y = if x == 1 then
-  return x + 1
+  local y = local _1
+if x == 1 then
+  _1 = x + 1
 else
-  return x
+  _1 = x
 end
 y + x
 end

@@ -104,28 +104,30 @@ and render_if ident if_expression =
       e
   | None -> rendered_expression ^ Ident.statement ident "end"
 
-and render_if_case ident con exp =
+and render_if_case ident con exp var_name =
   let header =
     Ident.statement ident (sprintf "if %s then\n" (render_expression ident con))
   in
   let body =
-    Ident.block ident ("return " ^ render_expression ident exp ^ "\n")
+    Ident.block ident (sprintf "%s = %s" var_name (render_expression ident exp ^ "\n"))
   in
   header ^ body ^ Ident.statement ident "else"
 
 and render_match indent match_exp =
+  let var_name = Temp_vars.get_new_var () in
+  let top_level_var = Ident.statement indent (sprintf "local %s\n" var_name) in
   let cases =
     String.concat ""
       (List.map
          (fun s -> String.trim s)
-         (List.map (fun (c, e) -> render_if_case indent c e) match_exp.cases))
+         (List.map (fun (c, e) -> render_if_case indent c e var_name) match_exp.cases))
   in
   let cases = Ident.statement indent cases in
   let default =
     match match_exp.default_case with
     | Some d ->
         let body =
-          Ident.block indent ("return " ^ render_expression indent d)
+          Ident.block indent (sprintf "%s = %s" var_name (render_expression indent d))
         in
         "\n" ^ body ^ "\n" ^ Ident.statement indent "end"
     | None ->
@@ -136,7 +138,7 @@ and render_match indent match_exp =
         in
         body ^ Ident.statement indent "end"
   in
-  cases ^ default
+  top_level_var ^ cases ^ default
 
 and render_array ident array =
   sprintf "{%s}" (render_call_parameters ident array.array_members)
