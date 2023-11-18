@@ -12,6 +12,8 @@ type expression =
   | Match of match_expression
   | Array of array
   | Map of map
+  | TypeDef of type_def (* A type that is defined for later usage *)
+  | TypeConstruct of type_construct (* A type that is assigned *)
   | FuncDef of func_definition (* This is not a concrete type *)
   | Block of expression list (* This is not a concrete type *)
   | Unknown (* Placeholder *)
@@ -41,13 +43,18 @@ and bin_op =
   | Eq
   | Ne
 
-and unary_op =
-  | Not
-  (* not *)
-  | Pound
-  (* # *)
-  | Negate (* - *)
+and unary_op = Not | Pound | Negate
 
+and type_def =
+  | Variant of variant_def
+  | Record of record_def
+  | CoreType of string
+
+and type_construct = CVariant of variant | CRecord of record
+and variant_def = { vdname : string; variants : string list }
+and variant = { vname : string; variant : string; vvalue : expression }
+and record_def = { rdname : string; rdfields : (string * type_def) list }
+and record = { rname : string; rfields : (string * expression) list }
 and assignment = { aname : string; value : expression }
 and func_decl = { local : bool; fn_name : string; definition : func_definition }
 

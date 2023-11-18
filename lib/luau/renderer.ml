@@ -71,6 +71,20 @@ let rec render_expression ident expression =
   | FuncDef _ | Block _ ->
       print_endline "FuncDefs and Blocks cannot be rendered alone";
       exit 1
+  | TypeDef _ -> ("typedef", None)
+  | TypeConstruct construct -> (
+      match construct with
+      | CVariant variant ->
+          let open_brace = Ident.statement ident "{\n" in
+          let tag = Ident.block ident (sprintf "tag = \"%s\"\n" variant.variant) in
+          let value =
+            Ident.block ident
+              (sprintf "value = %s\n"
+                 (fst (render_expression ident variant.vvalue)))
+          in
+          let close_brace = Ident.statement ident "}\n" in
+          (open_brace ^ tag ^ value ^ close_brace, None)
+      | CRecord _ -> ("record", None))
   | Unknown -> ("unknown", None)
 
 and render_function ident fn_decl =
@@ -129,7 +143,8 @@ and render_if ident if_e then_e else_e =
       let e =
         rendered_expression
         ^ Ident.statement ident "else\n"
-        ^ fst (render_expression ident e) ^ "end"
+        ^ fst (render_expression ident e)
+        ^ "end"
       in
       Ident.decrement ident;
       (e, None)
@@ -143,7 +158,8 @@ and render_match indent match_exp =
       (List.map
          (fun s -> String.trim s)
          (List.map
-            (fun (c, e) -> (render_if_case indent c e var_name) ^ Ident.statement indent "else")
+            (fun (c, e) ->
+              render_if_case indent c e var_name ^ Ident.statement indent "else")
             match_exp.cases))
   in
   let cases = Ident.statement indent cases in

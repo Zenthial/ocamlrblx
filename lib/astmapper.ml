@@ -73,6 +73,12 @@ let parse_condition_pattern (pattern : Parsetree.pattern) =
   | Ppat_any -> Ast.Identifier "_"
   | Ppat_var loc -> Ast.Identifier loc.txt
   | Ppat_constant c -> parse_constant c
+  (* See pattern docs for more detail
+     Construct holds ty, which is the type we're matching on,
+     and a list option of the different paramters that type might hold.
+     For a Some("yo") type, this would be Ppat_construct (Some, Some[(_, "yo")])
+  *)
+  (* | Ppat_construct (ty, vals_opt) -> Ast.Unknown *)
   | _ -> Ast.Unknown
 
 let pattern_val_to_string (pat : Parsetree.pattern) =
