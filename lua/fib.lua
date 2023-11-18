@@ -7,6 +7,7 @@ function fib(n)
   else
     _2 = fib(n - 1) + fib(n - 2)
   end
+  return _2
 end
 
 print(fib(10))

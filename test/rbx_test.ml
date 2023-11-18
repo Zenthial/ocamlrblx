@@ -10,7 +10,7 @@ let%test "no-body function" =
     }
   in
   let ident = Ocamlrbx.Ident.create () in
-  let render = render_function ident func in
+  let render, _ = render_function ident func in
   render = "local function add(x, y) end"
 
 let%test "function body" =
@@ -27,7 +27,7 @@ let%test "function body" =
     }
   in
   let ident = Ocamlrbx.Ident.create () in
-  let render = render_function ident func in
+  let render, _ = render_function ident func in
   let expected = "local function add(x, y)\n  local one = 1\nend" in
   render = expected
 
