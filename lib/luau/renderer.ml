@@ -64,7 +64,7 @@ let rec render_expression ident expression =
         None )
   | Identifier i -> (i, None)
   | FuncCall c -> render_func_call ident c
-  | If e -> render_if ident e
+  | If (con_e, then_e, else_e) -> render_if ident con_e then_e else_e
   | Match m -> render_match ident m
   | Array a -> render_array ident a
   | Map m -> render_map ident m
@@ -108,28 +108,6 @@ and render_function ident fn_decl =
     Ident.decrement ident;
     (header ^ "\n" ^ block ^ Ident.statement ident "end", None)
 
-and render_if ident if_expression =
-  let header =
-    Ident.statement ident
-      (sprintf "if %s then"
-         (fst (render_expression ident if_expression.condition)))
-  in
-  let body =
-    Ident.block ident (fst (render_expression ident if_expression.body))
-  in
-  let rendered_expression = header ^ body in
-  match if_expression.else_block with
-  | Some e ->
-      Ident.increment ident;
-      let e =
-        rendered_expression
-        ^ Ident.statement ident "else\n"
-        ^ fst (render_expression ident e)
-      in
-      Ident.decrement ident;
-      (e, None)
-  | None -> (rendered_expression ^ Ident.statement ident "end", None)
-
 and render_if_case ident con exp var_name =
   let header =
     Ident.statement ident
@@ -140,7 +118,22 @@ and render_if_case ident con exp var_name =
       (sprintf "%s = %s" var_name
          (String.trim (fst (render_expression ident exp)) ^ "\n"))
   in
-  header ^ body ^ Ident.statement ident "else"
+  header ^ body
+
+and render_if ident if_e then_e else_e =
+  let var_name = Temp_vars.get_new_var () in
+  let rendered_expression = render_if_case ident if_e then_e var_name in
+  match else_e with
+  | Some e ->
+      Ident.increment ident;
+      let e =
+        rendered_expression
+        ^ Ident.statement ident "else\n"
+        ^ fst (render_expression ident e) ^ "end"
+      in
+      Ident.decrement ident;
+      (e, None)
+  | None -> (rendered_expression ^ Ident.statement ident "end", None)
 
 and render_match indent match_exp =
   let var_name = Temp_vars.get_new_var () in
@@ -150,7 +143,7 @@ and render_match indent match_exp =
       (List.map
          (fun s -> String.trim s)
          (List.map
-            (fun (c, e) -> render_if_case indent c e var_name)
+            (fun (c, e) -> (render_if_case indent c e var_name) ^ Ident.statement indent "else")
             match_exp.cases))
   in
   let cases = Ident.statement indent cases in

@@ -8,7 +8,7 @@ type expression =
   (* Unary expression *)
   | UnExp of unary_op * expression
   | Identifier of identifier
-  | If of if_expression
+  | If of expression * expression * expression option (* if E then E else E *)
   | Match of match_expression
   | Array of array
   | Map of map
@@ -54,19 +54,6 @@ and func_decl = { local : bool; fn_name : string; definition : func_definition }
 and func_definition = {
   dparameters : string list;
   statements : expression list;
-}
-
-and if_expression = {
-  condition : expression;
-      (* This really isn't an expression, but the OCaml side of things will handle the  *)
-  body : expression;
-  else_block : expression option;
-      (* There's no concept of else if in ocaml, just
-         if condition then
-
-         else
-           if condition then else
-      *)
 }
 
 and match_expression = {
