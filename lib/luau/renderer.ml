@@ -40,7 +40,7 @@ let rec render_expression ident expression =
       (* let old = Ident.get_level ident in *)
       (* Ident.set ident 0; *)
       let assignment, return_override = render_expression ident a.value in
-      let assignment = String.trim assignment in
+      let assignment = String.trim assignment ^ "\n" in
       (* Ident.set ident old; *)
       let arender =
         match return_override with

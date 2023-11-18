@@ -4,7 +4,8 @@ function p(x)
     _1 = x + 1
   else
     _1 = x
-  end  local y = _1
+  end
+  local y = _1
   return y + x
 end
 
