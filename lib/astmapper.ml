@@ -34,6 +34,19 @@ let parse_constant (const : Parsetree.constant) =
 (*   (* | Ppat_any -> Ast.Assignment *) *)
 (*   | _ -> Ast.Unknown *)
 
+let rec unwrap_func_def def =
+  match def with
+  | Ast.FuncDef d ->
+      let p = d.dparameters in
+      let ps, definition =
+        if List.length d.statements = 1 then
+          unwrap_func_def (List.nth d.statements 0)
+        else ([], d.statements)
+      in
+      (List.append p ps, definition)
+  | Ast.Block b -> ([], b)
+  | _ -> ([], [ def ])
+
 (* https://v2.ocaml.org/api/compilerlibref/Parsetree.html#TYPEpattern *)
 let parse_binding_pattern (pattern : Parsetree.pattern) e =
   match pattern.ppat_desc with
@@ -43,10 +56,29 @@ let parse_binding_pattern (pattern : Parsetree.pattern) e =
       let var =
         match e with
         | Ast.FuncDef def ->
-            Ast.Func { fn_name = loc.txt; local = false; definition = def }
+            let params, def = unwrap_func_def (Ast.FuncDef def) in
+            Ast.Func
+              {
+                fn_name = loc.txt;
+                local = false;
+                definition = { dparameters = params; statements = def };
+              }
         | _ -> Ast.Assignment { aname = loc.txt; value = e }
       in
       var
+  | _ -> Ast.Unknown
+
+let parse_condition_pattern (pattern : Parsetree.pattern) =
+  match pattern.ppat_desc with
+  | Ppat_any -> Ast.Identifier "_"
+  | Ppat_var loc -> Ast.Identifier loc.txt
+  | Ppat_constant c -> parse_constant c
+  (* See pattern docs for more detail
+     Construct holds ty, which is the type we're matching on,
+     and a list option of the different paramters that type might hold.
+     For a Some("yo") type, this would be Ppat_construct (Some, Some[(_, "yo")])
+  *)
+  (* | Ppat_construct (ty, vals_opt) -> Ast.Unknown *)
   | _ -> Ast.Unknown
 
 let pattern_val_to_string (pat : Parsetree.pattern) =
@@ -85,6 +117,28 @@ let rec parse_expression (expression : Parsetree.expression) =
       let exp = parse_expression tail_expression in
       let tail = match exp with Ast.Block e_list -> e_list | _ -> [ exp ] in
       Ast.Block (List.append bindings tail)
+  | Pexp_match (match_e, cases) ->
+      let mapped_e = parse_expression match_e in
+
+      let rec find_default (cs : Parsetree.case list) acc =
+        match cs with
+        | c :: cs' ->
+            if c.pc_lhs.ppat_desc = Parsetree.Ppat_any then
+              (Some c.pc_rhs, List.append cs' acc)
+            else find_default cs' (c :: acc)
+        | _ -> (None, acc)
+      in
+
+      let default, cases = find_default cases [] in
+      let cs =
+        List.map
+          (fun (c : Parsetree.case) ->
+            ( Ast.BinExp (mapped_e, Ast.Eq, parse_condition_pattern c.pc_lhs),
+              parse_expression c.pc_rhs ))
+          cases
+      in
+      let default = Option.map (fun o -> parse_expression o) default in
+      Ast.Match { default_case = default; cases = cs }
   | _ -> Ast.Unknown
 
 (* https://v2.ocaml.org/api/compilerlibref/Parsetree.html#TYPEvalue_binding *)

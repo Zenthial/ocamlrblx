@@ -1,4 +1,4 @@
-let stdlib = [ ("print_endline", "print") ]
+let stdlib = [ ("print_endline", "print"); ("print_int", "print") ]
 
 let rec find_in_stdlib func lib =
   match lib with
