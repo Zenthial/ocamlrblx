@@ -1,0 +1,68 @@
+Usage:
+Deploying an ECS locally requires an ecs.json file. It has one key, name that is the name all resources created when locally deploying are created under.
+
+When deploying locally, run creds, which will give your coder instance AWS credentials that allow you to deploy to ENG, and then run just deploy-ecs inside the ECS directory
+
+
+
+Typically, once an ECS is created, all that will need to be updated is the actual code. Because of this, the deployment will exist early after the Docker image is uploaded if a task definition already exists. If you want to update any configuration, please run just teardown and then just deploy-ecs .
+
+How does it work?
+If you just want to deploy your ECS, you can stop reading now. However, if you're interested in how the internals work, continue reading.
+
+Note: All scripts referenced are located in scripts/aws/ecs/ inside the monorepo
+
+Warning: If you want to read the scripts, a basic understanding of the CLI utility jq , plus awk and basic bash, will all help you. If you need any references about jq , please see here.
+
+
+
+At the high level, an ECS (Elastic Container Service), runs a Docker image. This means that the first step of deploying an ECS is to build our Docker image. 
+
+Our Go binary is built with GOARCH=amd64 go build -ldflags="-s -w" cmd/bootstrap-aws/bootstrap.go . From there, we create a minimal Dockerfile:
+
+FROM vdocker.artifactory.opst.c1.vanguard.com/debian-vgbase:bullseye-slim
+ 
+COPY ./bootstrap /bin/app
+ 
+ENTRYPOINT ["/bin/app"]
+The full building process can be seen in the docker-build.sh script.
+
+We now have a Docker image
+With our Docker image, we need some place to upload it to. An ECS can run a Docker image from Docker Hub or from an ECR (Elastic Container Registry). 
+
+We create an ECR using the aws ecr create-repository command, and then set it's repository policy to allow images to be pushed and pulled from it. Finally, we record the ECR URI (Uniform Resource Identifier), as we need that to be able to push our Docker image up. This full process can be seen in the create-ecr.sh script.
+
+We're ready to push our Docker image to AWS
+This is a fairly trivial process. We just have to log into our ECR, tag our newly created Docker image with the URI of the ECR we just created, and then run docker push . This entire process can be seen in docker-push.sh.
+
+Let's make an ECS
+That really isn't a trivial process. An ECS is really three components: the cluster, the service, and the task definition. A service runs a task, which is defined in the task definition. A cluster is a grouping of services, but in our case, each cluster just has one service, for the ECS we're deploying. In the future, we could "optimize" this by grouping our teams services inside one cluster.
+
+Okay, so lets make a Task Definition
+Easier said than done. Our task definition is going to need a task role, so that it can access all of our other services (dynamodb, sqs, ...). Since this local ECS deployment only accesses ENG, we felt it was fine to give our tasks wildcard access to all of our resources. This is not a good security practice and should not be used outside of an ENG region. Here are the permissions the task role we create has: ["ecs:*", "logs:*", "xray:*", "sqs:*", "s3:*", "dynamodb:*", "kinesis:*", "execute-api:*", "events:*" 
+
+With these permissions, we then create a role, using aws iam create-role and assign the role policy that we just defined. This process can be see in create-task-role.sh. After the role is created, we record the task-role-arn to be used later.
+
+
+
+Now we can actually create a task definition. If you're interested in all the specifics of a task definition, feel free to look at the AWS documentation here. For those of us who don't like looking at JSON documentation, I'll explain the important parts. 
+
+A task definition needs to specify a few important things: the amount of CPU and Memory our task is allowed (which I default to 1 CPU and 2 GB of memory), the task role and execution role arns, and the container definition, which includes the Docker image to run, and how the container's logs should be recorded. This definition is created using aws ecs register-task-definition and can be seen at the top of create-ecs.sh.
+
+Now that we have a Task Definition..
+We need a service to run that task definition. Services are relatively simple, they take a task definition arn, the name of the service to create, and a cluster for them to be under. Additionally, they also take a launch type, which we set to FARGATE, and a desired count, which we set to 0, as we don't want AWS trying to always have a task running. This means that we're going to have to create a cluster. 
+
+We use the most minimal cluster cloudformation json, which is just { "name": "clusterName" } . We then take the name of our cluster, and pass it to our service we want to create. This entire process can be seen in create-ecs.sh.
+
+Step Functions
+A common pattern of invoking an ECS (at least at Vanguard) is through a step function. This enables any resource to invoke the step function, which then in-turn spins up an ECS task. Creating a step function is similar to creating any other resource we've created so far. First, we need to create a step function role, which takes the task role arn, giving it permissions to run the task. With this role, we can then create our "state machine" (step function alias) using aws stepfunctions create-state-machine . The full implementation can be seen in create-sfn.sh.
+
+Cloudformation Generation
+I've mentioned a lot throughout this article about the different parameters the cloudformation requires for different resources. Instead of keeping these cloudformations hardcoded inside each ECS, I instead wrote a Go CLI tool to generate the 9 different formations we need. If you've read any of the scripts up to this point, you probably noticed a binary called gen . This is the Go program that handles all cloudformation json. It is compiled at the start of the just deploy-ecs script, and then temporarily added to your PATH for the duration of the deployment. The code for this generation can be seen in /scripts/aws/ecs/gen-go/. I personally felt, with the amount of configuration needed to be generated, that it was easier to express as types in a language, rather than having many json files and using jq to sub in parameters.
+
+Teardown
+If you want to do the inverse of everything described in this document, also known as deleting everything, then run just teardown . This is useful in a few different scenarios:
+
+You've updated the generation Go code, and want to redeploy everything with the new configuration
+Someone else deployed an ECS with the same name, and you want to test your changes
+Failsafe if anything went wrong in the deployment
