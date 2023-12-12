@@ -58,13 +58,24 @@ let rec render_expression ident expression =
     in
     Ident.statement ident arender, None
   | Func f -> render_function ident f
-  | BinExp (left, op, right) ->
+  | FieldAccess (e, f) -> fst (render_expression ident e) ^ "." ^ f, None
+  | EnumMatch em -> sprintf "\"%s\"" em.etag, em.eargs
+  | BinExp (left, op, right, remainder) ->
+    let remainder = Option.map (fun e -> fst (render_expression ident e)) remainder in
+    let right_exp, right_rem = render_expression ident right in
+    let remainder =
+      match remainder, right_rem with
+      | Some re, Some rr -> Some (rr ^ " = " ^ re ^ "\n")
+      | _ -> None
+    in
+    (* The remainder is for a match expression that contains a variable*)
+    (* An example of this would be Some(1) *)
     ( sprintf
         "%s %s %s"
         (fst (render_expression ident left))
         (render_bin_op op)
-        (String.trim (fst (render_expression ident right)))
-    , None )
+        (String.trim right_exp)
+    , remainder )
   | UnExp (op, right) ->
     sprintf "%s%s" (render_un_op op) (fst (render_expression ident right)), None
   | Identifier i -> i, None
@@ -73,15 +84,31 @@ let rec render_expression ident expression =
   | Match m -> render_match ident m
   | Array a -> render_array ident a
   | Map m -> render_map ident m
-  | FuncDef _ | Block _ ->
-    print_endline "FuncDefs and Blocks cannot be rendered alone";
+  | FuncDef _ ->
+    print_endline "FuncDefs cannot be rendered alone";
     exit 1
-  | TypeDef _ -> "typedef", None
+  | Block b ->
+    String.concat "" (List.map (fun s -> fst (render_expression ident s)) b), None
+  | TypeDef def ->
+    (match def with
+     | Variant v ->
+       let variant_header = sprintf "type %s = {\n" v.vdname in
+       let tag =
+         Ident.block
+           ident
+           (sprintf
+              "tag: %s,\n"
+              (String.concat " | " (List.map (fun s -> sprintf "\"%s\"" s) v.variants)))
+       in
+       let value = Ident.block ident "value: any\n" in
+       variant_header ^ tag ^ value ^ "}", None
+     | Record _ -> "record", None
+     | CoreType ct -> ct, None)
   | TypeConstruct construct ->
     (match construct with
      | CVariant variant ->
        let open_brace = Ident.statement ident "{\n" in
-       let tag = Ident.block ident (sprintf "tag = \"%s\"\n" variant.variant) in
+       let tag = Ident.block ident (sprintf "tag = \"%s\",\n" variant.variant) in
        let value =
          Ident.block
            ident
@@ -123,8 +150,12 @@ and render_function ident fn_decl =
     header ^ "\n" ^ block ^ Ident.statement ident "end", None)
 
 and render_if_case ident con exp var_name =
-  let header =
-    Ident.statement ident (sprintf "if %s then\n" (fst (render_expression ident con)))
+  let condition_render, assignment_remainder = render_expression ident con in
+  let header = Ident.statement ident (sprintf "if %s then\n" condition_render) in
+  let assignment =
+    match assignment_remainder with
+    | Some r -> Ident.block ident r
+    | None -> ""
   in
   let body =
     Ident.block
@@ -134,7 +165,7 @@ and render_if_case ident con exp var_name =
          var_name
          (String.trim (fst (render_expression ident exp)) ^ "\n"))
   in
-  header ^ body
+  header ^ assignment ^ body
 
 and render_if ident if_e then_e else_e =
   let var_name = Temp_vars.get_new_var () in

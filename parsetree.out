@@ -1,8 +1,8 @@
 [
-  structure_item (transpile/option_match.ml[1,0+0]..[1,0+39])
+  structure_item (transpile/option_match.ml[1,0+0]..[3,26+19])
     Pstr_type Rec
     [
-      type_declaration "question" (transpile/option_match.ml[1,0+5]..[1,0+13]) (transpile/option_match.ml[1,0+0]..[1,0+39])
+      type_declaration "question" (transpile/option_match.ml[1,0+5]..[1,0+13]) (transpile/option_match.ml[1,0+0]..[3,26+19])
         ptype_params =
           []
         ptype_cstrs =
@@ -10,15 +10,15 @@
         ptype_kind =
           Ptype_variant
             [
-              (transpile/option_match.ml[1,0+16]..[1,0+21])
-                "Never" (transpile/option_match.ml[1,0+16]..[1,0+21])
+              (transpile/option_match.ml[2,16+2]..[2,16+9])
+                "Never" (transpile/option_match.ml[2,16+4]..[2,16+9])
                 []
                 None
-              (transpile/option_match.ml[1,0+22]..[1,0+39])
-                "Maybe" (transpile/option_match.ml[1,0+24]..[1,0+29])
+              (transpile/option_match.ml[3,26+2]..[3,26+19])
+                "Maybe" (transpile/option_match.ml[3,26+4]..[3,26+9])
                 [
-                  core_type (transpile/option_match.ml[1,0+33]..[1,0+39])
-                    Ptyp_constr "string" (transpile/option_match.ml[1,0+33]..[1,0+39])
+                  core_type (transpile/option_match.ml[3,26+13]..[3,26+19])
+                    Ptyp_constr "string" (transpile/option_match.ml[3,26+13]..[3,26+19])
                     []
                 ]
                 None
@@ -27,75 +27,84 @@
         ptype_manifest =
           None
     ]
-  structure_item (transpile/option_match.ml[3,41+0]..[4,54+73])
+  structure_item (transpile/option_match.ml[5,47+0]..[8,106+33])
     Pstr_value Nonrec
     [
       <def>
-        pattern (transpile/option_match.ml[3,41+4]..[3,41+8])
-          Ppat_var "test" (transpile/option_match.ml[3,41+4]..[3,41+8])
-        expression (transpile/option_match.ml[3,41+9]..[4,54+73]) ghost
+        pattern (transpile/option_match.ml[5,47+4]..[5,47+8])
+          Ppat_var "test" (transpile/option_match.ml[5,47+4]..[5,47+8])
+        expression (transpile/option_match.ml[5,47+9]..[8,106+33]) ghost
           Pexp_fun
           Nolabel
           None
-          pattern (transpile/option_match.ml[3,41+9]..[3,41+10])
-            Ppat_var "o" (transpile/option_match.ml[3,41+9]..[3,41+10])
-          expression (transpile/option_match.ml[4,54+2]..[4,54+73])
+          pattern (transpile/option_match.ml[5,47+9]..[5,47+10])
+            Ppat_var "o" (transpile/option_match.ml[5,47+9]..[5,47+10])
+          expression (transpile/option_match.ml[6,60+2]..[8,106+33])
             Pexp_match
-            expression (transpile/option_match.ml[4,54+8]..[4,54+9])
-              Pexp_ident "o" (transpile/option_match.ml[4,54+8]..[4,54+9])
+            expression (transpile/option_match.ml[6,60+8]..[6,60+9])
+              Pexp_ident "o" (transpile/option_match.ml[6,60+8]..[6,60+9])
             [
               <case>
-                pattern (transpile/option_match.ml[4,54+15]..[4,54+22])
-                  Ppat_construct "Maybe" (transpile/option_match.ml[4,54+15]..[4,54+20])
+                pattern (transpile/option_match.ml[7,75+4]..[7,75+11])
+                  Ppat_construct "Maybe" (transpile/option_match.ml[7,75+4]..[7,75+9])
                   Some
                     []
-                    pattern (transpile/option_match.ml[4,54+21]..[4,54+22])
-                      Ppat_var "s" (transpile/option_match.ml[4,54+21]..[4,54+22])
-                expression (transpile/option_match.ml[4,54+26]..[4,54+41])
+                    pattern (transpile/option_match.ml[7,75+10]..[7,75+11])
+                      Ppat_var "s" (transpile/option_match.ml[7,75+10]..[7,75+11])
+                expression (transpile/option_match.ml[7,75+15]..[7,75+30])
                   Pexp_apply
-                  expression (transpile/option_match.ml[4,54+26]..[4,54+39])
-                    Pexp_ident "print_endline" (transpile/option_match.ml[4,54+26]..[4,54+39])
+                  expression (transpile/option_match.ml[7,75+15]..[7,75+28])
+                    Pexp_ident "print_endline" (transpile/option_match.ml[7,75+15]..[7,75+28])
                   [
                     <arg>
                     Nolabel
-                      expression (transpile/option_match.ml[4,54+40]..[4,54+41])
-                        Pexp_ident "s" (transpile/option_match.ml[4,54+40]..[4,54+41])
+                      expression (transpile/option_match.ml[7,75+29]..[7,75+30])
+                        Pexp_ident "s" (transpile/option_match.ml[7,75+29]..[7,75+30])
                   ]
               <case>
-                pattern (transpile/option_match.ml[4,54+44]..[4,54+49])
-                  Ppat_construct "Never" (transpile/option_match.ml[4,54+44]..[4,54+49])
+                pattern (transpile/option_match.ml[8,106+4]..[8,106+9])
+                  Ppat_construct "Never" (transpile/option_match.ml[8,106+4]..[8,106+9])
                   None
-                expression (transpile/option_match.ml[4,54+53]..[4,54+73])
+                expression (transpile/option_match.ml[8,106+13]..[8,106+33])
                   Pexp_apply
-                  expression (transpile/option_match.ml[4,54+53]..[4,54+66])
-                    Pexp_ident "print_endline" (transpile/option_match.ml[4,54+53]..[4,54+66])
+                  expression (transpile/option_match.ml[8,106+13]..[8,106+26])
+                    Pexp_ident "print_endline" (transpile/option_match.ml[8,106+13]..[8,106+26])
                   [
                     <arg>
                     Nolabel
-                      expression (transpile/option_match.ml[4,54+67]..[4,54+73])
-                        Pexp_constant PConst_string("None",(transpile/option_match.ml[4,54+68]..[4,54+72]),None)
+                      expression (transpile/option_match.ml[8,106+27]..[8,106+33])
+                        Pexp_constant PConst_string("None",(transpile/option_match.ml[8,106+28]..[8,106+32]),None)
                   ]
             ]
     ]
-  structure_item (transpile/option_match.ml[6,129+0]..[6,129+27])
+  structure_item (transpile/option_match.ml[11,144+0]..[13,178+8])
     Pstr_value Nonrec
     [
       <def>
-        pattern (transpile/option_match.ml[6,129+4]..[6,129+5])
+        pattern (transpile/option_match.ml[11,144+4]..[11,144+5])
           Ppat_any
-        expression (transpile/option_match.ml[6,129+8]..[6,129+27])
-          Pexp_apply
-          expression (transpile/option_match.ml[6,129+8]..[6,129+12])
-            Pexp_ident "test" (transpile/option_match.ml[6,129+8]..[6,129+12])
+        expression (transpile/option_match.ml[12,152+2]..[13,178+8])
+          Pexp_let Nonrec
           [
-            <arg>
-            Nolabel
-              expression (transpile/option_match.ml[6,129+13]..[6,129+27])
-                Pexp_construct "Maybe" (transpile/option_match.ml[6,129+14]..[6,129+19])
+            <def>
+              pattern (transpile/option_match.ml[12,152+6]..[12,152+7])
+                Ppat_var "t" (transpile/option_match.ml[12,152+6]..[12,152+7])
+              expression (transpile/option_match.ml[12,152+10]..[12,152+22])
+                Pexp_construct "Maybe" (transpile/option_match.ml[12,152+10]..[12,152+15])
                 Some
-                  expression (transpile/option_match.ml[6,129+20]..[6,129+26])
-                    Pexp_constant PConst_string("test",(transpile/option_match.ml[6,129+21]..[6,129+25]),None)
+                  expression (transpile/option_match.ml[12,152+16]..[12,152+22])
+                    Pexp_constant PConst_string("test",(transpile/option_match.ml[12,152+17]..[12,152+21]),None)
           ]
+          expression (transpile/option_match.ml[13,178+2]..[13,178+8])
+            Pexp_apply
+            expression (transpile/option_match.ml[13,178+2]..[13,178+6])
+              Pexp_ident "test" (transpile/option_match.ml[13,178+2]..[13,178+6])
+            [
+              <arg>
+              Nolabel
+                expression (transpile/option_match.ml[13,178+7]..[13,178+8])
+                  Pexp_ident "t" (transpile/option_match.ml[13,178+7]..[13,178+8])
+            ]
     ]
 ]
 

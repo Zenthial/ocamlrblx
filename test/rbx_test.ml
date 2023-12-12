@@ -14,7 +14,7 @@ let%test "no-body function" =
 ;;
 
 let%test "render binop" =
-  let expr = BinExp (Literal (Number "1"), Add, Literal (Number "2")) in
+  let expr = BinExp (Literal (Number "1"), Add, Literal (Number "2"), None) in
   let result = render expr in
   let expected = "1 + 2" in
   result = expected
@@ -48,7 +48,7 @@ let%test "render map" =
 ;;
 
 let%test "render match" =
-  let eq_check = BinExp (Literal (String "test"), Eq, Literal (String "test")) in
+  let eq_check = BinExp (Literal (String "test"), Eq, Literal (String "test"), None) in
   let print = FuncCall { ident = "print"; cparameters = [ Literal (String "equal") ] } in
   let m = Match { cases = [ eq_check, print; eq_check, print ]; default_case = None } in
   let result = render m in
@@ -68,9 +68,7 @@ let%test "render match" =
 
 let%test "render variant" =
   let one = Literal (Number "1") in
-  let some_opt =
-    TypeConstruct (CVariant { vname = "Option"; variant = "Some"; vvalue = one })
-  in
+  let some_opt = TypeConstruct (CVariant { variant = "Some"; vvalue = one }) in
   let result = render some_opt in
   let expected = "{\n  tag = \"Some\"\n  value = 1\n}\n" in
   print_endline result;
@@ -79,9 +77,7 @@ let%test "render variant" =
 
 let%test "render variant assignment" =
   let one = Literal (Number "1") in
-  let some_opt =
-    TypeConstruct (CVariant { vname = "Option"; variant = "Some"; vvalue = one })
-  in
+  let some_opt = TypeConstruct (CVariant { variant = "Some"; vvalue = one }) in
   let assign = Assignment { aname = "test"; value = some_opt } in
   let result = render assign in
   let expected = "local test = {\n  tag = \"Some\"\n  value = 1\n}\n" in

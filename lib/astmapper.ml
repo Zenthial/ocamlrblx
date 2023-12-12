@@ -83,18 +83,32 @@ let parse_binding_pattern (pattern : Parsetree.pattern) e =
   | _ -> Ast.Unknown
 ;;
 
+let rec pattern_to_string (p : Parsetree.pattern) =
+  match p.ppat_desc with
+  | Ppat_var loc -> loc.txt
+  | Ppat_tuple t -> String.concat "," (List.map pattern_to_string t)
+  | _ -> "unknown pattern to type"
+;;
+
 let parse_condition_pattern (pattern : Parsetree.pattern) =
   match pattern.ppat_desc with
-  | Ppat_any -> Ast.Identifier "_"
-  | Ppat_var loc -> Ast.Identifier loc.txt
-  | Ppat_constant c -> parse_constant c
+  | Ppat_any -> Ast.Identifier "_", false
+  | Ppat_var loc -> Ast.Identifier loc.txt, false
+  | Ppat_constant c -> parse_constant c, false
   (* See pattern docs for more detail
      Construct holds ty, which is the type we're matching on,
      and a list option of the different paramters that type might hold.
      For a Some("yo") type, this would be Ppat_construct (Some, Some[(_, "yo")])
   *)
-  (* | Ppat_construct (ty, vals_opt) -> Ast.Unknown *)
-  | _ -> Ast.Unknown
+  | Ppat_construct (ty, args) ->
+    let eargs =
+      match args with
+      | Some el -> Some (pattern_to_string (snd el))
+      | None -> None
+    in
+    let constr_name = Longident.last ty.txt in
+    Ast.EnumMatch { etag = constr_name; eargs }, true
+  | _ -> Ast.Unknown, false
 ;;
 
 let pattern_val_to_string (pat : Parsetree.pattern) =
@@ -116,13 +130,21 @@ let rec parse_expression (expression : Parsetree.expression) =
         (* A bin op with more than two params is impossible *)
         let left = List.nth params 0 in
         let right = List.nth params 1 in
-        Ast.BinExp (left, op, right)
+        Ast.BinExp (left, op, right, None)
       | None -> Ast.FuncCall { ident = i; cparameters = params }
     in
     application
   (* https://v2.ocaml.org/api/compilerlibref/Longident.html#TYPEt *)
   | Pexp_ident ident -> Ast.Identifier (parse_ident ident.txt)
   | Pexp_constant const -> parse_constant const
+  | Pexp_construct (ident, exp_opt) ->
+    let value =
+      match exp_opt with
+      | Some exp -> parse_expression exp
+      | None -> Ast.Literal Ast.Nil
+    in
+    Ast.TypeConstruct
+      (Ast.CVariant { variant = Longident.last ident.txt; vvalue = value })
   (* The function documentation, listed above, is quite good. The first two arguments of the tuple are label and expression option. These are for a labeled function argument and a default expression for the label. Not handling these immediately. The others are the pattern and expression, which correspond to the syntax `let f P = E` where the pattern is the argument, and the expression is the function *)
   | Pexp_fun (_, _, pat, exp) ->
     let argument_name = pattern_val_to_string pat in
@@ -156,8 +178,12 @@ let rec parse_expression (expression : Parsetree.expression) =
     let cs =
       List.map
         (fun (c : Parsetree.case) ->
-          ( Ast.BinExp (mapped_e, Ast.Eq, parse_condition_pattern c.pc_lhs)
-          , parse_expression c.pc_rhs ))
+          let condition, construct = parse_condition_pattern c.pc_lhs in
+          let e = if construct then Ast.FieldAccess (mapped_e, "tag") else mapped_e in
+          let remainder =
+            if construct then Some (Ast.FieldAccess (mapped_e, "value")) else None
+          in
+          Ast.BinExp (e, Ast.Eq, condition, remainder), parse_expression c.pc_rhs)
         cases
     in
     let default = Option.map (fun o -> parse_expression o) default in

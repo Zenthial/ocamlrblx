@@ -8,4 +8,7 @@ let test o =
   | Never -> print_endline "None"
 ;;
 
-let _ = test (Maybe "test")
+let _ =
+  let t = Never in
+  test t
+;;

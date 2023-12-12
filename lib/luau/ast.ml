@@ -4,7 +4,8 @@ type expression =
   | Literal of literal
   | Assignment of assignment
   (* Binary expression *)
-  | BinExp of expression * bin_op * expression
+  | BinExp of expression * bin_op * expression * expression option
+  (* The final optional expression is for an assignment remainder like a match expression *)
   (* Unary expression *)
   | UnExp of unary_op * expression
   | Identifier of identifier
@@ -12,8 +13,10 @@ type expression =
   | Match of match_expression
   | Array of array
   | Map of map
+  | FieldAccess of expression * string
   | TypeDef of type_def (* A type that is defined for later usage *)
   | TypeConstruct of type_construct (* A type that is assigned *)
+  | EnumMatch of enum_def (* An enum *)
   | FuncDef of func_definition (* This is not a concrete type *)
   | Block of expression list (* This is not a concrete type *)
   | Unknown (* Placeholder *)
@@ -48,6 +51,11 @@ and unary_op =
   | Pound
   | Negate
 
+and enum_def =
+  { etag : identifier
+  ; eargs : string option
+  }
+
 and type_def =
   | Variant of variant_def
   | Record of record_def
@@ -63,8 +71,7 @@ and variant_def =
   }
 
 and variant =
-  { vname : string
-  ; variant : string
+  { variant : string
   ; vvalue : expression
   }
 
