@@ -43,35 +43,73 @@ and bin_op =
   | Eq
   | Ne
 
-and unary_op = Not | Pound | Negate
+and unary_op =
+  | Not
+  | Pound
+  | Negate
 
 and type_def =
   | Variant of variant_def
   | Record of record_def
   | CoreType of string
 
-and type_construct = CVariant of variant | CRecord of record
-and variant_def = { vdname : string; variants : string list }
-and variant = { vname : string; variant : string; vvalue : expression }
-and record_def = { rdname : string; rdfields : (string * type_def) list }
-and record = { rname : string; rfields : (string * expression) list }
-and assignment = { aname : string; value : expression }
-and func_decl = { local : bool; fn_name : string; definition : func_definition }
+and type_construct =
+  | CVariant of variant
+  | CRecord of record
 
-and func_definition = {
-  dparameters : string list;
-  statements : expression list;
-}
+and variant_def =
+  { vdname : string
+  ; variants : string list
+  }
 
-and match_expression = {
-  cases : (expression * expression) list;
-  default_case : expression option;
-}
+and variant =
+  { vname : string
+  ; variant : string
+  ; vvalue : expression
+  }
+
+and record_def =
+  { rdname : string
+  ; rdfields : (string * string) list
+  }
+
+and record =
+  { rname : string
+  ; rfields : (string * expression) list
+  }
+
+and assignment =
+  { aname : string
+  ; value : expression
+  }
+
+and func_decl =
+  { local : bool
+  ; fn_name : string
+  ; definition : func_definition
+  }
+
+and func_definition =
+  { dparameters : string list
+  ; statements : expression list
+  }
+
+and match_expression =
+  { cases : (expression * expression) list
+  ; default_case : expression option
+  }
 
 and array = { array_members : expression list }
 and map = { map_members : (string * expression) list }
 and identifier = string
-and func_call = { ident : identifier; cparameters : expression list }
+
+and func_call =
+  { ident : identifier
+  ; cparameters : expression list
+  }
 
 let to_string (exp : expression) =
-  match exp with Identifier i -> i | _ -> exit 1
+  match exp with
+  | Identifier i -> i
+  | _ -> exit 1
+;;
