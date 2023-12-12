@@ -9,6 +9,6 @@ let test o =
 ;;
 
 let _ =
-  let t = Never in
-  test t
+  let t2 = Maybe "thing" in
+  test t2
 ;;

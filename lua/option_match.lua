@@ -16,8 +16,8 @@ function test(o)
   return _1
 end
 
-local t = {
-  tag = "Never",
-  value = nil
+local t2 = {
+  tag = "Maybe",
+  value = "thing"
 }
-test(t)
+test(t2)
