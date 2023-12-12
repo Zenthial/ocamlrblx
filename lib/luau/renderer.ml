@@ -129,10 +129,11 @@ let rec render_expression ident expression =
          String.concat
            ",\n"
            (List.map
-              (fun (i, e) -> sprintf "%s = %s" i (fst (render_expression ident e)))
+              (fun (i, e) ->
+                Ident.block ident (sprintf "%s = %s" i (fst (render_expression ident e))))
               record.rfields)
        in
-       let close_brace = Ident.statement ident "}\n" in
+       let close_brace = "\n" ^ Ident.statement ident "}\n" in
        open_brace ^ body ^ close_brace, None)
   | Unknown -> "unknown", None
 

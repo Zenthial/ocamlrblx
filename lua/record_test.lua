@@ -3,5 +3,8 @@ type person = {
   age: int
 }
 
-local p = unknown
+local p = {
+  name = "John",
+  age = 30
+}
 unknown

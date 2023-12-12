@@ -3,11 +3,17 @@ type adder = {
 }
 
 function add(x, y)
-  return unknown
+  return {
+    value = x.value + y.value
+  }
 end
 
-local one = unknown
-local two = unknown
+local one = {
+  value = 1
+}
+local two = {
+  value = 2
+}
 local three = add(one, two)
 local six = add(three, three)
-print(tostring(unknown))
+print(tostring(six.value))

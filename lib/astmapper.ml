@@ -145,6 +145,13 @@ let rec parse_expression (expression : Parsetree.expression) =
     in
     Ast.TypeConstruct
       (Ast.CVariant { variant = Longident.last ident.txt; vvalue = value })
+  | Pexp_record (fields, _) ->
+    let mapped_fields =
+      List.map (fun (ident, exp) -> Longident.last ident.txt, parse_expression exp) fields
+    in
+    Ast.TypeConstruct (Ast.CRecord { rname = ""; rfields = mapped_fields })
+  | Pexp_field (exp, ident) ->
+    Ast.FieldAccess (parse_expression exp, Longident.last ident.txt)
   (* The function documentation, listed above, is quite good. The first two arguments of the tuple are label and expression option. These are for a labeled function argument and a default expression for the label. Not handling these immediately. The others are the pattern and expression, which correspond to the syntax `let f P = E` where the pattern is the argument, and the expression is the function *)
   | Pexp_fun (_, _, pat, exp) ->
     let argument_name = pattern_val_to_string pat in
