@@ -88,7 +88,10 @@ let rec render_expression ident expression =
     print_endline "FuncDefs cannot be rendered alone";
     exit 1
   | Block b ->
-    String.concat "" (List.map (fun s -> fst (render_expression ident s)) b), None
+    ( String.concat
+        "\n"
+        (List.map (fun s -> String.trim (fst (render_expression ident s))) b)
+    , None )
   | TypeDef def ->
     (match def with
      | Variant v ->

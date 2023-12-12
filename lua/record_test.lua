@@ -7,4 +7,5 @@ local p = {
   name = "John",
   age = 30
 }
-unknown
+print(p.name)
+print(p.age)

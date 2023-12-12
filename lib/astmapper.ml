@@ -195,6 +195,8 @@ let rec parse_expression (expression : Parsetree.expression) =
     in
     let default = Option.map (fun o -> parse_expression o) default in
     Ast.Match { default_case = default; cases = cs }
+  | Pexp_sequence (exp1, exp2) ->
+    Ast.Block [ parse_expression exp1; parse_expression exp2 ]
   | _ -> Ast.Unknown
 
 (* https://v2.ocaml.org/api/compilerlibref/Parsetree.html#TYPEvalue_binding *)
