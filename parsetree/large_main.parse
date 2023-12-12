@@ -1,0 +1,121 @@
+[
+  structure_item (large_main.ml[1,0+0]..[1,0+19])
+    Pstr_value Nonrec
+    [
+      <def>
+        pattern (large_main.ml[1,0+4]..[1,0+7])
+          Ppat_var "add" (large_main.ml[1,0+4]..[1,0+7])
+        expression (large_main.ml[1,0+8]..[1,0+19]) ghost
+          Pexp_fun
+          Nolabel
+          None
+          pattern (large_main.ml[1,0+8]..[1,0+9])
+            Ppat_var "x" (large_main.ml[1,0+8]..[1,0+9])
+          expression (large_main.ml[1,0+10]..[1,0+19]) ghost
+            Pexp_fun
+            Nolabel
+            None
+            pattern (large_main.ml[1,0+10]..[1,0+11])
+              Ppat_var "y" (large_main.ml[1,0+10]..[1,0+11])
+            expression (large_main.ml[1,0+14]..[1,0+19])
+              Pexp_apply
+              expression (large_main.ml[1,0+16]..[1,0+17])
+                Pexp_ident "+" (large_main.ml[1,0+16]..[1,0+17])
+              [
+                <arg>
+                Nolabel
+                  expression (large_main.ml[1,0+14]..[1,0+15])
+                    Pexp_ident "x" (large_main.ml[1,0+14]..[1,0+15])
+                <arg>
+                Nolabel
+                  expression (large_main.ml[1,0+18]..[1,0+19])
+                    Pexp_ident "y" (large_main.ml[1,0+18]..[1,0+19])
+              ]
+    ]
+  structure_item (large_main.ml[3,21+0]..[8,123+35])
+    Pstr_value Nonrec
+    [
+      <def>
+        pattern (large_main.ml[3,21+4]..[3,21+5])
+          Ppat_any
+        expression (large_main.ml[4,29+2]..[8,123+35])
+          Pexp_let Nonrec
+          [
+            <def>
+              pattern (large_main.ml[4,29+6]..[4,29+9])
+                Ppat_var "one" (large_main.ml[4,29+6]..[4,29+9])
+              expression (large_main.ml[4,29+12]..[4,29+13])
+                Pexp_constant PConst_int (1,None)
+          ]
+          expression (large_main.ml[5,46+2]..[8,123+35])
+            Pexp_let Nonrec
+            [
+              <def>
+                pattern (large_main.ml[5,46+6]..[5,46+9])
+                  Ppat_var "two" (large_main.ml[5,46+6]..[5,46+9])
+                expression (large_main.ml[5,46+12]..[5,46+13])
+                  Pexp_constant PConst_int (2,None)
+            ]
+            expression (large_main.ml[6,63+2]..[8,123+35])
+              Pexp_let Nonrec
+              [
+                <def>
+                  pattern (large_main.ml[6,63+6]..[6,63+11])
+                    Ppat_var "three" (large_main.ml[6,63+6]..[6,63+11])
+                  expression (large_main.ml[6,63+14]..[6,63+25])
+                    Pexp_apply
+                    expression (large_main.ml[6,63+14]..[6,63+17])
+                      Pexp_ident "add" (large_main.ml[6,63+14]..[6,63+17])
+                    [
+                      <arg>
+                      Nolabel
+                        expression (large_main.ml[6,63+18]..[6,63+21])
+                          Pexp_ident "one" (large_main.ml[6,63+18]..[6,63+21])
+                      <arg>
+                      Nolabel
+                        expression (large_main.ml[6,63+22]..[6,63+25])
+                          Pexp_ident "two" (large_main.ml[6,63+22]..[6,63+25])
+                    ]
+              ]
+              expression (large_main.ml[7,92+2]..[8,123+35])
+                Pexp_let Nonrec
+                [
+                  <def>
+                    pattern (large_main.ml[7,92+6]..[7,92+9])
+                      Ppat_var "six" (large_main.ml[7,92+6]..[7,92+9])
+                    expression (large_main.ml[7,92+12]..[7,92+27])
+                      Pexp_apply
+                      expression (large_main.ml[7,92+12]..[7,92+15])
+                        Pexp_ident "add" (large_main.ml[7,92+12]..[7,92+15])
+                      [
+                        <arg>
+                        Nolabel
+                          expression (large_main.ml[7,92+16]..[7,92+21])
+                            Pexp_ident "three" (large_main.ml[7,92+16]..[7,92+21])
+                        <arg>
+                        Nolabel
+                          expression (large_main.ml[7,92+22]..[7,92+27])
+                            Pexp_ident "three" (large_main.ml[7,92+22]..[7,92+27])
+                      ]
+                ]
+                expression (large_main.ml[8,123+2]..[8,123+35])
+                  Pexp_apply
+                  expression (large_main.ml[8,123+2]..[8,123+15])
+                    Pexp_ident "print_endline" (large_main.ml[8,123+2]..[8,123+15])
+                  [
+                    <arg>
+                    Nolabel
+                      expression (large_main.ml[8,123+16]..[8,123+35])
+                        Pexp_apply
+                        expression (large_main.ml[8,123+17]..[8,123+30])
+                          Pexp_ident "string_of_int" (large_main.ml[8,123+17]..[8,123+30])
+                        [
+                          <arg>
+                          Nolabel
+                            expression (large_main.ml[8,123+31]..[8,123+34])
+                              Pexp_ident "six" (large_main.ml[8,123+31]..[8,123+34])
+                        ]
+                  ]
+    ]
+]
+

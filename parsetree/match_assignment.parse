@@ -1,0 +1,90 @@
+[
+  structure_item (match_assignment.ml[1,0+0]..[7,72+7])
+    Pstr_value Nonrec
+    [
+      <def>
+        pattern (match_assignment.ml[1,0+4]..[1,0+5])
+          Ppat_var "p" (match_assignment.ml[1,0+4]..[1,0+5])
+        expression (match_assignment.ml[1,0+6]..[7,72+7]) ghost
+          Pexp_fun
+          Nolabel
+          None
+          pattern (match_assignment.ml[1,0+6]..[1,0+7])
+            Ppat_var "x" (match_assignment.ml[1,0+6]..[1,0+7])
+          expression (match_assignment.ml[2,10+2]..[7,72+7])
+            Pexp_let Nonrec
+            [
+              <def>
+                pattern (match_assignment.ml[2,10+6]..[2,10+7])
+                  Ppat_var "y" (match_assignment.ml[2,10+6]..[2,10+7])
+                expression (match_assignment.ml[3,20+4]..[5,54+12])
+                  Pexp_match
+                  expression (match_assignment.ml[3,20+10]..[3,20+11])
+                    Pexp_ident "x" (match_assignment.ml[3,20+10]..[3,20+11])
+                  [
+                    <case>
+                      pattern (match_assignment.ml[4,37+6]..[4,37+7])
+                        Ppat_constant PConst_int (1,None)
+                      expression (match_assignment.ml[4,37+11]..[4,37+16])
+                        Pexp_apply
+                        expression (match_assignment.ml[4,37+13]..[4,37+14])
+                          Pexp_ident "+" (match_assignment.ml[4,37+13]..[4,37+14])
+                        [
+                          <arg>
+                          Nolabel
+                            expression (match_assignment.ml[4,37+11]..[4,37+12])
+                              Pexp_ident "x" (match_assignment.ml[4,37+11]..[4,37+12])
+                          <arg>
+                          Nolabel
+                            expression (match_assignment.ml[4,37+15]..[4,37+16])
+                              Pexp_constant PConst_int (1,None)
+                        ]
+                    <case>
+                      pattern (match_assignment.ml[5,54+6]..[5,54+7])
+                        Ppat_any
+                      expression (match_assignment.ml[5,54+11]..[5,54+12])
+                        Pexp_ident "x" (match_assignment.ml[5,54+11]..[5,54+12])
+                  ]
+            ]
+            expression (match_assignment.ml[7,72+2]..[7,72+7])
+              Pexp_apply
+              expression (match_assignment.ml[7,72+4]..[7,72+5])
+                Pexp_ident "+" (match_assignment.ml[7,72+4]..[7,72+5])
+              [
+                <arg>
+                Nolabel
+                  expression (match_assignment.ml[7,72+2]..[7,72+3])
+                    Pexp_ident "y" (match_assignment.ml[7,72+2]..[7,72+3])
+                <arg>
+                Nolabel
+                  expression (match_assignment.ml[7,72+6]..[7,72+7])
+                    Pexp_ident "x" (match_assignment.ml[7,72+6]..[7,72+7])
+              ]
+    ]
+  structure_item (match_assignment.ml[10,84+0]..[10,84+23])
+    Pstr_value Nonrec
+    [
+      <def>
+        pattern (match_assignment.ml[10,84+4]..[10,84+5])
+          Ppat_any
+        expression (match_assignment.ml[10,84+8]..[10,84+23])
+          Pexp_apply
+          expression (match_assignment.ml[10,84+8]..[10,84+17])
+            Pexp_ident "print_int" (match_assignment.ml[10,84+8]..[10,84+17])
+          [
+            <arg>
+            Nolabel
+              expression (match_assignment.ml[10,84+18]..[10,84+23])
+                Pexp_apply
+                expression (match_assignment.ml[10,84+19]..[10,84+20])
+                  Pexp_ident "p" (match_assignment.ml[10,84+19]..[10,84+20])
+                [
+                  <arg>
+                  Nolabel
+                    expression (match_assignment.ml[10,84+21]..[10,84+22])
+                      Pexp_constant PConst_int (1,None)
+                ]
+          ]
+    ]
+]
+

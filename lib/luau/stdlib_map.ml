@@ -1,4 +1,6 @@
-let stdlib = [ "print_endline", "print"; "print_int", "print" ]
+let stdlib =
+  [ "print_endline", "print"; "print_int", "print"; "string_of_int", "tostring" ]
+;;
 
 let rec find_in_stdlib func lib =
   match lib with

@@ -1,0 +1,65 @@
+[
+  structure_item (multi_params.ml[1,0+0]..[1,0+33])
+    Pstr_value Nonrec
+    [
+      <def>
+        pattern (multi_params.ml[1,0+4]..[1,0+5])
+          Ppat_var "p" (multi_params.ml[1,0+4]..[1,0+5])
+        expression (multi_params.ml[1,0+6]..[1,0+33]) ghost
+          Pexp_fun
+          Nolabel
+          None
+          pattern (multi_params.ml[1,0+6]..[1,0+7])
+            Ppat_var "x" (multi_params.ml[1,0+6]..[1,0+7])
+          expression (multi_params.ml[1,0+8]..[1,0+33]) ghost
+            Pexp_fun
+            Nolabel
+            None
+            pattern (multi_params.ml[1,0+8]..[1,0+9])
+              Ppat_var "y" (multi_params.ml[1,0+8]..[1,0+9])
+            expression (multi_params.ml[1,0+12]..[1,0+33])
+              Pexp_apply
+              expression (multi_params.ml[1,0+12]..[1,0+25])
+                Pexp_ident "print_endline" (multi_params.ml[1,0+12]..[1,0+25])
+              [
+                <arg>
+                Nolabel
+                  expression (multi_params.ml[1,0+26]..[1,0+33])
+                    Pexp_apply
+                    expression (multi_params.ml[1,0+29]..[1,0+30])
+                      Pexp_ident "^" (multi_params.ml[1,0+29]..[1,0+30])
+                    [
+                      <arg>
+                      Nolabel
+                        expression (multi_params.ml[1,0+27]..[1,0+28])
+                          Pexp_ident "x" (multi_params.ml[1,0+27]..[1,0+28])
+                      <arg>
+                      Nolabel
+                        expression (multi_params.ml[1,0+31]..[1,0+32])
+                          Pexp_ident "y" (multi_params.ml[1,0+31]..[1,0+32])
+                    ]
+              ]
+    ]
+  structure_item (multi_params.ml[2,34+0]..[2,34+23])
+    Pstr_value Nonrec
+    [
+      <def>
+        pattern (multi_params.ml[2,34+4]..[2,34+5])
+          Ppat_any
+        expression (multi_params.ml[2,34+8]..[2,34+23])
+          Pexp_apply
+          expression (multi_params.ml[2,34+8]..[2,34+9])
+            Pexp_ident "p" (multi_params.ml[2,34+8]..[2,34+9])
+          [
+            <arg>
+            Nolabel
+              expression (multi_params.ml[2,34+10]..[2,34+15])
+                Pexp_constant PConst_string("one",(multi_params.ml[2,34+11]..[2,34+14]),None)
+            <arg>
+            Nolabel
+              expression (multi_params.ml[2,34+16]..[2,34+23])
+                Pexp_constant PConst_string("+ two",(multi_params.ml[2,34+17]..[2,34+22]),None)
+          ]
+    ]
+]
+

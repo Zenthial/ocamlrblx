@@ -1,0 +1,82 @@
+[
+  structure_item (record_test.ml[1,0+0]..[4,46+3])
+    Pstr_type Rec
+    [
+      type_declaration "person" (record_test.ml[1,0+5]..[1,0+11]) (record_test.ml[1,0+0]..[4,46+3])
+        ptype_params =
+          []
+        ptype_cstrs =
+          []
+        ptype_kind =
+          Ptype_record
+            [
+              (record_test.ml[2,14+4]..[3,32+3])
+                Immutable
+                "name" (record_test.ml[2,14+4]..[2,14+8])                core_type (record_test.ml[2,14+11]..[2,14+17])
+                  Ptyp_constr "string" (record_test.ml[2,14+11]..[2,14+17])
+                  []
+              (record_test.ml[3,32+4]..[3,32+13])
+                Immutable
+                "age" (record_test.ml[3,32+4]..[3,32+7])                core_type (record_test.ml[3,32+10]..[3,32+13])
+                  Ptyp_constr "int" (record_test.ml[3,32+10]..[3,32+13])
+                  []
+            ]
+        ptype_private = Public
+        ptype_manifest =
+          None
+    ]
+  structure_item (record_test.ml[6,51+0]..[9,124+17])
+    Pstr_value Nonrec
+    [
+      <def>
+        pattern (record_test.ml[6,51+4]..[6,51+5])
+          Ppat_any
+        expression (record_test.ml[7,59+2]..[9,124+17])
+          Pexp_let Nonrec
+          [
+            <def>
+              pattern (record_test.ml[7,59+6]..[7,59+7])
+                Ppat_var "p" (record_test.ml[7,59+6]..[7,59+7])
+              expression (record_test.ml[7,59+10]..[7,59+37])
+                Pexp_record
+                [
+                  "name" (record_test.ml[7,59+12]..[7,59+16])
+                    expression (record_test.ml[7,59+19]..[7,59+25])
+                      Pexp_constant PConst_string("John",(record_test.ml[7,59+20]..[7,59+24]),None)
+                  "age" (record_test.ml[7,59+27]..[7,59+30])
+                    expression (record_test.ml[7,59+33]..[7,59+35])
+                      Pexp_constant PConst_int (30,None)
+                ]
+                None
+          ]
+          expression (record_test.ml[8,100+2]..[9,124+17])
+            Pexp_sequence
+            expression (record_test.ml[8,100+2]..[8,100+22])
+              Pexp_apply
+              expression (record_test.ml[8,100+2]..[8,100+15])
+                Pexp_ident "print_endline" (record_test.ml[8,100+2]..[8,100+15])
+              [
+                <arg>
+                Nolabel
+                  expression (record_test.ml[8,100+16]..[8,100+22])
+                    Pexp_field
+                    expression (record_test.ml[8,100+16]..[8,100+17])
+                      Pexp_ident "p" (record_test.ml[8,100+16]..[8,100+17])
+                    "name" (record_test.ml[8,100+18]..[8,100+22])
+              ]
+            expression (record_test.ml[9,124+2]..[9,124+17])
+              Pexp_apply
+              expression (record_test.ml[9,124+2]..[9,124+11])
+                Pexp_ident "print_int" (record_test.ml[9,124+2]..[9,124+11])
+              [
+                <arg>
+                Nolabel
+                  expression (record_test.ml[9,124+12]..[9,124+17])
+                    Pexp_field
+                    expression (record_test.ml[9,124+12]..[9,124+13])
+                      Pexp_ident "p" (record_test.ml[9,124+12]..[9,124+13])
+                    "age" (record_test.ml[9,124+14]..[9,124+17])
+              ]
+    ]
+]
+

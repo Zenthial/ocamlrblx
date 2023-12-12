@@ -1,0 +1,110 @@
+[
+  structure_item (option_match.ml[1,0+0]..[3,26+19])
+    Pstr_type Rec
+    [
+      type_declaration "question" (option_match.ml[1,0+5]..[1,0+13]) (option_match.ml[1,0+0]..[3,26+19])
+        ptype_params =
+          []
+        ptype_cstrs =
+          []
+        ptype_kind =
+          Ptype_variant
+            [
+              (option_match.ml[2,16+2]..[2,16+9])
+                "Never" (option_match.ml[2,16+4]..[2,16+9])
+                []
+                None
+              (option_match.ml[3,26+2]..[3,26+19])
+                "Maybe" (option_match.ml[3,26+4]..[3,26+9])
+                [
+                  core_type (option_match.ml[3,26+13]..[3,26+19])
+                    Ptyp_constr "string" (option_match.ml[3,26+13]..[3,26+19])
+                    []
+                ]
+                None
+            ]
+        ptype_private = Public
+        ptype_manifest =
+          None
+    ]
+  structure_item (option_match.ml[5,47+0]..[8,106+33])
+    Pstr_value Nonrec
+    [
+      <def>
+        pattern (option_match.ml[5,47+4]..[5,47+8])
+          Ppat_var "test" (option_match.ml[5,47+4]..[5,47+8])
+        expression (option_match.ml[5,47+9]..[8,106+33]) ghost
+          Pexp_fun
+          Nolabel
+          None
+          pattern (option_match.ml[5,47+9]..[5,47+10])
+            Ppat_var "o" (option_match.ml[5,47+9]..[5,47+10])
+          expression (option_match.ml[6,60+2]..[8,106+33])
+            Pexp_match
+            expression (option_match.ml[6,60+8]..[6,60+9])
+              Pexp_ident "o" (option_match.ml[6,60+8]..[6,60+9])
+            [
+              <case>
+                pattern (option_match.ml[7,75+4]..[7,75+11])
+                  Ppat_construct "Maybe" (option_match.ml[7,75+4]..[7,75+9])
+                  Some
+                    []
+                    pattern (option_match.ml[7,75+10]..[7,75+11])
+                      Ppat_var "s" (option_match.ml[7,75+10]..[7,75+11])
+                expression (option_match.ml[7,75+15]..[7,75+30])
+                  Pexp_apply
+                  expression (option_match.ml[7,75+15]..[7,75+28])
+                    Pexp_ident "print_endline" (option_match.ml[7,75+15]..[7,75+28])
+                  [
+                    <arg>
+                    Nolabel
+                      expression (option_match.ml[7,75+29]..[7,75+30])
+                        Pexp_ident "s" (option_match.ml[7,75+29]..[7,75+30])
+                  ]
+              <case>
+                pattern (option_match.ml[8,106+4]..[8,106+9])
+                  Ppat_construct "Never" (option_match.ml[8,106+4]..[8,106+9])
+                  None
+                expression (option_match.ml[8,106+13]..[8,106+33])
+                  Pexp_apply
+                  expression (option_match.ml[8,106+13]..[8,106+26])
+                    Pexp_ident "print_endline" (option_match.ml[8,106+13]..[8,106+26])
+                  [
+                    <arg>
+                    Nolabel
+                      expression (option_match.ml[8,106+27]..[8,106+33])
+                        Pexp_constant PConst_string("None",(option_match.ml[8,106+28]..[8,106+32]),None)
+                  ]
+            ]
+    ]
+  structure_item (option_match.ml[11,144+0]..[13,180+9])
+    Pstr_value Nonrec
+    [
+      <def>
+        pattern (option_match.ml[11,144+4]..[11,144+5])
+          Ppat_any
+        expression (option_match.ml[12,152+2]..[13,180+9])
+          Pexp_let Nonrec
+          [
+            <def>
+              pattern (option_match.ml[12,152+6]..[12,152+8])
+                Ppat_var "t2" (option_match.ml[12,152+6]..[12,152+8])
+              expression (option_match.ml[12,152+11]..[12,152+24])
+                Pexp_construct "Maybe" (option_match.ml[12,152+11]..[12,152+16])
+                Some
+                  expression (option_match.ml[12,152+17]..[12,152+24])
+                    Pexp_constant PConst_string("thing",(option_match.ml[12,152+18]..[12,152+23]),None)
+          ]
+          expression (option_match.ml[13,180+2]..[13,180+9])
+            Pexp_apply
+            expression (option_match.ml[13,180+2]..[13,180+6])
+              Pexp_ident "test" (option_match.ml[13,180+2]..[13,180+6])
+            [
+              <arg>
+              Nolabel
+                expression (option_match.ml[13,180+7]..[13,180+9])
+                  Pexp_ident "t2" (option_match.ml[13,180+7]..[13,180+9])
+            ]
+    ]
+]
+

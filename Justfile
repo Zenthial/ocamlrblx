@@ -7,13 +7,17 @@ clean:
 parse:
     #!/usr/bin/env bash
 
-    ocamlc -dparsetree transpile/option_match.ml &> parsetree.out
-    rm transpile/*.cm*
-    rm a.out
-    just -f {{justfile()}} print
+    pushd {{justfile_directory()}}/transpile >/dev/null
+    for f in *; do
+        if [ "$f" == "dune" ]; then continue; fi
+        name=${f%.*}
+        ocamlc -dparsetree "$f" &> {{justfile_directory()}}/parsetree/"$name".parse
+    done
 
-print:
-    bat parsetree.out
+    rm *.cm*
+    rm a.out
+    
+    popd >/dev/null
 
 test:
     dune runtest

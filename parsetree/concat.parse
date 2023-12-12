@@ -1,0 +1,85 @@
+[
+  structure_item (concat.ml[1,0+0]..[4,66+37])
+    Pstr_value Nonrec
+    [
+      <def>
+        pattern (concat.ml[1,0+4]..[1,0+5])
+          Ppat_var "p" (concat.ml[1,0+4]..[1,0+5])
+        expression (concat.ml[1,0+6]..[4,66+37]) ghost
+          Pexp_fun
+          Nolabel
+          None
+          pattern (concat.ml[1,0+6]..[1,0+7])
+            Ppat_var "s" (concat.ml[1,0+6]..[1,0+7])
+          expression (concat.ml[2,10+2]..[4,66+37])
+            Pexp_let Nonrec
+            [
+              <def>
+                pattern (concat.ml[2,10+6]..[2,10+13])
+                  Ppat_var "new_str" (concat.ml[2,10+6]..[2,10+13])
+                expression (concat.ml[2,10+16]..[2,10+24])
+                  Pexp_apply
+                  expression (concat.ml[2,10+18]..[2,10+19])
+                    Pexp_ident "^" (concat.ml[2,10+18]..[2,10+19])
+                  [
+                    <arg>
+                    Nolabel
+                      expression (concat.ml[2,10+16]..[2,10+17])
+                        Pexp_ident "s" (concat.ml[2,10+16]..[2,10+17])
+                    <arg>
+                    Nolabel
+                      expression (concat.ml[2,10+20]..[2,10+24])
+                        Pexp_constant PConst_string("yo",(concat.ml[2,10+21]..[2,10+23]),None)
+                  ]
+            ]
+            expression (concat.ml[3,38+2]..[4,66+37])
+              Pexp_let Nonrec
+              [
+                <def>
+                  pattern (concat.ml[3,38+6]..[3,38+15])
+                    Ppat_var "other_str" (concat.ml[3,38+6]..[3,38+15])
+                  expression (concat.ml[3,38+18]..[3,38+24])
+                    Pexp_constant PConst_string("test",(concat.ml[3,38+19]..[3,38+23]),None)
+              ]
+              expression (concat.ml[4,66+2]..[4,66+37])
+                Pexp_apply
+                expression (concat.ml[4,66+2]..[4,66+15])
+                  Pexp_ident "print_endline" (concat.ml[4,66+2]..[4,66+15])
+                [
+                  <arg>
+                  Nolabel
+                    expression (concat.ml[4,66+16]..[4,66+37])
+                      Pexp_apply
+                      expression (concat.ml[4,66+25]..[4,66+26])
+                        Pexp_ident "^" (concat.ml[4,66+25]..[4,66+26])
+                      [
+                        <arg>
+                        Nolabel
+                          expression (concat.ml[4,66+17]..[4,66+24])
+                            Pexp_ident "new_str" (concat.ml[4,66+17]..[4,66+24])
+                        <arg>
+                        Nolabel
+                          expression (concat.ml[4,66+27]..[4,66+36])
+                            Pexp_ident "other_str" (concat.ml[4,66+27]..[4,66+36])
+                      ]
+                ]
+    ]
+  structure_item (concat.ml[7,108+0]..[7,108+23])
+    Pstr_value Nonrec
+    [
+      <def>
+        pattern (concat.ml[7,108+4]..[7,108+5])
+          Ppat_any
+        expression (concat.ml[7,108+8]..[7,108+23])
+          Pexp_apply
+          expression (concat.ml[7,108+8]..[7,108+9])
+            Pexp_ident "p" (concat.ml[7,108+8]..[7,108+9])
+          [
+            <arg>
+            Nolabel
+              expression (concat.ml[7,108+10]..[7,108+23])
+                Pexp_constant PConst_string("hello world",(concat.ml[7,108+11]..[7,108+22]),None)
+          ]
+    ]
+]
+

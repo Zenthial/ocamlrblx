@@ -102,7 +102,14 @@ let rec render_expression ident expression =
        in
        let value = Ident.block ident "value: any\n" in
        variant_header ^ tag ^ value ^ "}", None
-     | Record _ -> "record", None
+     | Record r ->
+       let record_header = sprintf "type %s = {\n" r.rdname in
+       let body =
+         String.concat
+           ",\n"
+           (List.map (fun (i, e) -> Ident.block ident (sprintf "%s: %s" i e)) r.rdfields)
+       in
+       record_header ^ body ^ "\n}", None
      | CoreType ct -> ct, None)
   | TypeConstruct construct ->
     (match construct with
@@ -116,7 +123,17 @@ let rec render_expression ident expression =
        in
        let close_brace = Ident.statement ident "}\n" in
        open_brace ^ tag ^ value ^ close_brace, None
-     | CRecord _ -> "record", None)
+     | CRecord record ->
+       let open_brace = Ident.statement ident "{\n" in
+       let body =
+         String.concat
+           ",\n"
+           (List.map
+              (fun (i, e) -> sprintf "%s = %s" i (fst (render_expression ident e)))
+              record.rfields)
+       in
+       let close_brace = Ident.statement ident "}\n" in
+       open_brace ^ body ^ close_brace, None)
   | Unknown -> "unknown", None
 
 and render_function ident fn_decl =
