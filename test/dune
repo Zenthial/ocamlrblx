@@ -1,6 +1,6 @@
 (library
  (name test)
- (libraries ocamlrbx)
+ (libraries ocamlrbx rbxlib)
  (inline_tests)
  (preprocess
   (pps ppx_inline_test)))
