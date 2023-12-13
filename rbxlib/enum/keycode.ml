@@ -1,27 +1,4 @@
-type user_input_type =
-  | MouseButton1
-  | MouseButton2
-  | MouseButton3
-  | MouseWheel
-  | MouseMovement
-  | Touch
-  | Keyboard
-  | Focus
-  | Accelerometer
-  | Gyro
-  | Gamepad1
-  | Gamepad2
-  | Gamepad3
-  | Gamepad4
-  | Gamepad5
-  | Gamepad6
-  | Gamepad7
-  | Gamepad8
-  | TextInput
-  | InputMethod
-  | None
-
-type key_code =
+type t =
   | Unknown
   | Backspace
   | Tab
