@@ -1,8 +1,10 @@
 #![allow(dead_code)]
 
 mod class_gen;
+mod enum_gen;
 
 use class_gen::generate_class;
+use enum_gen::generate_enum;
 use serde::Deserialize;
 
 use std::fs::File;
@@ -74,8 +76,23 @@ struct Class {
 
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "PascalCase")]
+struct EnumItem {
+    name: String,
+    value: i32,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(rename_all = "PascalCase")]
+struct Enum {
+    name: String,
+    items: Vec<EnumItem>,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(rename_all = "PascalCase")]
 struct API {
     classes: Vec<Class>,
+    enums: Vec<Enum>,
 }
 
 fn read_api() -> API {
@@ -90,7 +107,12 @@ fn write_api(writer: &mut BufWriter<File>, buf: String) {
 }
 fn main() {
     let api = read_api();
-    let mut writer = BufWriter::new(File::create("classes.ml").unwrap());
+    let mut writer = BufWriter::new(File::create("api.mli").unwrap());
+
+    for enm in &api.enums {
+        let enum_str = generate_enum(enm);
+        write_api(&mut writer, enum_str);
+    }
 
     for class in &api.classes {
         let class_str = generate_class(class);
