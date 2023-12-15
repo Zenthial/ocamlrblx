@@ -1,0 +1,5 @@
+(include_subdirs unqualified)
+
+(library
+ (name rbx)
+ (modules_without_implementation Instance))

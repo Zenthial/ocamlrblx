@@ -3,7 +3,7 @@
 mod class_gen;
 mod enum_gen;
 
-use class_gen::generate_class;
+use class_gen::generate_class_module;
 use enum_gen::generate_enum;
 use serde::Deserialize;
 
@@ -107,17 +107,21 @@ fn write_api(writer: &mut BufWriter<File>, buf: String) {
 }
 fn main() {
     let api = read_api();
-    let mut writer = BufWriter::new(File::create("api.mli").unwrap());
+    let mut enum_writer = BufWriter::new(File::create("rbx/enums.ml").unwrap());
 
     for enm in &api.enums {
         let enum_str = generate_enum(enm);
-        write_api(&mut writer, enum_str);
+        write_api(&mut enum_writer, enum_str);
     }
+
+    enum_writer.flush().unwrap();
 
     for class in &api.classes {
-        let class_str = generate_class(class);
+        let mut writer =
+            BufWriter::new(File::create(format!("rbx/classes/{}.mli", class.name)).unwrap());
+        let class_str = generate_class_module(class);
         write_api(&mut writer, class_str);
-    }
 
-    writer.flush().unwrap();
+        writer.flush().unwrap();
+    }
 }
