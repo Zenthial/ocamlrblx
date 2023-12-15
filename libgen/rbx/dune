@@ -2,4 +2,4 @@
 
 (library
  (name rbx)
- (modules_without_implementation Instance))
+ (modules_without_implementation classes))

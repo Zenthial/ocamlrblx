@@ -3,12 +3,15 @@
 mod class_gen;
 mod enum_gen;
 
-use class_gen::generate_class_module;
+use class_gen::generate_classes;
 use enum_gen::generate_enum;
 use serde::Deserialize;
 
 use std::fs::File;
 use std::io::{BufReader, BufWriter, Write};
+
+const DUNE: &str =
+    "(include_subdirs unqualified)\n(library (name rbx)\n (modules_without_implementation ";
 
 #[derive(Deserialize, Debug)]
 enum ValueTypeCategory {
@@ -103,7 +106,7 @@ fn read_api() -> API {
 }
 
 fn write_api(writer: &mut BufWriter<File>, buf: String) {
-    writer.write_all(buf.as_bytes()).unwrap();
+    writer.write(buf.as_bytes()).unwrap();
 }
 fn main() {
     let api = read_api();
@@ -116,12 +119,5 @@ fn main() {
 
     enum_writer.flush().unwrap();
 
-    for class in &api.classes {
-        let mut writer =
-            BufWriter::new(File::create(format!("rbx/classes/{}.mli", class.name)).unwrap());
-        let class_str = generate_class_module(class);
-        write_api(&mut writer, class_str);
-
-        writer.flush().unwrap();
-    }
+    generate_classes(&api.classes);
 }

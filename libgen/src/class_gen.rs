@@ -1,17 +1,50 @@
-use crate::{Class, Member};
+use std::{
+    fs::File,
+    io::{BufWriter, Write},
+};
+
+use crate::{Class, Member, ValueTypeCategory};
 
 use convert_case::{Case, Casing};
 
-fn map_type(ty: String) -> String {
-    match ty.as_str() {
-        "null" => "unit".to_string(),
-        "int64" => "int".to_string(),
-        "double" => "float".to_string(),
-        "Objects" => "instance list".to_string(),
-        "Variant" => "'a".to_string(),
-        "Array" | "Tuple" => "'a list".to_string(),
-        "Dictionary" => "(string * 'a) list".to_string(),
-        _ => to_snake(ty),
+fn map_type(cat: &ValueTypeCategory, ty: String, class_name: &str) -> String {
+    use crate::ValueTypeCategory::*;
+    match cat {
+        Class => {
+            if &ty == class_name {
+                "t".to_string()
+            } else {
+                ty + ".t"
+            }
+        }
+        _ => match ty.as_str() {
+            "null" => "unit".to_string(),
+            "int64" => "int".to_string(),
+            "double" => "float".to_string(),
+            "Objects" => {
+                if class_name == "Instance" {
+                    "t list".to_string()
+                } else {
+                    "Instance.t list".to_string()
+                }
+            }
+            "Variant" => "'a".to_string(),
+            "Array" | "Tuple" => "'a list".to_string(),
+            "Dictionary" | "Map" => "(string * 'a) list".to_string(),
+            "CFrame" => "cframe".to_string(),
+            "Vector3" => "vector3".to_string(),
+            "Vector2" => "vector2".to_string(),
+            "Color3" => "color3".to_string(),
+            "Content" => "string".to_string(),
+            "Function" => "(unit -> unit)".to_string(),
+            _ => {
+                if ty.contains("?") {
+                    let type_name = ty.split("?").collect::<Vec<&str>>()[0];
+                    return format!("{} option", to_snake(type_name.into()));
+                }
+                to_snake(ty)
+            }
+        },
     }
 }
 
@@ -30,9 +63,10 @@ pub fn to_snake(s: String) -> String {
 }
 
 pub fn generate_class_module(class: &Class) -> String {
-    let imports = String::from("open Types\n");
-    let mut type_heading = format!("type {} = {{\n", to_snake(class.name.clone()));
+    let mut type_heading = String::from("  type t = {\n");
     let mut methods = String::new();
+
+    let mut props = 0;
 
     use crate::MemberType::*;
     for member in &class.members {
@@ -44,10 +78,11 @@ pub fn generate_class_module(class: &Class) -> String {
             Property => {
                 let vt = member.value_type.as_ref().unwrap();
                 type_heading += &format!(
-                    "  {} : {};\n",
+                    "    {} : {};\n",
                     to_snake(member.name.clone()),
-                    map_type(vt.name.clone())
+                    map_type(&vt.category, vt.name.clone(), &class.name)
                 );
+                props += 1;
             }
             Function => {
                 let rt = member.return_type.as_ref().unwrap();
@@ -59,7 +94,11 @@ pub fn generate_class_module(class: &Class) -> String {
 
                 for p in params {
                     if p.p_type.name != "Actor" {
-                        mapped_params.push(map_type(p.p_type.name.clone()));
+                        mapped_params.push(map_type(
+                            &p.p_type.category,
+                            p.p_type.name.clone(),
+                            &class.name,
+                        ));
                     }
                 }
 
@@ -68,76 +107,45 @@ pub fn generate_class_module(class: &Class) -> String {
                 }
 
                 let return_type = rt.name.clone();
-                mapped_params.push(map_type(return_type));
+                mapped_params.push(map_type(&rt.category, return_type, &class.name));
 
                 let param_list = mapped_params.join(" -> ");
-                methods += &format!("val {} : {}\n", to_snake(member.name.clone()), param_list);
+                methods += &format!("  val {} : {}\n", to_snake(member.name.clone()), param_list);
             }
             _ => {}
         }
     }
 
-    imports + &type_heading + "}\n" + &methods
+    if props == 0 {
+        String::from("  type t\n") + &methods
+    } else {
+        type_heading + "  }\n" + &methods
+    }
 }
 
-pub fn generate_class(class: &Class) -> String {
-    let mut ret = String::new();
+pub fn generate_classes(classes: &Vec<Class>) {
+    let imports = String::from("open Types\nopen Enums\n\n[@@@warning \"-67\"]");
 
-    if class.name.contains("Actor") {
-        return ret;
-    }
+    let mut writer = BufWriter::new(File::create("rbx/classes.mli").unwrap());
+    let mut first_module = false;
 
-    let superclass = if class.superclass == "<<<ROOT>>>" {
-        "object".to_string()
-    } else {
-        to_snake(class.superclass.clone()) + " -> object"
-    };
+    writer.write_all(imports.as_bytes()).unwrap();
 
-    ret += &format!("class {} : {}\n", to_snake(class.name.clone()), superclass);
+    for class in classes {
+        let module = generate_class_module(class);
+        if first_module {
+            writer
+                .write_all(format!("and {} : sig\n", class.name).as_bytes())
+                .unwrap();
+            writer.write_all(module.as_bytes()).unwrap();
+        } else {
+            writer
+                .write_all(format!("module rec {} : sig\n", class.name).as_bytes())
+                .unwrap();
+            writer.write_all(module.as_bytes()).unwrap();
 
-    use crate::MemberType::*;
-    for member in &class.members {
-        if let Some(ts) = &member.tags {
-            if ts.contains(&String::from("Deprecated")) {
-                continue;
-            }
+            first_module = true;
         }
-
-        match member.member_type {
-            Property => {
-                let vt = member.value_type.as_ref().unwrap();
-                ret += &format!(
-                    "  val {} : {}\n",
-                    to_snake(member.name.clone()),
-                    map_type(vt.name.clone())
-                );
-            }
-            Function => {
-                let rt = member.return_type.as_ref().unwrap();
-                let params = member.parameters.as_ref().unwrap();
-                let mut mapped_params = params
-                    .iter()
-                    .map(|p| map_type(p.p_type.name.clone()))
-                    .collect::<Vec<String>>();
-
-                if mapped_params.len() == 0 {
-                    mapped_params.push("unit".to_string());
-                }
-
-                let return_type = rt.name.clone();
-                mapped_params.push(map_type(return_type));
-
-                let param_list = mapped_params.join(" -> ");
-                ret += &format!(
-                    "  method {} : {}\n",
-                    to_snake(member.name.clone()),
-                    param_list
-                );
-            }
-            _ => {}
-        }
+        writer.write_all("end\n".as_bytes()).unwrap();
     }
-
-    ret += &format!("end\n\n");
-    return ret;
 }
