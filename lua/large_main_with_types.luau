@@ -14,34 +14,34 @@ function add(x, y)
 end
 
 function add_skin(prof, skin_name)
-	local function _6(name, _)
+	local function _8(name, _)
 		return name == skin_name
 	end
-	local exists = List.exists(_6, prof.skins)
+	local exists = List.exists(_8, prof.skins)
 
-	local function _4(name, quant)
-		local _5
+	local function _6(name, quant)
+		local _7
 		if name == skin_name then
-			_5 = { name, quant + 1 }
+			_7 = { name, quant + 1 }
 		else
-			_5 = { name, quant }
+			_7 = { name, quant }
 		end
-		return _5
+		return _7
 	end
-	local _3
+	local _5
 	if exists then
-		_3 = List.map(_4, prof.skins)
+		_5 = List.map(_6, prof.skins)
 	else
-		_3 = table.insert(prof.skins, { skin_name, 1 })
+		_5 = table.insert(prof.skins, { skin_name, 1 })
 	end
-	local skins = _3
+	local skins = _5
 	return {
 		fragments = prof.fragments,
 		skins = skins,
 	}
 end
 
-local function _7(s, _)
+local function _9(s, _)
 	return print(s)
 end
 local one = {
@@ -60,5 +60,5 @@ local prof = {
 	},
 }
 local new_prof = add_skin(prof, "test")
-List.iter(_7, new_prof.skins)
+List.iter(_9, new_prof.skins)
 print(tostring(six.value))

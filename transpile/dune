@@ -1,2 +1,3 @@
 (library
- (name transpile))
+ (name transpile)
+ (libraries rbxlib))

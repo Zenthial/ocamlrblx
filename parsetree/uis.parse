@@ -1,0 +1,64 @@
+[
+  structure_item (uis.ml[1,0+0]..[1,0+11])
+    Pstr_open Fresh
+    module_expr (uis.ml[1,0+5]..[1,0+11])
+      Pmod_ident "Rbxlib" (uis.ml[1,0+5]..[1,0+11])
+  structure_item (uis.ml[3,13+0]..[5,85+46])
+    Pstr_value Nonrec
+    [
+      <def>
+        pattern (uis.ml[3,13+4]..[3,13+5])
+          Ppat_any
+        expression (uis.ml[4,21+2]..[5,85+46])
+          Pexp_let Nonrec
+          [
+            <def>
+              pattern (uis.ml[4,21+6]..[4,21+13])
+                Ppat_var "pressed" (uis.ml[4,21+6]..[4,21+13])
+              expression (uis.ml[4,21+16]..[4,21+60])
+                Pexp_apply
+                expression (uis.ml[4,21+16]..[4,21+57])
+                  Pexp_ident "Classes.UserInputService.get_keys_pressed" (uis.ml[4,21+16]..[4,21+57])
+                [
+                  <arg>
+                  Nolabel
+                    expression (uis.ml[4,21+58]..[4,21+60])
+                      Pexp_construct "()" (uis.ml[4,21+58]..[4,21+60])
+                      None
+                ]
+          ]
+          expression (uis.ml[5,85+2]..[5,85+46])
+            Pexp_apply
+            expression (uis.ml[5,85+2]..[5,85+11])
+              Pexp_ident "List.iter" (uis.ml[5,85+2]..[5,85+11])
+            [
+              <arg>
+              Nolabel
+                expression (uis.ml[5,85+12]..[5,85+38])
+                  Pexp_fun
+                  Nolabel
+                  None
+                  pattern (uis.ml[5,85+17]..[5,85+18])
+                    Ppat_var "p" (uis.ml[5,85+17]..[5,85+18])
+                  expression (uis.ml[5,85+22]..[5,85+37])
+                    Pexp_apply
+                    expression (uis.ml[5,85+22]..[5,85+35])
+                      Pexp_ident "print_endline" (uis.ml[5,85+22]..[5,85+35])
+                    [
+                      <arg>
+                      Nolabel
+                        expression (uis.ml[5,85+36]..[5,85+37])
+                          Pexp_ident "p" (uis.ml[5,85+36]..[5,85+37])
+                    ]
+              <arg>
+              Nolabel
+                expression (uis.ml[5,85+39]..[5,85+46])
+                  Pexp_ident "pressed" (uis.ml[5,85+39]..[5,85+46])
+            ]
+    ]
+]
+
+File "uis.ml", line 1, characters 5-11:
+1 | open Rbxlib
+         ^^^^^^
+Error: Unbound module Rbxlib

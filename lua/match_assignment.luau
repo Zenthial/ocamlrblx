@@ -1,11 +1,11 @@
 function p(x)
-	local _8
+	local _4
 	if x == 1 then
-		_8 = x + 1
+		_4 = x + 1
 	else
-		_8 = x
+		_4 = x
 	end
-	local y = _8
+	local y = _4
 	return y + x
 end
 

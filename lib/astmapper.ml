@@ -287,6 +287,14 @@ let structure_item (item : Parsetree.structure_item) =
   match item.pstr_desc with
   | Pstr_value (rec_flag, value_binding_list) -> handle_value rec_flag value_binding_list
   | Pstr_type (_, type_declarations) -> handle_type type_declarations
+  | Pstr_open open_decl ->
+    let expr = open_decl.popen_expr in
+    let str =
+      match expr.pmod_desc with
+      | Pmod_ident ident -> Longident.last ident.txt
+      | _ -> assert false
+    in
+    Ast.Require str
   | _ -> Ast.Unknown
 ;;
 

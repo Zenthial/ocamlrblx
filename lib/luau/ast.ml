@@ -20,6 +20,7 @@ type expression =
   | FuncDef of func_definition (* This is not a concrete type *)
   | Block of expression list (* This is not a concrete type *)
   | Tuple of expression list (* Same typedef as block, but comma separated *)
+  | Require of string
   | Unknown (* Placeholder *)
 
 and literal =

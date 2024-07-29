@@ -2,4 +2,4 @@
 
 (library
  (name rbxlib)
- (modules_without_implementation players userinputservice))
+ (modules_without_implementation classes))
