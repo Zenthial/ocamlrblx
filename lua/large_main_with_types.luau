@@ -1,10 +1,10 @@
 type player_profile = {
-	fragments: int,
-	skins: list,
+	fragments: number,
+	skins: { string | number },
 }
 
 type adder = {
-	value: int,
+	value: number,
 }
 
 function add(x, y)

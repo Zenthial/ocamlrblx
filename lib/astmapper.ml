@@ -20,9 +20,24 @@ let parse_ident (ident : Longident.t) =
   | None -> i
 ;;
 
-let map_coretype (c : Parsetree.core_type) =
+let unwrap_ident ident = String.concat " " (Longident.flatten ident.txt)
+
+(* https://ocaml.org/manual/5.1/api/compilerlibref/Parsetree.html#TYPEcore_type *)
+let rec map_coretype (c : Parsetree.core_type) =
   match c.ptyp_desc with
-  | Ptyp_constr (ident, _) -> String.concat " " (Longident.flatten ident.txt)
+  | Ptyp_constr (ident, l) ->
+    let ty = Type_map.ocaml_to_luau (unwrap_ident ident) in
+    (match l with
+     | [ ty' ] ->
+       let ty_param = Type_map.ocaml_to_luau (map_coretype ty') in
+       if ty = "table" then "{" ^ ty_param ^ "}" else ty ^ "<" ^ ty_param ^ ">"
+     | [] -> ty
+     | _ ->
+       print_endline "unhandled";
+       assert false)
+  | Ptyp_tuple tys ->
+    let tys = List.map map_coretype tys in
+    String.concat "|" tys
   | _ ->
     print_endline "coretype";
     "unknown"

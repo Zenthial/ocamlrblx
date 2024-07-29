@@ -1,6 +1,6 @@
 type person = {
 	name: string,
-	age: int,
+	age: number,
 }
 
 local p = {
