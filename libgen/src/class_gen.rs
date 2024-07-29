@@ -1,4 +1,5 @@
 use std::{
+    collections::HashSet,
     fs::File,
     io::{BufWriter, Write},
 };
@@ -7,11 +8,147 @@ use crate::{Class, Member, ValueTypeCategory};
 
 use convert_case::{Case, Casing};
 
+fn class_blacklist<'a>() -> HashSet<&'a str> {
+    HashSet::from([
+        // Classes which Roblox leverages internally/in the CoreScripts but serve no purpose to developers
+        "OmniRecommendationsService",
+        "CommandService",
+        "TutorialService",
+        "AnalysticsSettings",
+        "BinaryStringValue",
+        "BrowserService",
+        "CacheableContentProvider",
+        "ClusterPacketCache",
+        "CookiesService",
+        "CorePackages",
+        "CoreScript",
+        "CoreScriptSyncService",
+        "DraftsService",
+        "FlagStandService",
+        "FlyweightService",
+        "FriendService",
+        "Geometry",
+        "GoogleAnalyticsConfiguration",
+        "GuidRegistryService",
+        "HttpRbxApiService",
+        "HttpRequest",
+        "KeyboardService",
+        "LocalStorageService",
+        "LuaWebService",
+        "MemStorageService",
+        "MouseService",
+        "PartOperationAsset",
+        "PermissionsService",
+        "PhysicsPacketCache",
+        "PlayerEmulatorService",
+        "ReflectionMetadataItem",
+        "RobloxReplicatedStorage",
+        "RuntimeScriptService",
+        "SpawnerService",
+        "StandalonePluginScripts",
+        "StopWatchReporter",
+        "ThirdPartyUserService",
+        "TimerService",
+        "TouchInputService",
+        "VirtualInputManager",
+        "Visit",
+        // never implemented
+        "AdvancedDragger",
+        "LoginService",
+        "NotificationService",
+        "ScriptService",
+        "Status",
+        // super deprecated:
+        "AdService",
+        "FunctionalTest",
+        "PluginManager",
+        "VirtualUser",
+        // "BevelMesh",
+        "CustomEvent",
+        "CustomEventReceiver",
+        // "CylinderMesh",
+        // "DoubleConstrainedValue",
+        "Flag",
+        "FlagStand",
+        // "FloorWire",
+        // "Glue",
+        "GuiMain",
+        // "Hat",
+        "Hint",
+        // "Hole",
+        "Hopper",
+        "HopperBin",
+        // "IntConstrainedValue",
+        // "JointsService",
+        "Message",
+        // "MotorFeature",
+        "PointsService",
+        // "SelectionPartLasso",
+        // "SelectionPointLasso",
+        // "SkateboardPlatform",
+        "Skin",
+        "ReflectionMetadata",
+        "ReflectionMetadataCallbacks",
+        "ReflectionMetadataClasses",
+        "ReflectionMetadataEnums",
+        "ReflectionMetadataEvents",
+        "ReflectionMetadataFunctions",
+        "ReflectionMetadataProperties",
+        "ReflectionMetadataYieldFunctions",
+        // unused
+        "UGCValidationService",
+        "RbxAnalyticsService",
+        // PLUGIN ONLY
+        "ABTestService",
+        "ChangeHistoryService",
+        "CoreGui",
+        "DataModelSession",
+        "DebuggerBreakpoint",
+        "DebuggerManager",
+        "DebuggerWatch",
+        "DebugSettings",
+        "File",
+        "GameSettings",
+        "GlobalSettings",
+        "LuaSettings",
+        "MemStorageConnection",
+        "MultipleDocumentInterfaceInstance",
+        "NetworkPeer",
+        "NetworkReplicator",
+        "NetworkSettings",
+        "PackageService",
+        "PhysicsSettings",
+        "Plugin",
+        "PluginAction",
+        "PluginDebugService",
+        "PluginDragEvent",
+        "PluginGui",
+        "PluginGuiService",
+        "PluginMenu",
+        "PluginMouse",
+        "PluginToolbar",
+        "PluginToolbarButton",
+        "RenderingTest",
+        "RenderSettings",
+        "RobloxPluginGuiService",
+        "ScriptDebugger",
+        "Selection",
+        "StatsItem",
+        "Studio",
+        "StudioData",
+        "StudioService",
+        "StudioTheme",
+        "TaskScheduler",
+        "TestService",
+        "VersionControlService",
+    ])
+}
+
 fn map_type(cat: &ValueTypeCategory, ty: String, class_name: &str) -> String {
     use crate::ValueTypeCategory::*;
     match cat {
         Class => {
-            if &ty == class_name {
+            if ty == class_name {
                 "t".to_string()
             } else {
                 ty + ".t"
@@ -33,13 +170,18 @@ fn map_type(cat: &ValueTypeCategory, ty: String, class_name: &str) -> String {
             "Dictionary" | "Map" => "(string * 'a) list".to_string(),
             "CFrame" => "cframe".to_string(),
             "Vector3" => "vector3".to_string(),
+            "Vector3int16" => "vector3_int16".to_string(),
             "Vector2" => "vector2".to_string(),
+            "Region3" => "region3".to_string(),
+            "Region3int16" => "region3_int16".to_string(),
             "Color3" => "color3".to_string(),
             "Content" => "string".to_string(),
             "Function" => "(unit -> unit)".to_string(),
+            "UDim2" => "udim2".to_string(),
+            "UDim" => "udim".to_string(),
             _ => {
-                if ty.contains("?") {
-                    let type_name = ty.split("?").collect::<Vec<&str>>()[0];
+                if ty.contains('?') {
+                    let type_name = ty.split('?').collect::<Vec<&str>>()[0];
                     return format!("{} option", to_snake(type_name.into()));
                 }
                 to_snake(ty)
@@ -77,9 +219,17 @@ pub fn generate_class_module(class: &Class) -> String {
         match member.member_type {
             Property => {
                 let vt = member.value_type.as_ref().unwrap();
+                let mut member_name = to_snake(member.name.clone());
+                if member_name == "type" {
+                    member_name = "_type".to_string()
+                } else if member_name == "to" {
+                    member_name = "_to".to_string()
+                } else if member_name == "constraint" {
+                    member_name = "_constraint".to_string()
+                }
                 type_heading += &format!(
                     "    {} : {};\n",
-                    to_snake(member.name.clone()),
+                    member_name,
                     map_type(&vt.category, vt.name.clone(), &class.name)
                 );
                 props += 1;
@@ -102,7 +252,7 @@ pub fn generate_class_module(class: &Class) -> String {
                     }
                 }
 
-                if mapped_params.len() == 0 {
+                if mapped_params.is_empty() {
                     mapped_params.push("unit".to_string());
                 }
 
@@ -126,12 +276,20 @@ pub fn generate_class_module(class: &Class) -> String {
 pub fn generate_classes(classes: &Vec<Class>) {
     let imports = String::from("open Types\nopen Enums\n\n[@@@warning \"-67\"]");
 
+    let blacklist = class_blacklist();
     let mut writer = BufWriter::new(File::create("rbx/classes.mli").unwrap());
     let mut first_module = false;
 
     writer.write_all(imports.as_bytes()).unwrap();
 
     for class in classes {
+        if blacklist.contains(class.name.as_str())
+            || class.name.contains("Studio")
+            || class.name.contains("OpenCloud")
+        {
+            continue;
+        }
+
         let module = generate_class_module(class);
         if first_module {
             writer

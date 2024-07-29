@@ -17,5 +17,5 @@ pub fn generate_enum(enum_def: &Enum) -> String {
 
     ret += "\n";
 
-    return ret;
+    ret
 }

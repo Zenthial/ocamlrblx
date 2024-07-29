@@ -93,12 +93,12 @@ struct Enum {
 
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "PascalCase")]
-struct API {
+struct Api {
     classes: Vec<Class>,
     enums: Vec<Enum>,
 }
 
-fn read_api() -> API {
+fn read_api() -> Api {
     let file = File::open("api.json").unwrap();
     let reader = BufReader::new(file);
 
@@ -106,7 +106,7 @@ fn read_api() -> API {
 }
 
 fn write_api(writer: &mut BufWriter<File>, buf: String) {
-    writer.write(buf.as_bytes()).unwrap();
+    writer.write_all(buf.as_bytes()).unwrap();
 }
 fn main() {
     let api = read_api();
