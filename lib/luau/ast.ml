@@ -19,6 +19,7 @@ type expression =
   | EnumMatch of enum_def (* An enum *)
   | FuncDef of func_definition (* This is not a concrete type *)
   | Block of expression list (* This is not a concrete type *)
+  | Tuple of expression list (* Same typedef as block, but comma separated *)
   | Unknown (* Placeholder *)
 
 and literal =

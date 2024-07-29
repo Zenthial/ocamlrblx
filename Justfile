@@ -1,5 +1,10 @@
 run:
+    #!/usr/bin/env bash
     dune build && dune exec ./bin/main.exe
+    for f in lua/*; do
+        name=(readlink -f "$f")
+        stylua "$f"
+    done
 
 clean:
     rm -rf _build

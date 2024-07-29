@@ -9,7 +9,8 @@ let%test "no-body function" =
     }
   in
   let ident = Ocamlrbx.Ident.create () in
-  let render, _ = render_function ident func in
+  let top_level_funcs = ref { amount = 0; func_strs = [] } in
+  let render, _ = render_function ident func top_level_funcs in
   render = "local function add(x, y) end"
 ;;
 
@@ -70,7 +71,7 @@ let%test "render variant" =
   let one = Literal (Number "1") in
   let some_opt = TypeConstruct (CVariant { variant = "Some"; vvalue = one }) in
   let result = render some_opt in
-  let expected = "{\n  tag = \"Some\"\n  value = 1\n}\n" in
+  let expected = "{\n  tag = \"Some\",\n  value = 1\n}\n" in
   print_endline result;
   result = expected
 ;;
@@ -80,7 +81,7 @@ let%test "render variant assignment" =
   let some_opt = TypeConstruct (CVariant { variant = "Some"; vvalue = one }) in
   let assign = Assignment { aname = "test"; value = some_opt } in
   let result = render assign in
-  let expected = "local test = {\n  tag = \"Some\"\n  value = 1\n}\n" in
+  let expected = "local test = {\n  tag = \"Some\",\n  value = 1\n}\n" in
   print_endline result;
   result = expected
 ;;

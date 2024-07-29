@@ -1,8 +1,8 @@
 [
-  structure_item (large_main_with_types.ml[1,0+0]..[1,0+28])
+  structure_item (large_main_with_types.ml[1,0+0]..[4,74+3])
     Pstr_type Rec
     [
-      type_declaration "adder" (large_main_with_types.ml[1,0+5]..[1,0+10]) (large_main_with_types.ml[1,0+0]..[1,0+28])
+      type_declaration "player_profile" (large_main_with_types.ml[1,0+5]..[1,0+19]) (large_main_with_types.ml[1,0+0]..[4,74+3])
         ptype_params =
           []
         ptype_cstrs =
@@ -10,160 +10,461 @@
         ptype_kind =
           Ptype_record
             [
-              (large_main_with_types.ml[1,0+15]..[1,0+26])
+              (large_main_with_types.ml[2,22+4]..[3,42+3])
                 Immutable
-                "value" (large_main_with_types.ml[1,0+15]..[1,0+20])                core_type (large_main_with_types.ml[1,0+23]..[1,0+26])
-                  Ptyp_constr "int" (large_main_with_types.ml[1,0+23]..[1,0+26])
+                "fragments" (large_main_with_types.ml[2,22+4]..[2,22+13])                core_type (large_main_with_types.ml[2,22+16]..[2,22+19])
+                  Ptyp_constr "int" (large_main_with_types.ml[2,22+16]..[2,22+19])
+                  []
+              (large_main_with_types.ml[3,42+4]..[3,42+31])
+                Immutable
+                "skins" (large_main_with_types.ml[3,42+4]..[3,42+9])                core_type (large_main_with_types.ml[3,42+12]..[3,42+31])
+                  Ptyp_constr "list" (large_main_with_types.ml[3,42+27]..[3,42+31])
+                  [
+                    core_type (large_main_with_types.ml[3,42+13]..[3,42+25])
+                      Ptyp_tuple
+                      [
+                        core_type (large_main_with_types.ml[3,42+13]..[3,42+19])
+                          Ptyp_constr "string" (large_main_with_types.ml[3,42+13]..[3,42+19])
+                          []
+                        core_type (large_main_with_types.ml[3,42+22]..[3,42+25])
+                          Ptyp_constr "int" (large_main_with_types.ml[3,42+22]..[3,42+25])
+                          []
+                      ]
+                  ]
+            ]
+        ptype_private = Public
+        ptype_manifest =
+          None
+    ]
+  structure_item (large_main_with_types.ml[6,79+0]..[6,79+28])
+    Pstr_type Rec
+    [
+      type_declaration "adder" (large_main_with_types.ml[6,79+5]..[6,79+10]) (large_main_with_types.ml[6,79+0]..[6,79+28])
+        ptype_params =
+          []
+        ptype_cstrs =
+          []
+        ptype_kind =
+          Ptype_record
+            [
+              (large_main_with_types.ml[6,79+15]..[6,79+26])
+                Immutable
+                "value" (large_main_with_types.ml[6,79+15]..[6,79+20])                core_type (large_main_with_types.ml[6,79+23]..[6,79+26])
+                  Ptyp_constr "int" (large_main_with_types.ml[6,79+23]..[6,79+26])
                   []
             ]
         ptype_private = Public
         ptype_manifest =
           None
     ]
-  structure_item (large_main_with_types.ml[3,30+0]..[3,30+43])
+  structure_item (large_main_with_types.ml[8,109+0]..[8,109+43])
     Pstr_value Nonrec
     [
       <def>
-        pattern (large_main_with_types.ml[3,30+4]..[3,30+7])
-          Ppat_var "add" (large_main_with_types.ml[3,30+4]..[3,30+7])
-        expression (large_main_with_types.ml[3,30+8]..[3,30+43]) ghost
+        pattern (large_main_with_types.ml[8,109+4]..[8,109+7])
+          Ppat_var "add" (large_main_with_types.ml[8,109+4]..[8,109+7])
+        expression (large_main_with_types.ml[8,109+8]..[8,109+43]) ghost
           Pexp_fun
           Nolabel
           None
-          pattern (large_main_with_types.ml[3,30+8]..[3,30+9])
-            Ppat_var "x" (large_main_with_types.ml[3,30+8]..[3,30+9])
-          expression (large_main_with_types.ml[3,30+10]..[3,30+43]) ghost
+          pattern (large_main_with_types.ml[8,109+8]..[8,109+9])
+            Ppat_var "x" (large_main_with_types.ml[8,109+8]..[8,109+9])
+          expression (large_main_with_types.ml[8,109+10]..[8,109+43]) ghost
             Pexp_fun
             Nolabel
             None
-            pattern (large_main_with_types.ml[3,30+10]..[3,30+11])
-              Ppat_var "y" (large_main_with_types.ml[3,30+10]..[3,30+11])
-            expression (large_main_with_types.ml[3,30+14]..[3,30+43])
+            pattern (large_main_with_types.ml[8,109+10]..[8,109+11])
+              Ppat_var "y" (large_main_with_types.ml[8,109+10]..[8,109+11])
+            expression (large_main_with_types.ml[8,109+14]..[8,109+43])
               Pexp_record
               [
-                "value" (large_main_with_types.ml[3,30+16]..[3,30+21])
-                  expression (large_main_with_types.ml[3,30+24]..[3,30+41])
+                "value" (large_main_with_types.ml[8,109+16]..[8,109+21])
+                  expression (large_main_with_types.ml[8,109+24]..[8,109+41])
                     Pexp_apply
-                    expression (large_main_with_types.ml[3,30+32]..[3,30+33])
-                      Pexp_ident "+" (large_main_with_types.ml[3,30+32]..[3,30+33])
+                    expression (large_main_with_types.ml[8,109+32]..[8,109+33])
+                      Pexp_ident "+" (large_main_with_types.ml[8,109+32]..[8,109+33])
                     [
                       <arg>
                       Nolabel
-                        expression (large_main_with_types.ml[3,30+24]..[3,30+31])
+                        expression (large_main_with_types.ml[8,109+24]..[8,109+31])
                           Pexp_field
-                          expression (large_main_with_types.ml[3,30+24]..[3,30+25])
-                            Pexp_ident "x" (large_main_with_types.ml[3,30+24]..[3,30+25])
-                          "value" (large_main_with_types.ml[3,30+26]..[3,30+31])
+                          expression (large_main_with_types.ml[8,109+24]..[8,109+25])
+                            Pexp_ident "x" (large_main_with_types.ml[8,109+24]..[8,109+25])
+                          "value" (large_main_with_types.ml[8,109+26]..[8,109+31])
                       <arg>
                       Nolabel
-                        expression (large_main_with_types.ml[3,30+34]..[3,30+41])
+                        expression (large_main_with_types.ml[8,109+34]..[8,109+41])
                           Pexp_field
-                          expression (large_main_with_types.ml[3,30+34]..[3,30+35])
-                            Pexp_ident "y" (large_main_with_types.ml[3,30+34]..[3,30+35])
-                          "value" (large_main_with_types.ml[3,30+36]..[3,30+41])
+                          expression (large_main_with_types.ml[8,109+34]..[8,109+35])
+                            Pexp_ident "y" (large_main_with_types.ml[8,109+34]..[8,109+35])
+                          "value" (large_main_with_types.ml[8,109+36]..[8,109+41])
                     ]
               ]
               None
     ]
-  structure_item (large_main_with_types.ml[5,75+0]..[10,201+41])
+  structure_item (large_main_with_types.ml[10,154+0]..[20,464+39])
     Pstr_value Nonrec
     [
       <def>
-        pattern (large_main_with_types.ml[5,75+4]..[5,75+5])
+        pattern (large_main_with_types.ml[10,154+4]..[10,154+12])
+          Ppat_var "add_skin" (large_main_with_types.ml[10,154+4]..[10,154+12])
+        expression (large_main_with_types.ml[10,154+13]..[20,464+39]) ghost
+          Pexp_fun
+          Nolabel
+          None
+          pattern (large_main_with_types.ml[10,154+13]..[10,154+17])
+            Ppat_var "prof" (large_main_with_types.ml[10,154+13]..[10,154+17])
+          expression (large_main_with_types.ml[10,154+18]..[20,464+39]) ghost
+            Pexp_fun
+            Nolabel
+            None
+            pattern (large_main_with_types.ml[10,154+18]..[10,154+27])
+              Ppat_var "skin_name" (large_main_with_types.ml[10,154+18]..[10,154+27])
+            expression (large_main_with_types.ml[11,184+2]..[20,464+39])
+              Pexp_let Nonrec
+              [
+                <def>
+                  pattern (large_main_with_types.ml[11,184+6]..[11,184+12])
+                    Ppat_var "exists" (large_main_with_types.ml[11,184+6]..[11,184+12])
+                  expression (large_main_with_types.ml[11,184+15]..[11,184+73])
+                    Pexp_apply
+                    expression (large_main_with_types.ml[11,184+15]..[11,184+26])
+                      Pexp_ident "List.exists" (large_main_with_types.ml[11,184+15]..[11,184+26])
+                    [
+                      <arg>
+                      Nolabel
+                        expression (large_main_with_types.ml[11,184+27]..[11,184+62])
+                          Pexp_fun
+                          Nolabel
+                          None
+                          pattern (large_main_with_types.ml[11,184+32]..[11,184+41])
+                            Ppat_tuple
+                            [
+                              pattern (large_main_with_types.ml[11,184+33]..[11,184+37])
+                                Ppat_var "name" (large_main_with_types.ml[11,184+33]..[11,184+37])
+                              pattern (large_main_with_types.ml[11,184+39]..[11,184+40])
+                                Ppat_any
+                            ]
+                          expression (large_main_with_types.ml[11,184+45]..[11,184+61])
+                            Pexp_apply
+                            expression (large_main_with_types.ml[11,184+50]..[11,184+51])
+                              Pexp_ident "=" (large_main_with_types.ml[11,184+50]..[11,184+51])
+                            [
+                              <arg>
+                              Nolabel
+                                expression (large_main_with_types.ml[11,184+45]..[11,184+49])
+                                  Pexp_ident "name" (large_main_with_types.ml[11,184+45]..[11,184+49])
+                              <arg>
+                              Nolabel
+                                expression (large_main_with_types.ml[11,184+52]..[11,184+61])
+                                  Pexp_ident "skin_name" (large_main_with_types.ml[11,184+52]..[11,184+61])
+                            ]
+                      <arg>
+                      Nolabel
+                        expression (large_main_with_types.ml[11,184+63]..[11,184+73])
+                          Pexp_field
+                          expression (large_main_with_types.ml[11,184+63]..[11,184+67])
+                            Pexp_ident "prof" (large_main_with_types.ml[11,184+63]..[11,184+67])
+                          "skins" (large_main_with_types.ml[11,184+68]..[11,184+73])
+                    ]
+              ]
+              expression (large_main_with_types.ml[12,261+2]..[20,464+39])
+                Pexp_let Nonrec
+                [
+                  <def>
+                    pattern (large_main_with_types.ml[12,261+6]..[12,261+11])
+                      Ppat_var "skins" (large_main_with_types.ml[12,261+6]..[12,261+11])
+                    expression (large_main_with_types.ml[13,275+4]..[18,421+37])
+                      Pexp_ifthenelse
+                      expression (large_main_with_types.ml[13,275+7]..[13,275+13])
+                        Pexp_ident "exists" (large_main_with_types.ml[13,275+7]..[13,275+13])
+                      expression (large_main_with_types.ml[15,298+6]..[17,402+18])
+                        Pexp_apply
+                        expression (large_main_with_types.ml[15,298+6]..[15,298+14])
+                          Pexp_ident "List.map" (large_main_with_types.ml[15,298+6]..[15,298+14])
+                        [
+                          <arg>
+                          Nolabel
+                            expression (large_main_with_types.ml[16,313+8]..[16,313+88])
+                              Pexp_fun
+                              Nolabel
+                              None
+                              pattern (large_main_with_types.ml[16,313+13]..[16,313+26])
+                                Ppat_tuple
+                                [
+                                  pattern (large_main_with_types.ml[16,313+14]..[16,313+18])
+                                    Ppat_var "name" (large_main_with_types.ml[16,313+14]..[16,313+18])
+                                  pattern (large_main_with_types.ml[16,313+20]..[16,313+25])
+                                    Ppat_var "quant" (large_main_with_types.ml[16,313+20]..[16,313+25])
+                                ]
+                              expression (large_main_with_types.ml[16,313+30]..[16,313+87])
+                                Pexp_ifthenelse
+                                expression (large_main_with_types.ml[16,313+33]..[16,313+49])
+                                  Pexp_apply
+                                  expression (large_main_with_types.ml[16,313+38]..[16,313+39])
+                                    Pexp_ident "=" (large_main_with_types.ml[16,313+38]..[16,313+39])
+                                  [
+                                    <arg>
+                                    Nolabel
+                                      expression (large_main_with_types.ml[16,313+33]..[16,313+37])
+                                        Pexp_ident "name" (large_main_with_types.ml[16,313+33]..[16,313+37])
+                                    <arg>
+                                    Nolabel
+                                      expression (large_main_with_types.ml[16,313+40]..[16,313+49])
+                                        Pexp_ident "skin_name" (large_main_with_types.ml[16,313+40]..[16,313+49])
+                                  ]
+                                expression (large_main_with_types.ml[16,313+55]..[16,313+70])
+                                  Pexp_tuple
+                                  [
+                                    expression (large_main_with_types.ml[16,313+55]..[16,313+59])
+                                      Pexp_ident "name" (large_main_with_types.ml[16,313+55]..[16,313+59])
+                                    expression (large_main_with_types.ml[16,313+61]..[16,313+70])
+                                      Pexp_apply
+                                      expression (large_main_with_types.ml[16,313+67]..[16,313+68])
+                                        Pexp_ident "+" (large_main_with_types.ml[16,313+67]..[16,313+68])
+                                      [
+                                        <arg>
+                                        Nolabel
+                                          expression (large_main_with_types.ml[16,313+61]..[16,313+66])
+                                            Pexp_ident "quant" (large_main_with_types.ml[16,313+61]..[16,313+66])
+                                        <arg>
+                                        Nolabel
+                                          expression (large_main_with_types.ml[16,313+69]..[16,313+70])
+                                            Pexp_constant PConst_int (1,None)
+                                      ]
+                                  ]
+                                Some
+                                  expression (large_main_with_types.ml[16,313+76]..[16,313+87])
+                                    Pexp_tuple
+                                    [
+                                      expression (large_main_with_types.ml[16,313+76]..[16,313+80])
+                                        Pexp_ident "name" (large_main_with_types.ml[16,313+76]..[16,313+80])
+                                      expression (large_main_with_types.ml[16,313+82]..[16,313+87])
+                                        Pexp_ident "quant" (large_main_with_types.ml[16,313+82]..[16,313+87])
+                                    ]
+                          <arg>
+                          Nolabel
+                            expression (large_main_with_types.ml[17,402+8]..[17,402+18])
+                              Pexp_field
+                              expression (large_main_with_types.ml[17,402+8]..[17,402+12])
+                                Pexp_ident "prof" (large_main_with_types.ml[17,402+8]..[17,402+12])
+                              "skins" (large_main_with_types.ml[17,402+13]..[17,402+18])
+                        ]
+                      Some
+                        expression (large_main_with_types.ml[18,421+9]..[18,421+37])
+                          Pexp_construct "::" (large_main_with_types.ml[18,421+24]..[18,421+26])
+                          Some
+                            expression (large_main_with_types.ml[18,421+9]..[18,421+37]) ghost
+                              Pexp_tuple
+                              [
+                                expression (large_main_with_types.ml[18,421+9]..[18,421+23])
+                                  Pexp_tuple
+                                  [
+                                    expression (large_main_with_types.ml[18,421+10]..[18,421+19])
+                                      Pexp_ident "skin_name" (large_main_with_types.ml[18,421+10]..[18,421+19])
+                                    expression (large_main_with_types.ml[18,421+21]..[18,421+22])
+                                      Pexp_constant PConst_int (1,None)
+                                  ]
+                                expression (large_main_with_types.ml[18,421+27]..[18,421+37])
+                                  Pexp_field
+                                  expression (large_main_with_types.ml[18,421+27]..[18,421+31])
+                                    Pexp_ident "prof" (large_main_with_types.ml[18,421+27]..[18,421+31])
+                                  "skins" (large_main_with_types.ml[18,421+32]..[18,421+37])
+                              ]
+                ]
+                expression (large_main_with_types.ml[20,464+2]..[20,464+39])
+                  Pexp_record
+                  [
+                    "fragments" (large_main_with_types.ml[20,464+4]..[20,464+13])
+                      expression (large_main_with_types.ml[20,464+16]..[20,464+30])
+                        Pexp_field
+                        expression (large_main_with_types.ml[20,464+16]..[20,464+20])
+                          Pexp_ident "prof" (large_main_with_types.ml[20,464+16]..[20,464+20])
+                        "fragments" (large_main_with_types.ml[20,464+21]..[20,464+30])
+                    "skins" (large_main_with_types.ml[20,464+32]..[20,464+37]) ghost
+                      expression (large_main_with_types.ml[20,464+32]..[20,464+37])
+                        Pexp_ident "skins" (large_main_with_types.ml[20,464+32]..[20,464+37])
+                  ]
+                  None
+    ]
+  structure_item (large_main_with_types.ml[23,508+0]..[31,784+41])
+    Pstr_value Nonrec
+    [
+      <def>
+        pattern (large_main_with_types.ml[23,508+4]..[23,508+5])
           Ppat_any
-        expression (large_main_with_types.ml[6,83+2]..[10,201+41])
+        expression (large_main_with_types.ml[24,516+2]..[31,784+41])
           Pexp_let Nonrec
           [
             <def>
-              pattern (large_main_with_types.ml[6,83+6]..[6,83+9])
-                Ppat_var "one" (large_main_with_types.ml[6,83+6]..[6,83+9])
-              expression (large_main_with_types.ml[6,83+12]..[6,83+25])
+              pattern (large_main_with_types.ml[24,516+6]..[24,516+9])
+                Ppat_var "one" (large_main_with_types.ml[24,516+6]..[24,516+9])
+              expression (large_main_with_types.ml[24,516+12]..[24,516+25])
                 Pexp_record
                 [
-                  "value" (large_main_with_types.ml[6,83+14]..[6,83+19])
-                    expression (large_main_with_types.ml[6,83+22]..[6,83+23])
+                  "value" (large_main_with_types.ml[24,516+14]..[24,516+19])
+                    expression (large_main_with_types.ml[24,516+22]..[24,516+23])
                       Pexp_constant PConst_int (1,None)
                 ]
                 None
           ]
-          expression (large_main_with_types.ml[7,112+2]..[10,201+41])
+          expression (large_main_with_types.ml[25,545+2]..[31,784+41])
             Pexp_let Nonrec
             [
               <def>
-                pattern (large_main_with_types.ml[7,112+6]..[7,112+9])
-                  Ppat_var "two" (large_main_with_types.ml[7,112+6]..[7,112+9])
-                expression (large_main_with_types.ml[7,112+12]..[7,112+25])
+                pattern (large_main_with_types.ml[25,545+6]..[25,545+9])
+                  Ppat_var "two" (large_main_with_types.ml[25,545+6]..[25,545+9])
+                expression (large_main_with_types.ml[25,545+12]..[25,545+25])
                   Pexp_record
                   [
-                    "value" (large_main_with_types.ml[7,112+14]..[7,112+19])
-                      expression (large_main_with_types.ml[7,112+22]..[7,112+23])
+                    "value" (large_main_with_types.ml[25,545+14]..[25,545+19])
+                      expression (large_main_with_types.ml[25,545+22]..[25,545+23])
                         Pexp_constant PConst_int (2,None)
                   ]
                   None
             ]
-            expression (large_main_with_types.ml[8,141+2]..[10,201+41])
+            expression (large_main_with_types.ml[26,574+2]..[31,784+41])
               Pexp_let Nonrec
               [
                 <def>
-                  pattern (large_main_with_types.ml[8,141+6]..[8,141+11])
-                    Ppat_var "three" (large_main_with_types.ml[8,141+6]..[8,141+11])
-                  expression (large_main_with_types.ml[8,141+14]..[8,141+25])
+                  pattern (large_main_with_types.ml[26,574+6]..[26,574+11])
+                    Ppat_var "three" (large_main_with_types.ml[26,574+6]..[26,574+11])
+                  expression (large_main_with_types.ml[26,574+14]..[26,574+25])
                     Pexp_apply
-                    expression (large_main_with_types.ml[8,141+14]..[8,141+17])
-                      Pexp_ident "add" (large_main_with_types.ml[8,141+14]..[8,141+17])
+                    expression (large_main_with_types.ml[26,574+14]..[26,574+17])
+                      Pexp_ident "add" (large_main_with_types.ml[26,574+14]..[26,574+17])
                     [
                       <arg>
                       Nolabel
-                        expression (large_main_with_types.ml[8,141+18]..[8,141+21])
-                          Pexp_ident "one" (large_main_with_types.ml[8,141+18]..[8,141+21])
+                        expression (large_main_with_types.ml[26,574+18]..[26,574+21])
+                          Pexp_ident "one" (large_main_with_types.ml[26,574+18]..[26,574+21])
                       <arg>
                       Nolabel
-                        expression (large_main_with_types.ml[8,141+22]..[8,141+25])
-                          Pexp_ident "two" (large_main_with_types.ml[8,141+22]..[8,141+25])
+                        expression (large_main_with_types.ml[26,574+22]..[26,574+25])
+                          Pexp_ident "two" (large_main_with_types.ml[26,574+22]..[26,574+25])
                     ]
               ]
-              expression (large_main_with_types.ml[9,170+2]..[10,201+41])
+              expression (large_main_with_types.ml[27,603+2]..[31,784+41])
                 Pexp_let Nonrec
                 [
                   <def>
-                    pattern (large_main_with_types.ml[9,170+6]..[9,170+9])
-                      Ppat_var "six" (large_main_with_types.ml[9,170+6]..[9,170+9])
-                    expression (large_main_with_types.ml[9,170+12]..[9,170+27])
+                    pattern (large_main_with_types.ml[27,603+6]..[27,603+9])
+                      Ppat_var "six" (large_main_with_types.ml[27,603+6]..[27,603+9])
+                    expression (large_main_with_types.ml[27,603+12]..[27,603+27])
                       Pexp_apply
-                      expression (large_main_with_types.ml[9,170+12]..[9,170+15])
-                        Pexp_ident "add" (large_main_with_types.ml[9,170+12]..[9,170+15])
+                      expression (large_main_with_types.ml[27,603+12]..[27,603+15])
+                        Pexp_ident "add" (large_main_with_types.ml[27,603+12]..[27,603+15])
                       [
                         <arg>
                         Nolabel
-                          expression (large_main_with_types.ml[9,170+16]..[9,170+21])
-                            Pexp_ident "three" (large_main_with_types.ml[9,170+16]..[9,170+21])
+                          expression (large_main_with_types.ml[27,603+16]..[27,603+21])
+                            Pexp_ident "three" (large_main_with_types.ml[27,603+16]..[27,603+21])
                         <arg>
                         Nolabel
-                          expression (large_main_with_types.ml[9,170+22]..[9,170+27])
-                            Pexp_ident "three" (large_main_with_types.ml[9,170+22]..[9,170+27])
+                          expression (large_main_with_types.ml[27,603+22]..[27,603+27])
+                            Pexp_ident "three" (large_main_with_types.ml[27,603+22]..[27,603+27])
                       ]
                 ]
-                expression (large_main_with_types.ml[10,201+2]..[10,201+41])
-                  Pexp_apply
-                  expression (large_main_with_types.ml[10,201+2]..[10,201+15])
-                    Pexp_ident "print_endline" (large_main_with_types.ml[10,201+2]..[10,201+15])
+                expression (large_main_with_types.ml[28,634+2]..[31,784+41])
+                  Pexp_let Nonrec
                   [
-                    <arg>
-                    Nolabel
-                      expression (large_main_with_types.ml[10,201+16]..[10,201+41])
+                    <def>
+                      pattern (large_main_with_types.ml[28,634+6]..[28,634+10])
+                        Ppat_var "prof" (large_main_with_types.ml[28,634+6]..[28,634+10])
+                      expression (large_main_with_types.ml[28,634+13]..[28,634+45])
+                        Pexp_record
+                        [
+                          "fragments" (large_main_with_types.ml[28,634+15]..[28,634+24])
+                            expression (large_main_with_types.ml[28,634+27]..[28,634+31])
+                              Pexp_constant PConst_int (1000,None)
+                          "skins" (large_main_with_types.ml[28,634+33]..[28,634+38])
+                            expression (large_main_with_types.ml[28,634+41]..[28,634+43])
+                              Pexp_construct "[]" (large_main_with_types.ml[28,634+41]..[28,634+43])
+                              None
+                        ]
+                        None
+                  ]
+                  expression (large_main_with_types.ml[29,683+2]..[31,784+41])
+                    Pexp_let Nonrec
+                    [
+                      <def>
+                        pattern (large_main_with_types.ml[29,683+6]..[29,683+14])
+                          Ppat_var "new_prof" (large_main_with_types.ml[29,683+6]..[29,683+14])
+                        expression (large_main_with_types.ml[29,683+17]..[29,683+37])
+                          Pexp_apply
+                          expression (large_main_with_types.ml[29,683+17]..[29,683+25])
+                            Pexp_ident "add_skin" (large_main_with_types.ml[29,683+17]..[29,683+25])
+                          [
+                            <arg>
+                            Nolabel
+                              expression (large_main_with_types.ml[29,683+26]..[29,683+30])
+                                Pexp_ident "prof" (large_main_with_types.ml[29,683+26]..[29,683+30])
+                            <arg>
+                            Nolabel
+                              expression (large_main_with_types.ml[29,683+31]..[29,683+37])
+                                Pexp_constant PConst_string("test",(large_main_with_types.ml[29,683+32]..[29,683+36]),None)
+                          ]
+                    ]
+                    expression (large_main_with_types.ml[30,724+2]..[31,784+41])
+                      Pexp_sequence
+                      expression (large_main_with_types.ml[30,724+2]..[30,724+58])
                         Pexp_apply
-                        expression (large_main_with_types.ml[10,201+17]..[10,201+30])
-                          Pexp_ident "string_of_int" (large_main_with_types.ml[10,201+17]..[10,201+30])
+                        expression (large_main_with_types.ml[30,724+2]..[30,724+11])
+                          Pexp_ident "List.iter" (large_main_with_types.ml[30,724+2]..[30,724+11])
                         [
                           <arg>
                           Nolabel
-                            expression (large_main_with_types.ml[10,201+31]..[10,201+40])
+                            expression (large_main_with_types.ml[30,724+12]..[30,724+43])
+                              Pexp_fun
+                              Nolabel
+                              None
+                              pattern (large_main_with_types.ml[30,724+17]..[30,724+23])
+                                Ppat_tuple
+                                [
+                                  pattern (large_main_with_types.ml[30,724+18]..[30,724+19])
+                                    Ppat_var "s" (large_main_with_types.ml[30,724+18]..[30,724+19])
+                                  pattern (large_main_with_types.ml[30,724+21]..[30,724+22])
+                                    Ppat_any
+                                ]
+                              expression (large_main_with_types.ml[30,724+27]..[30,724+42])
+                                Pexp_apply
+                                expression (large_main_with_types.ml[30,724+27]..[30,724+40])
+                                  Pexp_ident "print_endline" (large_main_with_types.ml[30,724+27]..[30,724+40])
+                                [
+                                  <arg>
+                                  Nolabel
+                                    expression (large_main_with_types.ml[30,724+41]..[30,724+42])
+                                      Pexp_ident "s" (large_main_with_types.ml[30,724+41]..[30,724+42])
+                                ]
+                          <arg>
+                          Nolabel
+                            expression (large_main_with_types.ml[30,724+44]..[30,724+58])
                               Pexp_field
-                              expression (large_main_with_types.ml[10,201+31]..[10,201+34])
-                                Pexp_ident "six" (large_main_with_types.ml[10,201+31]..[10,201+34])
-                              "value" (large_main_with_types.ml[10,201+35]..[10,201+40])
+                              expression (large_main_with_types.ml[30,724+44]..[30,724+52])
+                                Pexp_ident "new_prof" (large_main_with_types.ml[30,724+44]..[30,724+52])
+                              "skins" (large_main_with_types.ml[30,724+53]..[30,724+58])
                         ]
-                  ]
+                      expression (large_main_with_types.ml[31,784+2]..[31,784+41])
+                        Pexp_apply
+                        expression (large_main_with_types.ml[31,784+2]..[31,784+15])
+                          Pexp_ident "print_endline" (large_main_with_types.ml[31,784+2]..[31,784+15])
+                        [
+                          <arg>
+                          Nolabel
+                            expression (large_main_with_types.ml[31,784+16]..[31,784+41])
+                              Pexp_apply
+                              expression (large_main_with_types.ml[31,784+17]..[31,784+30])
+                                Pexp_ident "string_of_int" (large_main_with_types.ml[31,784+17]..[31,784+30])
+                              [
+                                <arg>
+                                Nolabel
+                                  expression (large_main_with_types.ml[31,784+31]..[31,784+40])
+                                    Pexp_field
+                                    expression (large_main_with_types.ml[31,784+31]..[31,784+34])
+                                      Pexp_ident "six" (large_main_with_types.ml[31,784+31]..[31,784+34])
+                                    "value" (large_main_with_types.ml[31,784+35]..[31,784+40])
+                              ]
+                        ]
     ]
 ]
 

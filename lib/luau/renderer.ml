@@ -1,6 +1,11 @@
 open Format
 open Ast
 
+type top_level_funcs =
+  { amount : int
+  ; func_strs : string list
+  }
+
 let render_literal literal =
   match literal with
   | Number n -> n
@@ -39,14 +44,16 @@ let render_un_op op =
 
 let render_parameters params = String.concat ", " params
 
-let rec render_expression ident expression =
+let rec render_expression ident expression top_level_funcs =
   match expression with
   | Literal l -> render_literal l, None
   | Assignment a ->
     (* let old = Ident.get_level ident in *)
     (* Ident.set ident 0; *)
-    let assignment, return_override = render_expression ident a.value in
+    top_level_funcs := { amount = 0; func_strs = [] };
+    let assignment, return_override = render_expression ident a.value top_level_funcs in
     let assignment = String.trim assignment ^ "\n" in
+    let top_level = String.concat "\n" !top_level_funcs.func_strs in
     (* Ident.set ident old; *)
     let arender =
       match return_override with
@@ -56,13 +63,19 @@ let rec render_expression ident expression =
         then sprintf "%s" assignment
         else sprintf "local %s = %s" a.aname assignment
     in
-    Ident.statement ident arender, None
-  | Func f -> render_function ident f
-  | FieldAccess (e, f) -> fst (render_expression ident e) ^ "." ^ f, None
+    let arender = top_level ^ "\n" ^ Ident.statement ident arender in
+    arender, None
+  | Func f -> render_function ident f top_level_funcs
+  | FieldAccess (e, f) ->
+    let exp, opt = render_expression ident e top_level_funcs in
+    (* print_endline exp; *)
+    exp ^ "." ^ f, opt
   | EnumMatch em -> sprintf "\"%s\"" em.etag, em.eargs
   | BinExp (left, op, right, remainder) ->
-    let remainder = Option.map (fun e -> fst (render_expression ident e)) remainder in
-    let right_exp, right_rem = render_expression ident right in
+    let remainder =
+      Option.map (fun e -> fst (render_expression ident e top_level_funcs)) remainder
+    in
+    let right_exp, right_rem = render_expression ident right top_level_funcs in
     let remainder =
       match remainder, right_rem with
       | Some re, Some rr -> Some (rr ^ " = " ^ re ^ "\n")
@@ -72,26 +85,47 @@ let rec render_expression ident expression =
     (* An example of this would be Some(1) *)
     ( sprintf
         "%s %s %s"
-        (fst (render_expression ident left))
+        (fst (render_expression ident left top_level_funcs))
         (render_bin_op op)
         (String.trim right_exp)
     , remainder )
   | UnExp (op, right) ->
-    sprintf "%s%s" (render_un_op op) (fst (render_expression ident right)), None
+    ( sprintf
+        "%s%s"
+        (render_un_op op)
+        (fst (render_expression ident right top_level_funcs))
+    , None )
   | Identifier i -> i, None
-  | FuncCall c -> render_func_call ident c
-  | If (con_e, then_e, else_e) -> render_if ident con_e then_e else_e
-  | Match m -> render_match ident m
-  | Array a -> render_array ident a
-  | Map m -> render_map ident m
-  | FuncDef _ ->
-    print_endline "FuncDefs cannot be rendered alone";
-    exit 1
+  | FuncCall c -> render_func_call ident c top_level_funcs
+  | If (con_e, then_e, else_e) -> render_if ident con_e then_e else_e top_level_funcs
+  | Match m -> render_match ident m top_level_funcs
+  | Array a -> render_array ident a top_level_funcs
+  | Map m -> render_map ident m top_level_funcs
+  | FuncDef def ->
+    top_level_funcs
+    := { amount = !top_level_funcs.amount + 1; func_strs = !top_level_funcs.func_strs };
+    let ident_name = Temp_vars.get_new_var () in
+    let func_def, opt =
+      render_function
+        ident
+        { local = true; fn_name = ident_name; definition = def }
+        top_level_funcs
+    in
+    top_level_funcs
+    := { amount = !top_level_funcs.amount
+       ; func_strs = func_def :: !top_level_funcs.func_strs
+       };
+    ident_name, opt
   | Block b ->
     ( String.concat
         "\n"
-        (List.map (fun s -> String.trim (fst (render_expression ident s))) b)
+        (List.map
+           (fun s -> String.trim (fst (render_expression ident s top_level_funcs)))
+           b)
     , None )
+  | Tuple t ->
+    let a = { array_members = t } in
+    render_array ident a top_level_funcs
   | TypeDef def ->
     (match def with
      | Variant v ->
@@ -122,7 +156,9 @@ let rec render_expression ident expression =
        let value =
          Ident.block
            ident
-           (sprintf "value = %s\n" (fst (render_expression ident variant.vvalue)))
+           (sprintf
+              "value = %s\n"
+              (fst (render_expression ident variant.vvalue top_level_funcs)))
        in
        let close_brace = Ident.statement ident "}\n" in
        open_brace ^ tag ^ value ^ close_brace, None
@@ -133,14 +169,16 @@ let rec render_expression ident expression =
            ",\n"
            (List.map
               (fun (i, e) ->
-                Ident.block ident (sprintf "%s = %s" i (fst (render_expression ident e))))
+                Ident.block
+                  ident
+                  (sprintf "%s = %s" i (fst (render_expression ident e top_level_funcs))))
               record.rfields)
        in
        let close_brace = "\n" ^ Ident.statement ident "}\n" in
        open_brace ^ body ^ close_brace, None)
   | Unknown -> "unknown", None
 
-and render_function ident fn_decl =
+and render_function ident fn_decl top_level_funcs =
   let header =
     Ident.statement
       ident
@@ -156,9 +194,10 @@ and render_function ident fn_decl =
     let rec render_statements ss =
       match ss with
       | s :: s' :: ss' ->
-        (fst (render_expression ident s) ^ "\n") :: render_statements (s' :: ss')
+        (fst (render_expression ident s top_level_funcs) ^ "\n")
+        :: render_statements (s' :: ss')
       | s :: [] ->
-        let render, return_override = render_expression ident s in
+        let render, return_override = render_expression ident s top_level_funcs in
         (match return_override with
          | Some r ->
            [ render ^ Ident.statement ident (sprintf "return %s\n" (String.trim r)) ]
@@ -170,8 +209,10 @@ and render_function ident fn_decl =
     Ident.decrement ident;
     header ^ "\n" ^ block ^ Ident.statement ident "end", None)
 
-and render_if_case ident con exp var_name =
-  let condition_render, assignment_remainder = render_expression ident con in
+and render_if_case ident con exp var_name top_level_funcs =
+  let condition_render, assignment_remainder =
+    render_expression ident con top_level_funcs
+  in
   let header = Ident.statement ident (sprintf "if %s then\n" condition_render) in
   let assignment =
     match assignment_remainder with
@@ -184,27 +225,36 @@ and render_if_case ident con exp var_name =
       (sprintf
          "%s = %s"
          var_name
-         (String.trim (fst (render_expression ident exp)) ^ "\n"))
+         (String.trim (fst (render_expression ident exp top_level_funcs)) ^ "\n"))
   in
   header ^ assignment ^ body
 
-and render_if ident if_e then_e else_e =
+and render_if ident if_e then_e else_e top_level_funcs =
   let var_name = Temp_vars.get_new_var () in
-  let rendered_expression = render_if_case ident if_e then_e var_name in
+  let rendered_expression = render_if_case ident if_e then_e var_name top_level_funcs in
   match else_e with
   | Some e ->
     Ident.increment ident;
+    let else_block =
+      Ident.block
+        ident
+        (sprintf
+           "%s = %s"
+           var_name
+           (String.trim (fst (render_expression ident e top_level_funcs)) ^ "\n"))
+    in
     let e =
-      rendered_expression
+      sprintf "local %s\n" var_name
+      ^ rendered_expression
       ^ Ident.statement ident "else\n"
-      ^ fst (render_expression ident e)
-      ^ "end"
+      ^ else_block
+      ^ "end\n"
     in
     Ident.decrement ident;
-    e, None
-  | None -> rendered_expression ^ Ident.statement ident "end", None
+    e, Some var_name
+  | None -> rendered_expression ^ Ident.statement ident "end\n", None
 
-and render_match indent match_exp =
+and render_match indent match_exp top_level_funcs =
   let var_name = Temp_vars.get_new_var () in
   let top_level_var = Ident.statement indent (sprintf "local %s\n" var_name) in
   let cases =
@@ -214,7 +264,8 @@ and render_match indent match_exp =
          (fun s -> String.trim s)
          (List.map
             (fun (c, e) ->
-              render_if_case indent c e var_name ^ Ident.statement indent "else")
+              render_if_case indent c e var_name top_level_funcs
+              ^ Ident.statement indent "else")
             match_exp.cases))
   in
   let cases = Ident.statement indent cases in
@@ -224,7 +275,10 @@ and render_match indent match_exp =
       let body =
         Ident.block
           indent
-          (sprintf "%s = %s" var_name (String.trim (fst (render_expression indent d))))
+          (sprintf
+             "%s = %s"
+             var_name
+             (String.trim (fst (render_expression indent d top_level_funcs))))
       in
       "\n" ^ body ^ "\n" ^ Ident.statement indent "end\n"
     | None ->
@@ -235,29 +289,35 @@ and render_match indent match_exp =
   in
   top_level_var ^ cases ^ default, Some var_name
 
-and render_array ident array =
-  sprintf "{%s}" (render_call_parameters ident array.array_members), None
+and render_array ident array top_level_funcs =
+  sprintf "{%s}" (render_call_parameters ident array.array_members top_level_funcs), None
 
-and mapper ident (k, v) =
-  "\n" ^ Ident.block ident (sprintf "[\"%s\"] = %s" k (fst (render_expression ident v)))
+and mapper ident top_level_funcs (k, v) =
+  "\n"
+  ^ Ident.block
+      ident
+      (sprintf "[\"%s\"] = %s" k (fst (render_expression ident v top_level_funcs)))
 
-and render_map ident map =
-  let members = List.map (mapper ident) map.map_members |> String.concat "," in
+and render_map ident map top_level_funcs =
+  let members =
+    List.map (mapper ident top_level_funcs) map.map_members |> String.concat ","
+  in
   sprintf "{%s\n}" members, None
 
-and render_call_parameters ident params =
-  List.map (fun p -> fst (render_expression ident p)) params |> String.concat ", "
+and render_call_parameters ident params top_level_funcs =
+  List.map (fun p -> fst (render_expression ident p top_level_funcs)) params
+  |> String.concat ", "
 
-and render_func_call ident c =
-  ( Ident.statement
-      ident
-      (sprintf "%s(%s)" c.ident (render_call_parameters ident c.cparameters))
-  , None )
+and render_func_call ident c top_level_funcs =
+  let call_params = render_call_parameters ident c.cparameters top_level_funcs in
+  let func_call = sprintf "%s(%s)" c.ident call_params in
+  Ident.statement ident func_call, None
 ;;
 
 (* external entrypoint *)
 let render exp =
   let ident = Ident.create () in
-  let render, _ = render_expression ident exp in
+  let top_level_funcs = ref { amount = 0; func_strs = [] } in
+  let render, _ = render_expression ident exp top_level_funcs in
   render
 ;;

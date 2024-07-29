@@ -14,7 +14,7 @@ let recursive_flag flag =
 
 let parse_ident (ident : Longident.t) =
   (* Temp, eventually need to handle the three potential Longident.t variants *)
-  let i = Longident.last ident in
+  let i = String.concat "." (Longident.flatten ident) in
   match Stdlib_map.ocaml_to_luau i with
   | Some v -> v
   | None -> i
@@ -22,8 +22,10 @@ let parse_ident (ident : Longident.t) =
 
 let map_coretype (c : Parsetree.core_type) =
   match c.ptyp_desc with
-  | Ptyp_constr (ident, _) -> Longident.last ident.txt
-  | _ -> "unknown"
+  | Ptyp_constr (ident, _) -> String.concat " " (Longident.flatten ident.txt)
+  | _ ->
+    print_endline "coretype";
+    "unknown"
 ;;
 
 (* match ident with *)
@@ -80,7 +82,9 @@ let parse_binding_pattern (pattern : Parsetree.pattern) e =
       | _ -> Ast.Assignment { aname = loc.txt; value = e }
     in
     var
-  | _ -> Ast.Unknown
+  | _ ->
+    print_endline "binding pattern";
+    Ast.Unknown
 ;;
 
 let rec pattern_to_string (p : Parsetree.pattern) =
@@ -111,9 +115,22 @@ let parse_condition_pattern (pattern : Parsetree.pattern) =
   | _ -> Ast.Unknown, false
 ;;
 
-let pattern_val_to_string (pat : Parsetree.pattern) =
+let rec pattern_val_to_string (pat : Parsetree.pattern) =
   match pat.ppat_desc with
   | Ppat_var loc -> loc.txt
+  | Ppat_any -> "_"
+  | Ppat_construct _ ->
+    print_endline "construct";
+    assert false
+  | Ppat_record _ ->
+    print_endline "record";
+    assert false
+  | Ppat_constant _ ->
+    print_endline "constant";
+    assert false
+  | Ppat_tuple pats ->
+    let pat_strs = List.map pattern_val_to_string pats in
+    String.concat "," pat_strs
   | _ -> assert false
 ;;
 
@@ -143,15 +160,23 @@ let rec parse_expression (expression : Parsetree.expression) =
       | Some exp -> parse_expression exp
       | None -> Ast.Literal Ast.Nil
     in
-    Ast.TypeConstruct
-      (Ast.CVariant { variant = Longident.last ident.txt; vvalue = value })
+    let ident = Longident.last ident.txt in
+    print_endline ident;
+    (match ident with
+     | "::" ->
+       (match value with
+        | Ast.Tuple exps ->
+          Ast.FuncCall { ident = "table.insert"; cparameters = List.rev exps }
+        | _ -> assert false)
+     | _ -> Ast.TypeConstruct (Ast.CVariant { variant = ident; vvalue = value }))
   | Pexp_record (fields, _) ->
     let mapped_fields =
       List.map (fun (ident, exp) -> Longident.last ident.txt, parse_expression exp) fields
     in
     Ast.TypeConstruct (Ast.CRecord { rname = ""; rfields = mapped_fields })
   | Pexp_field (exp, ident) ->
-    Ast.FieldAccess (parse_expression exp, Longident.last ident.txt)
+    let field_name = String.concat "." (Longident.flatten ident.txt) in
+    Ast.FieldAccess (parse_expression exp, field_name)
   (* The function documentation, listed above, is quite good. The first two arguments of the tuple are label and expression option. These are for a labeled function argument and a default expression for the label. Not handling these immediately. The others are the pattern and expression, which correspond to the syntax `let f P = E` where the pattern is the argument, and the expression is the function *)
   | Pexp_fun (_, _, pat, exp) ->
     let argument_name = pattern_val_to_string pat in
@@ -197,7 +222,17 @@ let rec parse_expression (expression : Parsetree.expression) =
     Ast.Match { default_case = default; cases = cs }
   | Pexp_sequence (exp1, exp2) ->
     Ast.Block [ parse_expression exp1; parse_expression exp2 ]
-  | _ -> Ast.Unknown
+  | Pexp_ifthenelse (cond, then_exp, else_exp_opt) ->
+    Ast.If
+      ( parse_expression cond
+      , parse_expression then_exp
+      , Option.map parse_expression else_exp_opt )
+  | Pexp_tuple exps ->
+    let tup_members = List.map parse_expression exps in
+    Ast.Tuple tup_members
+  | _ ->
+    print_endline "unhandled pattern";
+    Ast.Unknown
 
 (* https://v2.ocaml.org/api/compilerlibref/Parsetree.html#TYPEvalue_binding *)
 and value_binding (binding : Parsetree.value_binding) =
