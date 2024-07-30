@@ -1,7 +1,7 @@
 run:
     #!/usr/bin/env bash
-    dune build && dune exec ./bin/main.exe
-    for f in lua/*; do
+    dune build && dune exec ./bin/main.exe -- -t
+    for f in lua/src/client/*; do
         name=(readlink -f "$f")
         stylua "$f"
     done

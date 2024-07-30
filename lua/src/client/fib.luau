@@ -1,3 +1,5 @@
+local _Include = game.ReplicatedStorage.include
+
 function fib(n)
 	local _1
 	if n == 1 then

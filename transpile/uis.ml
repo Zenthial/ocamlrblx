@@ -1,6 +1,7 @@
 open Rbxlib.Classes
+open Rbxlib.Enums
 
 let _ =
-  let pressed = UserInputService.get_keys_pressed () in
-  List.iter (fun p -> print_endline p) pressed
+  let pressed = UserInputService.gamepad_supports MouseButton1 E in
+  if pressed then print_endline "true" else print_endline "false"
 ;;

@@ -1,3 +1,6 @@
+local _Include = game.ReplicatedStorage.include
+local List = require(_Include.list)
+
 type player_profile = {
 	fragments: number,
 	skins: { string | number },

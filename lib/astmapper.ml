@@ -176,7 +176,7 @@ let rec parse_expression (expression : Parsetree.expression) =
       | None -> Ast.Literal Ast.Nil
     in
     let ident = Longident.last ident.txt in
-    print_endline ident;
+    (* print_endline ident; *)
     (match ident with
      | "::" ->
        (match value with

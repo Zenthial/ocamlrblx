@@ -1,4 +1,4 @@
 (executable
  (public_name ocamlrbx)
  (name main)
- (libraries ocamlrbx core))
+ (libraries ocamlrbx core core_unix minicli)) 

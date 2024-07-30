@@ -1,3 +1,5 @@
+local _Include = game.ReplicatedStorage.include
+
 function p(s)
 	local new_str = s .. "yo"
 

@@ -117,8 +117,16 @@ and func_call =
   ; cparameters : expression list
   }
 
-let to_string (exp : expression) =
+let rec to_string (exp : expression) =
   match exp with
   | Identifier i -> i
-  | _ -> exit 1
+  | Assignment a -> Format.sprintf "Assignment %s = %s" a.aname (to_string a.value)
+  | FuncCall fc ->
+    Format.sprintf
+      "FuncCall %s(%s)"
+      fc.ident
+      (String.concat "," (List.map to_string fc.cparameters))
+  | FieldAccess (field_e, field_name) ->
+    Format.sprintf "FieldAccess %s.%s" (to_string field_e) field_name
+  | _ -> ""
 ;;

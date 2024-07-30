@@ -1,3 +1,5 @@
+local _Include = game.ReplicatedStorage.include
+
 type person = {
 	name: string,
 	age: number,
