@@ -110,13 +110,12 @@ fn write_api(writer: &mut BufWriter<File>, buf: String) {
 }
 fn main() {
     let api = read_api();
-    let mut enum_writer = BufWriter::new(File::create("rbx/enums.ml").unwrap());
 
+    let mut enum_writer = BufWriter::new(File::create("rbx/enum.ml").unwrap());
     for enm in &api.enums {
         let enum_str = generate_enum(enm);
         write_api(&mut enum_writer, enum_str);
     }
-
     enum_writer.flush().unwrap();
 
     generate_classes(&api.classes);

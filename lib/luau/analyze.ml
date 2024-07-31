@@ -18,3 +18,7 @@ let rec analyze (ast : expression) =
      | _ -> [ None ])
   | _ -> [ None ]
 ;;
+
+(* let rec filter_requires = function *)
+(*     | Require id ->  *)
+(*    *)

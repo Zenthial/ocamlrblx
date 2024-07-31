@@ -177,6 +177,7 @@ let rec render_expression ident expression top_level_funcs =
        let close_brace = "\n" ^ Ident.statement ident "}\n" in
        open_brace ^ body ^ close_brace, None)
   | Require s -> sprintf "local %s = require(\"%s\")\n" s s, None
+  | RobloxEnum i -> i, None
   | Unknown -> "unknown", None
 
 and render_function ident fn_decl top_level_funcs =

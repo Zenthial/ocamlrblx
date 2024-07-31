@@ -1,5 +1,5 @@
 open Types
-open Enums
+open Enum
 
 [@@@warning "-67"]module rec Instance : sig
   type t = {
@@ -42,7 +42,7 @@ open Enums
 end
 and AccessoryDescription : sig
   type t = {
-    accessory_type : accessory_type;
+    accessory_type : AccessoryType.t;
     asset_id : int;
     instance : Instance.t;
     is_layered : bool;
@@ -66,7 +66,7 @@ and Accoutrement : sig
 end
 and Accessory : sig
   type t = {
-    accessory_type : accessory_type;
+    accessory_type : AccessoryType.t;
   }
 end
 and Hat : sig
@@ -76,7 +76,7 @@ and AdPortal : sig
   type t = {
     portal_invalid_reason : string;
     portal_version : int;
-    status : ad_unit_status;
+    status : AdUnitStatus.t;
   }
   val teleport_confirmed : int -> Player.t -> unit
   val teleport_rejected : bool -> bool -> unit
@@ -84,9 +84,9 @@ end
 and AnalyticsService : sig
   type t
   val fire_custom_event : Instance.t -> string -> 'a -> unit
-  val fire_in_game_economy_event : Instance.t -> string -> analytics_economy_action -> string -> int -> string -> 'a -> 'a -> unit
-  val fire_log_event : Instance.t -> analytics_log_level -> string -> 'a -> 'a -> unit
-  val fire_player_progression_event : Instance.t -> string -> analytics_progression_status -> 'a -> 'a -> 'a -> unit
+  val fire_in_game_economy_event : Instance.t -> string -> AnalyticsEconomyAction.t -> string -> int -> string -> 'a -> 'a -> unit
+  val fire_log_event : Instance.t -> AnalyticsLogLevel.t -> string -> 'a -> 'a -> unit
+  val fire_player_progression_event : Instance.t -> string -> AnalyticsProgressionStatus.t -> 'a -> 'a -> 'a -> unit
 end
 and Animation : sig
   type t = {
@@ -97,7 +97,7 @@ and AnimationClip : sig
   type t = {
     guid : string;
     loop : bool;
-    priority : animation_priority;
+    priority : AnimationPriority.t;
   }
 end
 and CurveAnimation : sig
@@ -138,7 +138,7 @@ and AnimationStreamTrack : sig
   type t = {
     animation : TrackerStreamAnimation.t;
     is_playing : bool;
-    priority : animation_priority;
+    priority : AnimationPriority.t;
     weight_current : float;
     weight_target : float;
   }
@@ -154,7 +154,7 @@ and AnimationTrack : sig
     is_playing : bool;
     length : float;
     looped : bool;
-    priority : animation_priority;
+    priority : AnimationPriority.t;
     speed : float;
     time_position : float;
     weight_current : float;
@@ -285,7 +285,7 @@ and AssetService : sig
   val get_asset_ids_for_package : int -> 'a list
   val get_bundle_details_async : int -> (string * 'a) list
   val get_game_places_async : unit -> Instance.t
-  val prompt_create_asset_async : Player.t -> Instance.t -> asset_type -> 'a list
+  val prompt_create_asset_async : Player.t -> Instance.t -> AssetType.t -> 'a list
   val prompt_import_animation_clip_from_video_async : Player.t -> (unit -> unit) -> 'a list
   val save_place_async : unit -> unit
   val search_audio : AudioSearchParams.t -> AudioPages.t
@@ -351,7 +351,7 @@ and AudioCompressor : sig
 end
 and AudioDeviceInput : sig
   type t = {
-    access_type : access_modifier_type;
+    access_type : AccessModifierType.t;
     active : bool;
     is_ready : bool;
     muted : bool;
@@ -465,7 +465,7 @@ and AudioSearchParams : sig
   type t = {
     album : string;
     artist : string;
-    audio_sub_type : audio_sub_type;
+    audio_sub_type : AudioSubType.t;
     max_duration : int;
     min_duration : int;
     search_keyword : string;
@@ -479,7 +479,7 @@ and AvatarChatService : sig
     client_features_initialized : bool;
     server_features : int;
   }
-  val is_enabled : int -> avatar_chat_service_feature -> bool
+  val is_enabled : int -> AvatarChatServiceFeature.t -> bool
   val is_place_enabled : unit -> bool
   val is_universe_enabled : unit -> bool
   val poll_client_features : unit -> int
@@ -493,14 +493,14 @@ and AvatarCreationService : sig
 end
 and AvatarEditorService : sig
   type t
-  val get_accessory_type : avatar_asset_type -> accessory_type
-  val no_prompt_create_outfit : HumanoidDescription.t -> humanoid_rig_type -> string -> bool
+  val get_accessory_type : AvatarAssetType.t -> AccessoryType.t
+  val no_prompt_create_outfit : HumanoidDescription.t -> HumanoidRigType.t -> string -> bool
   val no_prompt_delete_outfit : int -> bool
   val no_prompt_rename_outfit : int -> string -> bool
-  val no_prompt_save_avatar : HumanoidDescription.t -> humanoid_rig_type -> (string * 'a) list -> int -> bool
-  val no_prompt_save_avatar_thumbnail_customization : avatar_thumbnail_customization_type -> int -> float -> float -> float -> bool
-  val no_prompt_set_favorite : int -> avatar_item_type -> bool -> bool
-  val no_prompt_update_outfit : int -> HumanoidDescription.t -> humanoid_rig_type -> bool
+  val no_prompt_save_avatar : HumanoidDescription.t -> HumanoidRigType.t -> (string * 'a) list -> int -> bool
+  val no_prompt_save_avatar_thumbnail_customization : AvatarThumbnailCustomizationType.t -> int -> float -> float -> float -> bool
+  val no_prompt_set_favorite : int -> AvatarItemType.t -> bool -> bool
+  val no_prompt_update_outfit : int -> HumanoidDescription.t -> HumanoidRigType.t -> bool
   val perform_create_outfit_with_description : HumanoidDescription.t -> string -> unit
   val perform_delete_outfit : unit -> unit
   val perform_rename_outfit : string -> unit
@@ -508,12 +508,12 @@ and AvatarEditorService : sig
   val perform_set_favorite : unit -> unit
   val perform_update_outfit : HumanoidDescription.t -> unit
   val prompt_allow_inventory_read_access : unit -> unit
-  val prompt_create_outfit : HumanoidDescription.t -> humanoid_rig_type -> unit
+  val prompt_create_outfit : HumanoidDescription.t -> HumanoidRigType.t -> unit
   val prompt_delete_outfit : int -> unit
   val prompt_rename_outfit : int -> unit
-  val prompt_save_avatar : HumanoidDescription.t -> humanoid_rig_type -> unit
-  val prompt_set_favorite : int -> avatar_item_type -> bool -> unit
-  val prompt_update_outfit : int -> HumanoidDescription.t -> humanoid_rig_type -> unit
+  val prompt_save_avatar : HumanoidDescription.t -> HumanoidRigType.t -> unit
+  val prompt_set_favorite : int -> AvatarItemType.t -> bool -> unit
+  val prompt_update_outfit : int -> HumanoidDescription.t -> HumanoidRigType.t -> unit
   val set_allow_inventory_read_access : bool -> unit
   val signal_create_outfit_failed : unit -> unit
   val signal_create_outfit_permission_denied : unit -> unit
@@ -530,13 +530,13 @@ and AvatarEditorService : sig
   val check_apply_default_clothing : HumanoidDescription.t -> HumanoidDescription.t
   val conform_to_avatar_rules : HumanoidDescription.t -> HumanoidDescription.t
   val get_avatar_rules : unit -> (string * 'a) list
-  val get_batch_item_details : 'a list -> avatar_item_type -> 'a list
-  val get_favorite : int -> avatar_item_type -> bool
+  val get_batch_item_details : 'a list -> AvatarItemType.t -> 'a list
+  val get_favorite : int -> AvatarItemType.t -> bool
   val get_inventory : 'a list -> InventoryPages.t
-  val get_item_details : int -> avatar_item_type -> (string * 'a) list
+  val get_item_details : int -> AvatarItemType.t -> (string * 'a) list
   val get_outfit_details : int -> (string * 'a) list
-  val get_outfits : outfit_source -> outfit_type -> OutfitPages.t
-  val get_recommended_assets : avatar_asset_type -> int -> 'a list
+  val get_outfits : OutfitSource.t -> OutfitType.t -> OutfitPages.t
+  val get_recommended_assets : AvatarAssetType.t -> int -> 'a list
   val get_recommended_bundles : int -> 'a list
   val search_catalog : catalog_search_params -> CatalogPages.t
 end
@@ -630,17 +630,17 @@ and RootImportData : sig
     invert_negative_faces : bool;
     merge_meshes : bool;
     polygon_count : float;
-    rest_pose : rest_pose;
-    rig_scale : rig_scale;
-    rig_type : rig_type;
+    rest_pose : RestPose.t;
+    rig_scale : RigScale.t;
+    rig_type : RigType.t;
     rig_visualization : bool;
-    scale_unit : mesh_scale_unit;
+    scale_unit : MeshScaleUnit.t;
     use_scene_origin_as_c_frame : bool;
     use_scene_origin_as_pivot : bool;
     uses_cages : bool;
     validate_ugc_body : bool;
-    world_forward : normal_id;
-    world_up : normal_id;
+    world_forward : NormalId.t;
+    world_up : NormalId.t;
   }
 end
 and BasePlayerGui : sig
@@ -650,24 +650,24 @@ and BasePlayerGui : sig
 end
 and PlayerGui : sig
   type t = {
-    current_screen_orientation : screen_orientation;
-    screen_orientation : screen_orientation;
+    current_screen_orientation : ScreenOrientation.t;
+    screen_orientation : ScreenOrientation.t;
     selection_image_object : GuiObject.t;
   }
 end
 and StarterGui : sig
   type t = {
     process_user_input : bool;
-    rtl_text_support : rtl_text_support;
-    screen_orientation : screen_orientation;
+    rtl_text_support : RtlTextSupport.t;
+    screen_orientation : ScreenOrientation.t;
     show_development_gui : bool;
-    virtual_cursor_mode : virtual_cursor_mode;
+    virtual_cursor_mode : VirtualCursorMode.t;
   }
-  val get_core_gui_enabled : core_gui_type -> bool
+  val get_core_gui_enabled : CoreGuiType.t -> bool
   val register_get_core : string -> (unit -> unit) -> unit
   val register_set_core : string -> (unit -> unit) -> unit
   val set_core : string -> 'a -> unit
-  val set_core_gui_enabled : core_gui_type -> bool -> unit
+  val set_core_gui_enabled : CoreGuiType.t -> bool -> unit
   val get_core : string -> 'a
 end
 and BaseRemoteEvent : sig
@@ -695,17 +695,17 @@ and BaseWrap : sig
     import_origin_world : cframe;
   }
   val get_cage_offset : unit -> vector3
-  val get_faces : cage_type -> 'a list
-  val get_vertices : cage_type -> 'a list
+  val get_faces : CageType.t -> 'a list
+  val get_vertices : CageType.t -> 'a list
   val is_hsr_ready : unit -> bool
-  val modify_vertices : cage_type -> 'a list -> unit
+  val modify_vertices : CageType.t -> 'a list -> unit
 end
 and WrapLayer : sig
   type t = {
-    auto_skin : wrap_layer_auto_skin;
+    auto_skin : WrapLayerAutoSkin.t;
     bind_offset : cframe;
     color : color3;
-    debug_mode : wrap_layer_debug_mode;
+    debug_mode : WrapLayerDebugMode.t;
     enabled : bool;
     order : int;
     puffiness : float;
@@ -718,7 +718,7 @@ end
 and WrapTarget : sig
   type t = {
     color : color3;
-    debug_mode : wrap_target_debug_mode;
+    debug_mode : WrapTargetDebugMode.t;
     stiffness : float;
   }
 end
@@ -737,7 +737,7 @@ and Beam : sig
     segments : int;
     texture : string;
     texture_length : float;
-    texture_mode : texture_mode;
+    texture_mode : TextureMode.t;
     texture_speed : float;
     transparency : number_sequence;
     width_0 : float;
@@ -821,7 +821,7 @@ end
 and BodyPartDescription : sig
   type t = {
     asset_id : int;
-    body_part : body_part;
+    body_part : BodyPart.t;
     color : color3;
     instance : Instance.t;
   }
@@ -845,7 +845,7 @@ and BubbleChatMessageProperties : sig
   type t = {
     background_color_3 : color3;
     background_transparency : float;
-    font_face : font;
+    font_face : Font.t;
     tail_visible : bool;
     text_color_3 : color3;
     text_size : int;
@@ -876,10 +876,10 @@ and Camera : sig
   type t = {
     c_frame : cframe;
     camera_subject : Instance.t;
-    camera_type : camera_type;
+    camera_type : CameraType.t;
     diagonal_field_of_view : float;
     field_of_view : float;
-    field_of_view_mode : field_of_view_mode;
+    field_of_view_mode : FieldOfViewMode.t;
     focus : cframe;
     head_locked : bool;
     head_scale : float;
@@ -936,7 +936,7 @@ end
 and CharacterMesh : sig
   type t = {
     base_texture_id : int;
-    body_part : body_part;
+    body_part : BodyPart.t;
     mesh_id : int;
     overlay_texture_id : int;
   }
@@ -967,11 +967,11 @@ and Chat : sig
     bubble_chat_enabled : bool;
     load_default_chat : bool;
   }
-  val chat : Instance.t -> string -> chat_color -> unit
-  val chat_local : Instance.t -> string -> chat_color -> unit
+  val chat : Instance.t -> string -> ChatColor.t -> unit
+  val chat_local : Instance.t -> string -> ChatColor.t -> unit
   val get_should_use_lua_chat : unit -> bool
-  val invoke_chat_callback : chat_callback_type -> 'a list -> 'a list
-  val register_chat_callback : chat_callback_type -> (unit -> unit) -> unit
+  val invoke_chat_callback : ChatCallbackType.t -> 'a list -> 'a list
+  val register_chat_callback : ChatCallbackType.t -> (unit -> unit) -> unit
   val set_bubble_chat_settings : 'a -> unit
   val can_user_chat_async : int -> bool
   val can_users_chat_async : int -> int -> bool
@@ -995,10 +995,10 @@ and DragDetector : sig
     apply_at_center_of_mass : bool;
     axis : vector3;
     drag_frame : cframe;
-    drag_style : drag_detector_drag_style;
+    drag_style : DragDetectorDragStyle.t;
     enabled : bool;
-    gamepad_mode_switch_key_code : key_code;
-    keyboard_mode_switch_key_code : key_code;
+    gamepad_mode_switch_key_code : KeyCode.t;
+    keyboard_mode_switch_key_code : KeyCode.t;
     max_drag_angle : float;
     max_drag_translation : vector3;
     max_force : float;
@@ -1007,13 +1007,13 @@ and DragDetector : sig
     min_drag_translation : vector3;
     orientation : vector3;
     reference_instance : Instance.t;
-    response_style : drag_detector_response_style;
+    response_style : DragDetectorResponseStyle.t;
     responsiveness : float;
     run_locally : bool;
     secondary_axis : vector3;
     trackball_radial_pull_factor : float;
     trackball_roll_factor : float;
-    vr_switch_key_code : key_code;
+    vr_switch_key_code : KeyCode.t;
     world_axis : vector3;
     world_secondary_axis : vector3;
   }
@@ -1063,7 +1063,7 @@ and CommandInstance : sig
     enabled : bool;
     icon : string;
     name : string;
-    permission : command_permission;
+    permission : CommandPermission.t;
     status_tip : string;
   }
   val enable_gui_access : string -> string -> string -> unit
@@ -1087,12 +1087,12 @@ and Constraint : sig
 end
 and AlignOrientation : sig
   type t = {
-    align_type : align_type;
+    align_type : AlignType.t;
     c_frame : cframe;
     look_at_position : vector3;
     max_angular_velocity : float;
     max_torque : float;
-    mode : orientation_alignment_mode;
+    mode : OrientationAlignmentMode.t;
     primary_axis : vector3;
     primary_axis_only : bool;
     reaction_torque_enabled : bool;
@@ -1104,12 +1104,12 @@ end
 and AlignPosition : sig
   type t = {
     apply_at_center_of_mass : bool;
-    force_limit_mode : force_limit_mode;
-    force_relative_to : actuator_relative_to;
+    force_limit_mode : ForceLimitMode.t;
+    force_relative_to : ActuatorRelativeTo.t;
     max_axes_force : vector3;
     max_force : float;
     max_velocity : float;
-    mode : position_alignment_mode;
+    mode : PositionAlignmentMode.t;
     position : vector3;
     reaction_force_enabled : bool;
     responsiveness : float;
@@ -1121,7 +1121,7 @@ and AngularVelocity : sig
     angular_velocity : vector3;
     max_torque : float;
     reaction_torque_enabled : bool;
-    relative_to : actuator_relative_to;
+    relative_to : ActuatorRelativeTo.t;
   }
 end
 and AnimationConstraint : sig
@@ -1146,7 +1146,7 @@ and BallSocketConstraint : sig
 end
 and HingeConstraint : sig
   type t = {
-    actuator_type : actuator_type;
+    actuator_type : ActuatorType.t;
     angular_responsiveness : float;
     angular_speed : float;
     angular_velocity : float;
@@ -1174,7 +1174,7 @@ and LineForce : sig
 end
 and LinearVelocity : sig
   type t = {
-    force_limit_mode : force_limit_mode;
+    force_limit_mode : ForceLimitMode.t;
     force_limits_enabled : bool;
     line_direction : vector3;
     line_velocity : float;
@@ -1183,10 +1183,10 @@ and LinearVelocity : sig
     max_planar_axes_force : vector2;
     plane_velocity : vector2;
     primary_tangent_axis : vector3;
-    relative_to : actuator_relative_to;
+    relative_to : ActuatorRelativeTo.t;
     secondary_tangent_axis : vector3;
     vector_velocity : vector3;
-    velocity_constraint_mode : velocity_constraint_mode;
+    velocity_constraint_mode : VelocityConstraintMode.t;
   }
 end
 and PlaneConstraint : sig
@@ -1223,7 +1223,7 @@ and RopeConstraint : sig
 end
 and SlidingBallConstraint : sig
   type t = {
-    actuator_type : actuator_type;
+    actuator_type : ActuatorType.t;
     current_position : float;
     limits_enabled : bool;
     linear_responsiveness : float;
@@ -1242,7 +1242,7 @@ and SlidingBallConstraint : sig
 end
 and CylindricalConstraint : sig
   type t = {
-    angular_actuator_type : actuator_type;
+    angular_actuator_type : ActuatorType.t;
     angular_limits_enabled : bool;
     angular_responsiveness : float;
     angular_restitution : float;
@@ -1281,7 +1281,7 @@ and SpringConstraint : sig
 end
 and Torque : sig
   type t = {
-    relative_to : actuator_relative_to;
+    relative_to : ActuatorRelativeTo.t;
     torque : vector3;
   }
 end
@@ -1310,7 +1310,7 @@ and VectorForce : sig
   type t = {
     apply_at_center_of_mass : bool;
     force : vector3;
-    relative_to : actuator_relative_to;
+    relative_to : ActuatorRelativeTo.t;
   }
 end
 and ContentProvider : sig
@@ -1319,7 +1319,7 @@ and ContentProvider : sig
     request_queue_size : int;
   }
   val calculate_num_triangles_in_mesh_sync : string -> int
-  val get_asset_fetch_status : string -> asset_fetch_status
+  val get_asset_fetch_status : string -> AssetFetchStatus.t
   val get_asset_fetch_status_changed_signal : string -> rbx_script_signal
   val get_detailed_failed_requests : unit -> 'a list
   val get_failed_requests : unit -> 'a list
@@ -1338,11 +1338,11 @@ and ContextActionService : sig
   type t
   val bind_action : string -> (unit -> unit) -> bool -> 'a list -> unit
   val bind_action_at_priority : string -> (unit -> unit) -> bool -> int -> 'a list -> unit
-  val bind_activate : user_input_type -> 'a list -> unit
+  val bind_activate : UserInputType.t -> 'a list -> unit
   val bind_core_action : string -> (unit -> unit) -> bool -> 'a list -> unit
   val bind_core_action_at_priority : string -> (unit -> unit) -> bool -> int -> 'a list -> unit
-  val bind_core_activate : user_input_type -> 'a list -> unit
-  val call_function : string -> user_input_state -> Instance.t -> 'a list
+  val bind_core_activate : UserInputType.t -> 'a list -> unit
+  val call_function : string -> UserInputState.t -> Instance.t -> 'a list
   val fire_action_button_found_signal : string -> Instance.t -> unit
   val get_all_bound_action_info : unit -> (string * 'a) list
   val get_all_bound_core_action_info : unit -> (string * 'a) list
@@ -1354,17 +1354,17 @@ and ContextActionService : sig
   val set_position : string -> udim2 -> unit
   val set_title : string -> string -> unit
   val unbind_action : string -> unit
-  val unbind_activate : user_input_type -> key_code -> unit
+  val unbind_activate : UserInputType.t -> KeyCode.t -> unit
   val unbind_all_actions : unit -> unit
   val unbind_core_action : string -> unit
-  val unbind_core_activate : user_input_type -> key_code -> unit
+  val unbind_core_activate : UserInputType.t -> KeyCode.t -> unit
   val get_button : string -> Instance.t
 end
 and Controller : sig
   type t
-  val bind_button : button -> string -> unit
-  val get_button : button -> bool
-  val unbind_button : button -> unit
+  val bind_button : Button.t -> string -> unit
+  val get_button : Button.t -> bool
+  val unbind_button : Button.t -> unit
 end
 and HumanoidController : sig
   type t
@@ -1498,7 +1498,7 @@ and EditableMesh : sig
   val set_vertex_color : int -> color3 -> unit
   val set_vertex_color_alpha : int -> float -> unit
   val set_vertex_normal : int -> vector3 -> unit
-  val create_mesh_part_async : collision_fidelity -> MeshPart.t
+  val create_mesh_part_async : CollisionFidelity.t -> MeshPart.t
 end
 and FileMesh : sig
   type t = {
@@ -1508,7 +1508,7 @@ and FileMesh : sig
 end
 and SpecialMesh : sig
   type t = {
-    mesh_type : mesh_type;
+    mesh_type : MeshType.t;
   }
 end
 and DataModelPatchService : sig
@@ -1568,7 +1568,7 @@ and DataStoreService : sig
   val get_data_store : string -> string -> Instance.t -> GlobalDataStore.t
   val get_global_data_store : unit -> GlobalDataStore.t
   val get_ordered_data_store : string -> string -> OrderedDataStore.t
-  val get_request_budget_for_request_type : data_store_request_type -> int
+  val get_request_budget_for_request_type : DataStoreRequestType.t -> int
   val list_data_stores_async : string -> int -> string -> DataStoreListingPages.t
 end
 and DataStoreSetOptions : sig
@@ -1603,7 +1603,7 @@ and DebuggerConnection : sig
   val populate : Instance.t -> (unit -> unit) -> int
   val remove_breakpoint : Breakpoint.t -> unit
   val resume : ThreadState.t -> (unit -> unit) -> int
-  val set_exception_break_mode : debugger_exception_break_mode -> (unit -> unit) -> int
+  val set_exception_break_mode : DebuggerExceptionBreakMode.t -> (unit -> unit) -> int
   val set_variable : DebuggerVariable.t -> string -> (unit -> unit) -> int
   val step : ThreadState.t -> (unit -> unit) -> int
   val step_in : ThreadState.t -> (unit -> unit) -> int
@@ -1628,7 +1628,7 @@ and DebuggerLuaResponse : sig
     is_success : bool;
     message : string;
     request_id : int;
-    status : debugger_status;
+    status : DebuggerStatus.t;
   }
   val get_arg : unit -> 'a
 end
@@ -1664,14 +1664,14 @@ and DeviceIdService : sig
 end
 and Dialog : sig
   type t = {
-    behavior_type : dialog_behavior_type;
+    behavior_type : DialogBehaviorType.t;
     conversation_distance : float;
     goodbye_choice_active : bool;
     goodbye_dialog : string;
     in_use : bool;
     initial_prompt : string;
-    purpose : dialog_purpose;
-    tone : dialog_tone;
+    purpose : DialogPurpose.t;
+    tone : DialogTone.t;
     trigger_distance : float;
     trigger_offset : vector3;
   }
@@ -1689,7 +1689,7 @@ and DialogChoice : sig
 end
 and Dragger : sig
   type t
-  val axis_rotate : axis -> unit
+  val axis_rotate : Axis.t -> unit
   val mouse_down : Instance.t -> vector3 -> Instance.t list -> unit
   val mouse_move : ray -> unit
   val mouse_up : unit -> unit
@@ -1701,8 +1701,8 @@ and DraggerService : sig
     angle_snap_increment : float;
     animate_hover : bool;
     collisions_enabled : bool;
-    dragger_coordinate_space : dragger_coordinate_space;
-    dragger_movement_mode : dragger_movement_mode;
+    dragger_coordinate_space : DraggerCoordinateSpace.t;
+    dragger_movement_mode : DraggerMovementMode.t;
     geometry_snap_color : color3;
     hover_animate_frequency : float;
     hover_line_thickness : int;
@@ -1722,7 +1722,7 @@ and EditableImage : sig
   val copy : vector2 -> vector2 -> t
   val crop : vector2 -> vector2 -> unit
   val draw_circle : vector2 -> int -> color3 -> float -> unit
-  val draw_image : vector2 -> t -> image_combine_type -> unit
+  val draw_image : vector2 -> t -> ImageCombineType.t -> unit
   val draw_line : vector2 -> vector2 -> color3 -> float -> unit
   val draw_rectangle : vector2 -> vector2 -> color3 -> float -> unit
   val read_pixels : vector2 -> vector2 -> 'a list
@@ -1735,7 +1735,7 @@ and EngineAPICloudProcessingService : sig
 end
 and EulerRotationCurve : sig
   type t = {
-    rotation_order : rotation_order;
+    rotation_order : RotationOrder.t;
   }
   val get_angles_at_time : float -> 'a list
   val get_rotation_at_time : float -> cframe
@@ -1752,7 +1752,7 @@ and EventIngestService : sig
 end
 and ExperienceAuthService : sig
   type t
-  val scope_check_ui_complete : string -> 'a list -> scope_check_result -> (string * 'a) list -> unit
+  val scope_check_ui_complete : string -> 'a list -> ScopeCheckResult.t -> (string * 'a) list -> unit
 end
 and ExperienceInviteOptions : sig
   type t = {
@@ -1786,7 +1786,7 @@ and Explosion : sig
     blast_pressure : float;
     blast_radius : float;
     destroy_joint_radius_percent : float;
-    explosion_type : explosion_type;
+    explosion_type : ExplosionType.t;
     position : vector3;
     time_scale : float;
     visible : bool;
@@ -1795,7 +1795,7 @@ end
 and FaceAnimatorService : sig
   type t = {
     audio_animation_enabled : bool;
-    face_tracking_status_enum : tracker_face_tracking_status;
+    face_tracking_status_enum : TrackerFaceTrackingStatus.t;
     flip_head_orientation : bool;
     video_animation_enabled : bool;
   }
@@ -1862,7 +1862,7 @@ and FaceControls : sig
 end
 and FaceInstance : sig
   type t = {
-    face : normal_id;
+    face : NormalId.t;
   }
 end
 and Decal : sig
@@ -1910,10 +1910,10 @@ and FacialAnimationStreamingSubsessionStats : sig
 end
 and Feature : sig
   type t = {
-    face_id : normal_id;
-    in_out : in_out;
-    left_right : left_right;
-    top_bottom : top_bottom;
+    face_id : NormalId.t;
+    in_out : InOut.t;
+    left_right : LeftRight.t;
+    top_bottom : TopBottom.t;
   }
 end
 and Hole : sig
@@ -1982,7 +1982,7 @@ and GeometryService : sig
 end
 and GetTextBoundsParams : sig
   type t = {
-    font : font;
+    font : Font.t;
     size : float;
     text : string;
     width : float;
@@ -2000,7 +2000,7 @@ and DataStore : sig
   type t
   val get_version_async : string -> string -> 'a list
   val list_keys_async : string -> int -> string -> bool -> DataStoreKeyPages.t
-  val list_versions_async : string -> sort_direction -> int -> int -> int -> DataStoreVersionPages.t
+  val list_versions_async : string -> SortDirection.t -> int -> int -> int -> DataStoreVersionPages.t
   val remove_version_async : string -> string -> unit
 end
 and OrderedDataStore : sig
@@ -2027,10 +2027,10 @@ and GuiBase2d : sig
     is_not_occluded : bool;
     raw_rect_2_d : rect;
     root_localization_table : LocalizationTable.t;
-    selection_behavior_down : selection_behavior;
-    selection_behavior_left : selection_behavior;
-    selection_behavior_right : selection_behavior;
-    selection_behavior_up : selection_behavior;
+    selection_behavior_down : SelectionBehavior.t;
+    selection_behavior_left : SelectionBehavior.t;
+    selection_behavior_right : SelectionBehavior.t;
+    selection_behavior_up : SelectionBehavior.t;
     selection_group : bool;
     total_group_scale : float;
   }
@@ -2039,14 +2039,14 @@ and GuiObject : sig
   type t = {
     active : bool;
     anchor_point : vector2;
-    automatic_size : automatic_size;
+    automatic_size : AutomaticSize.t;
     background_color_3 : color3;
     background_transparency : float;
     border_color_3 : color3;
-    border_mode : border_mode;
+    border_mode : BorderMode.t;
     border_size_pixel : int;
     clips_descendants : bool;
-    gui_state : gui_state;
+    gui_state : GuiState.t;
     interactable : bool;
     layout_order : int;
     next_selection_down : t;
@@ -2059,14 +2059,14 @@ and GuiObject : sig
     selection_image_object : t;
     selection_order : int;
     size : udim2;
-    size_constraint : size_constraint;
+    size_constraint : SizeConstraint.t;
     transparency : float;
     visible : bool;
     z_index : int;
   }
-  val tween_position : udim2 -> easing_direction -> easing_style -> float -> bool -> (unit -> unit) -> bool
-  val tween_size : udim2 -> easing_direction -> easing_style -> float -> bool -> (unit -> unit) -> bool
-  val tween_size_and_position : udim2 -> udim2 -> easing_direction -> easing_style -> float -> bool -> (unit -> unit) -> bool
+  val tween_position : udim2 -> EasingDirection.t -> EasingStyle.t -> float -> bool -> (unit -> unit) -> bool
+  val tween_size : udim2 -> EasingDirection.t -> EasingStyle.t -> float -> bool -> (unit -> unit) -> bool
+  val tween_size_and_position : udim2 -> udim2 -> EasingDirection.t -> EasingStyle.t -> float -> bool -> (unit -> unit) -> bool
 end
 and CanvasGroup : sig
   type t = {
@@ -2076,7 +2076,7 @@ and CanvasGroup : sig
 end
 and Frame : sig
   type t = {
-    style : frame_style;
+    style : FrameStyle.t;
   }
 end
 and GuiButton : sig
@@ -2084,7 +2084,7 @@ and GuiButton : sig
     auto_button_color : bool;
     modal : bool;
     selected : bool;
-    style : button_style;
+    style : ButtonStyle.t;
   }
 end
 and ImageButton : sig
@@ -2098,8 +2098,8 @@ and ImageButton : sig
     image_transparency : float;
     is_loaded : bool;
     pressed_image : string;
-    resample_mode : resampler_mode;
-    scale_type : scale_type;
+    resample_mode : ResamplerMode.t;
+    scale_type : ScaleType.t;
     slice_center : rect;
     slice_scale : float;
     tile_size : udim2;
@@ -2109,8 +2109,8 @@ end
 and TextButton : sig
   type t = {
     content_text : string;
-    font : font;
-    font_face : font;
+    font : Font.t;
+    font_face : Font.t;
     line_height : float;
     localization_match_identifier : string;
     localization_matched_source_text : string;
@@ -2120,17 +2120,17 @@ and TextButton : sig
     text : string;
     text_bounds : vector2;
     text_color_3 : color3;
-    text_direction : text_direction;
+    text_direction : TextDirection.t;
     text_fits : bool;
     text_scaled : bool;
     text_size : float;
     text_stroke_color_3 : color3;
     text_stroke_transparency : float;
     text_transparency : float;
-    text_truncate : text_truncate;
+    text_truncate : TextTruncate.t;
     text_wrapped : bool;
-    text_x_alignment : text_x_alignment;
-    text_y_alignment : text_y_alignment;
+    text_x_alignment : TextXAlignment.t;
+    text_y_alignment : TextYAlignment.t;
   }
   val set_text_from_input : string -> unit
 end
@@ -2146,8 +2146,8 @@ and ImageLabel : sig
     image_rect_size : vector2;
     image_transparency : float;
     is_loaded : bool;
-    resample_mode : resampler_mode;
-    scale_type : scale_type;
+    resample_mode : ResamplerMode.t;
+    scale_type : ScaleType.t;
     slice_center : rect;
     slice_scale : float;
     tile_size : udim2;
@@ -2157,8 +2157,8 @@ end
 and TextLabel : sig
   type t = {
     content_text : string;
-    font : font;
-    font_face : font;
+    font : Font.t;
+    font_face : Font.t;
     line_height : float;
     localization_match_identifier : string;
     localization_matched_source_text : string;
@@ -2168,17 +2168,17 @@ and TextLabel : sig
     text : string;
     text_bounds : vector2;
     text_color_3 : color3;
-    text_direction : text_direction;
+    text_direction : TextDirection.t;
     text_fits : bool;
     text_scaled : bool;
     text_size : float;
     text_stroke_color_3 : color3;
     text_stroke_transparency : float;
     text_transparency : float;
-    text_truncate : text_truncate;
+    text_truncate : TextTruncate.t;
     text_wrapped : bool;
-    text_x_alignment : text_x_alignment;
-    text_y_alignment : text_y_alignment;
+    text_x_alignment : TextXAlignment.t;
+    text_y_alignment : TextYAlignment.t;
   }
   val set_text_from_input : string -> unit
 end
@@ -2186,25 +2186,25 @@ and ScrollingFrame : sig
   type t = {
     absolute_canvas_size : vector2;
     absolute_window_size : vector2;
-    automatic_canvas_size : automatic_size;
+    automatic_canvas_size : AutomaticSize.t;
     bottom_image : string;
     canvas_position : vector2;
     canvas_size : udim2;
-    elastic_behavior : elastic_behavior;
+    elastic_behavior : ElasticBehavior.t;
     horizontal_bar_rect : rect;
-    horizontal_scroll_bar_inset : scroll_bar_inset;
+    horizontal_scroll_bar_inset : ScrollBarInset.t;
     max_canvas_position : vector2;
     mid_image : string;
     scroll_bar_image_color_3 : color3;
     scroll_bar_image_transparency : float;
     scroll_bar_thickness : int;
     scroll_velocity : vector2;
-    scrolling_direction : scrolling_direction;
+    scrolling_direction : ScrollingDirection.t;
     scrolling_enabled : bool;
     top_image : string;
     vertical_bar_rect : rect;
-    vertical_scroll_bar_inset : scroll_bar_inset;
-    vertical_scroll_bar_position : vertical_scroll_bar_position;
+    vertical_scroll_bar_inset : ScrollBarInset.t;
+    vertical_scroll_bar_position : VerticalScrollBarPosition.t;
   }
   val clear_inertial_scrolling : unit -> unit
   val get_sampled_inertial_velocity : unit -> vector2
@@ -2215,8 +2215,8 @@ and TextBox : sig
     clear_text_on_focus : bool;
     content_text : string;
     cursor_position : int;
-    font : font;
-    font_face : font;
+    font : Font.t;
+    font_face : Font.t;
     line_height : float;
     localization_match_identifier : string;
     localization_matched_source_text : string;
@@ -2226,26 +2226,26 @@ and TextBox : sig
     overlay_native_input : bool;
     placeholder_color_3 : color3;
     placeholder_text : string;
-    return_key_type : return_key_type;
+    return_key_type : ReturnKeyType.t;
     rich_text : bool;
     selection_start : int;
     show_native_input : bool;
     text : string;
     text_bounds : vector2;
     text_color_3 : color3;
-    text_direction : text_direction;
+    text_direction : TextDirection.t;
     text_editable : bool;
     text_fits : bool;
-    text_input_type : text_input_type;
+    text_input_type : TextInputType.t;
     text_scaled : bool;
     text_size : float;
     text_stroke_color_3 : color3;
     text_stroke_transparency : float;
     text_transparency : float;
-    text_truncate : text_truncate;
+    text_truncate : TextTruncate.t;
     text_wrapped : bool;
-    text_x_alignment : text_x_alignment;
-    text_y_alignment : text_y_alignment;
+    text_x_alignment : TextXAlignment.t;
+    text_y_alignment : TextYAlignment.t;
   }
   val capture_focus : unit -> unit
   val is_focused : unit -> bool
@@ -2283,7 +2283,7 @@ and LayerCollector : sig
   type t = {
     enabled : bool;
     reset_on_spawn : bool;
-    z_index_behavior : z_index_behavior;
+    z_index_behavior : ZIndexBehavior.t;
   }
 end
 and BillboardGui : sig
@@ -2324,23 +2324,23 @@ and ScreenGui : sig
     display_order : int;
     ignore_gui_inset : bool;
     on_top_of_core_blur : bool;
-    safe_area_compatibility : safe_area_compatibility;
-    screen_insets : screen_insets;
+    safe_area_compatibility : SafeAreaCompatibility.t;
+    screen_insets : ScreenInsets.t;
   }
 end
 and SurfaceGuiBase : sig
   type t = {
     active : bool;
     adornee : Instance.t;
-    face : normal_id;
+    face : NormalId.t;
   }
 end
 and AdGui : sig
   type t = {
-    ad_shape : ad_shape;
+    ad_shape : AdShape.t;
     enable_video_ads : bool;
     fallback_image : string;
-    status : ad_unit_status;
+    status : AdUnitStatus.t;
   }
 end
 and SurfaceGui : sig
@@ -2353,8 +2353,8 @@ and SurfaceGui : sig
     light_influence : float;
     max_distance : float;
     pixels_per_stud : float;
-    shape : surface_gui_shape;
-    sizing_mode : surface_gui_sizing_mode;
+    shape : SurfaceGuiShape.t;
+    sizing_mode : SurfaceGuiSizingMode.t;
     tool_punch_through_distance : float;
     z_offset : float;
   }
@@ -2398,7 +2398,7 @@ and PVAdornment : sig
 end
 and HandleAdornment : sig
   type t = {
-    adorn_culling_mode : adorn_culling_mode;
+    adorn_culling_mode : AdornCullingMode.t;
     always_on_top : bool;
     c_frame : cframe;
     size_relative_offset : vector3;
@@ -2482,12 +2482,12 @@ end
 and Handles : sig
   type t = {
     faces : faces;
-    style : handles_style;
+    style : HandlesStyle.t;
   }
 end
 and SurfaceSelection : sig
   type t = {
-    target_surface : normal_id;
+    target_surface : NormalId.t;
   }
 end
 and SelectionLasso : sig
@@ -2538,11 +2538,11 @@ and GuiService : sig
     topbar_inset : rect;
     touch_controls_enabled : bool;
   }
-  val add_center_dialog : Instance.t -> center_dialog_type -> (unit -> unit) -> (unit -> unit) -> unit
+  val add_center_dialog : Instance.t -> CenterDialogType.t -> (unit -> unit) -> (unit -> unit) -> unit
   val add_key : string -> unit
   val add_selection_parent : string -> Instance.t -> unit
   val add_selection_tuple : string -> 'a list -> unit
-  val add_special_key : special_key -> unit
+  val add_special_key : SpecialKey.t -> unit
   val broadcast_notification : string -> int -> unit
   val clear_error : unit -> unit
   val close_inspect_menu : unit -> unit
@@ -2551,11 +2551,11 @@ and GuiService : sig
   val get_brick_count : unit -> int
   val get_closest_dialog_to_position : vector3 -> Instance.t
   val get_emotes_menu_open : unit -> bool
-  val get_error_code : unit -> connection_error
-  val get_error_type : unit -> connection_error
+  val get_error_code : unit -> ConnectionError.t
+  val get_error_type : unit -> ConnectionError.t
   val get_gameplay_paused_notification_enabled : unit -> bool
   val get_gui_inset : unit -> 'a list
-  val get_gui_is_visible : gui_type -> bool
+  val get_gui_is_visible : GuiType.t -> bool
   val get_hardware_safe_viewport : unit -> vector2
   val get_inspect_menu_enabled : unit -> bool
   val get_notification_type_list : unit -> (string * 'a) list
@@ -2570,7 +2570,7 @@ and GuiService : sig
   val remove_center_dialog : Instance.t -> unit
   val remove_key : string -> unit
   val remove_selection_group : string -> unit
-  val remove_special_key : special_key -> unit
+  val remove_special_key : SpecialKey.t -> unit
   val select : Instance.t -> unit
   val send_ui_occlusion_metrics_for_query_region : udim2 -> udim2 -> string -> unit
   val set_emotes_menu_open : bool -> unit
@@ -2582,19 +2582,19 @@ and GuiService : sig
   val set_purchase_prompt_is_shown : bool -> unit
   val set_safe_zone_offsets : float -> float -> float -> float -> unit
   val set_topbar_inset : rect -> unit
-  val set_ui_message : ui_message_type -> string -> unit
+  val set_ui_message : UiMessageType.t -> string -> unit
   val show_stats_based_on_input_string : string -> bool
   val toggle_fullscreen : unit -> unit
-  val toggle_gui_is_visible_for_captures : gui_type -> unit
-  val toggle_gui_is_visible_if_allowed : gui_type -> unit
+  val toggle_gui_is_visible_for_captures : GuiType.t -> unit
+  val toggle_gui_is_visible_if_allowed : GuiType.t -> unit
   val get_screen_resolution : unit -> vector2
 end
 and HapticService : sig
   type t
-  val get_motor : user_input_type -> vibration_motor -> 'a list
-  val is_motor_supported : user_input_type -> vibration_motor -> bool
-  val is_vibration_supported : user_input_type -> bool
-  val set_motor : user_input_type -> vibration_motor -> 'a list -> unit
+  val get_motor : UserInputType.t -> VibrationMotor.t -> 'a list
+  val is_motor_supported : UserInputType.t -> VibrationMotor.t -> bool
+  val is_vibration_supported : UserInputType.t -> bool
+  val set_motor : UserInputType.t -> VibrationMotor.t -> 'a list -> unit
 end
 and HeightmapImporterService : sig
   type t
@@ -2603,7 +2603,7 @@ and HeightmapImporterService : sig
   val is_valid_heightmap : string -> 'a list
   val set_import_heightmap_paused : bool -> unit
   val get_heightmap_preview_async : string -> 'a list
-  val import_heightmap : region3 -> string -> string -> material -> unit
+  val import_heightmap : region3 -> string -> string -> Material.t -> unit
 end
 and HiddenSurfaceRemovalAsset : sig
   type t
@@ -2611,14 +2611,14 @@ end
 and Highlight : sig
   type t = {
     adornee : Instance.t;
-    depth_mode : highlight_depth_mode;
+    depth_mode : HighlightDepthMode.t;
     enabled : bool;
     fill_color : color3;
     fill_transparency : float;
     line_thickness : int;
     outline_color : color3;
     outline_transparency : float;
-    reserved_id : reserved_highlight_id;
+    reserved_id : ReservedHighlightId.t;
   }
 end
 and HttpService : sig
@@ -2635,7 +2635,7 @@ and HttpService : sig
   val set_http_enabled : bool -> unit
   val url_encode : string -> string
   val get_async : string -> bool -> 'a -> string
-  val post_async : string -> string -> http_content_type -> bool -> 'a -> string
+  val post_async : string -> string -> HttpContentType.t -> bool -> 'a -> string
   val request_async : (string * 'a) list -> (string * 'a) list
 end
 and Humanoid : sig
@@ -2645,13 +2645,13 @@ and Humanoid : sig
     automatic_scaling_enabled : bool;
     break_joints_on_death : bool;
     camera_offset : vector3;
-    display_distance_type : humanoid_display_distance_type;
+    display_distance_type : HumanoidDisplayDistanceType.t;
     display_name : string;
     evaluate_state_machine : bool;
-    floor_material : material;
+    floor_material : Material.t;
     health : float;
     health_display_distance : float;
-    health_display_type : humanoid_health_display_type;
+    health_display_type : HumanoidHealthDisplayType.t;
     hip_height : float;
     internal_display_name : string;
     jump : bool;
@@ -2661,10 +2661,10 @@ and Humanoid : sig
     max_slope_angle : float;
     move_direction : vector3;
     name_display_distance : float;
-    name_occlusion : name_occlusion;
+    name_occlusion : NameOcclusion.t;
     platform_stand : bool;
     requires_neck : bool;
-    rig_type : humanoid_rig_type;
+    rig_type : HumanoidRigType.t;
     root_part : BasePart.t;
     seat_part : BasePart.t;
     sit : bool;
@@ -2677,27 +2677,27 @@ and Humanoid : sig
   val add_accessory : Instance.t -> unit
   val build_rig_from_attachments : unit -> unit
   val cache_defaults : unit -> unit
-  val change_state : humanoid_state_type -> unit
+  val change_state : HumanoidStateType.t -> unit
   val equip_tool : Instance.t -> unit
   val get_accessories : unit -> 'a list
-  val get_accessory_handle_scale : Instance.t -> body_part_r_15 -> vector3
+  val get_accessory_handle_scale : Instance.t -> BodyPartR15.t -> vector3
   val get_applied_description : unit -> HumanoidDescription.t
-  val get_body_part_r_15 : Instance.t -> body_part_r_15
-  val get_limb : Instance.t -> limb
+  val get_body_part_r_15 : Instance.t -> BodyPartR15.t
+  val get_limb : Instance.t -> Limb.t
   val get_move_velocity : unit -> vector3
-  val get_state : unit -> humanoid_state_type
-  val get_state_enabled : humanoid_state_type -> bool
+  val get_state : unit -> HumanoidStateType.t
+  val get_state_enabled : HumanoidStateType.t -> bool
   val move : vector3 -> bool -> unit
   val move_to : vector3 -> Instance.t -> unit
   val remove_accessories : unit -> unit
-  val replace_body_part_r_15 : body_part_r_15 -> BasePart.t -> bool
+  val replace_body_part_r_15 : BodyPartR15.t -> BasePart.t -> bool
   val set_click_to_walk_enabled : bool -> unit
-  val set_state_enabled : humanoid_state_type -> bool -> unit
+  val set_state_enabled : HumanoidStateType.t -> bool -> unit
   val take_damage : float -> unit
   val unequip_tools : unit -> unit
-  val apply_description : HumanoidDescription.t -> asset_type_verification -> unit
+  val apply_description : HumanoidDescription.t -> AssetTypeVerification.t -> unit
   val apply_description_client_server : HumanoidDescription.t -> unit
-  val apply_description_reset : HumanoidDescription.t -> asset_type_verification -> unit
+  val apply_description_reset : HumanoidDescription.t -> AssetTypeVerification.t -> unit
   val play_emote : string -> bool
   val play_emote_and_get_anim_track_by_id : int -> 'a list
 end
@@ -2764,7 +2764,7 @@ and IKControl : sig
     priority : int;
     smooth_time : float;
     target : Instance.t;
-    _type : ik_control_type;
+    _type : IKControlType.t;
     weight : float;
   }
   val get_chain_count : unit -> int
@@ -2777,13 +2777,13 @@ end
 and IXPService : sig
   type t
   val clear_user_layers : unit -> unit
-  val get_browser_tracker_layer_loading_status : unit -> ixp_loading_status
+  val get_browser_tracker_layer_loading_status : unit -> IXPLoadingStatus.t
   val get_browser_tracker_layer_variables : string -> (string * 'a) list
-  val get_browser_tracker_status_for_layer : string -> ixp_loading_status option
+  val get_browser_tracker_status_for_layer : string -> IXPLoadingStatus.t option
   val get_registered_user_layers_to_status : unit -> (string * 'a) list
-  val get_user_layer_loading_status : unit -> ixp_loading_status
+  val get_user_layer_loading_status : unit -> IXPLoadingStatus.t
   val get_user_layer_variables : string -> (string * 'a) list
-  val get_user_status_for_layer : string -> ixp_loading_status option
+  val get_user_status_for_layer : string -> IXPLoadingStatus.t option
   val initialize_user_layers : int -> unit
   val log_browser_tracker_layer_exposure : string -> unit
   val log_user_layer_exposure : string -> unit
@@ -2801,12 +2801,12 @@ end
 and InputObject : sig
   type t = {
     delta : vector3;
-    key_code : key_code;
+    key_code : KeyCode.t;
     position : vector3;
-    user_input_state : user_input_state;
-    user_input_type : user_input_type;
+    user_input_state : UserInputState.t;
+    user_input_type : UserInputType.t;
   }
-  val is_modifier_key_down : modifier_key -> bool
+  val is_modifier_key_down : ModifierKey.t -> bool
 end
 and InsertService : sig
   type t = {
@@ -2815,7 +2815,7 @@ and InsertService : sig
   val get_local_file_contents : string -> string
   val load_local_asset : string -> Instance.t
   val load_package_asset : string -> Instance.t list
-  val create_mesh_part_async : string -> collision_fidelity -> render_fidelity -> MeshPart.t
+  val create_mesh_part_async : string -> CollisionFidelity.t -> RenderFidelity.t -> MeshPart.t
   val get_collection : int -> 'a list
   val get_free_decals : string -> int -> 'a list
   val get_free_models : string -> int -> 'a list
@@ -2950,14 +2950,14 @@ end
 and SpotLight : sig
   type t = {
     angle : float;
-    face : normal_id;
+    face : NormalId.t;
     range : float;
   }
 end
 and SurfaceLight : sig
   type t = {
     angle : float;
-    face : normal_id;
+    face : NormalId.t;
     range : float;
   }
 end
@@ -2978,7 +2978,7 @@ and Lighting : sig
     global_shadows : bool;
     outdoor_ambient : color3;
     shadow_softness : float;
-    technology : technology;
+    technology : Technology.t;
     temp_use_new_sky_removal_behaviour : bool;
     time_of_day : string;
   }
@@ -3074,7 +3074,7 @@ and BaseScript : sig
     disabled : bool;
     enabled : bool;
     linked_source : string;
-    run_context : run_context;
+    run_context : RunContext.t;
   }
 end
 and Script : sig
@@ -3114,14 +3114,14 @@ and MarketplaceService : sig
   val prompt_native_purchase : Instance.t -> string -> unit
   val prompt_native_purchase_with_local_player : string -> unit
   val prompt_premium_purchase : Instance.t -> unit
-  val prompt_product_purchase : Instance.t -> int -> bool -> currency_type -> unit
-  val prompt_purchase : Instance.t -> int -> bool -> currency_type -> unit
+  val prompt_product_purchase : Instance.t -> int -> bool -> CurrencyType.t -> unit
+  val prompt_purchase : Instance.t -> int -> bool -> CurrencyType.t -> unit
   val prompt_roblox_purchase : int -> bool -> unit
   val prompt_subscription_purchase : Player.t -> string -> unit
   val prompt_third_party_purchase : Instance.t -> string -> unit
   val report_asset_sale : string -> int -> unit
   val report_robux_upsell_started : unit -> unit
-  val signal_asset_type_purchased : Instance.t -> asset_type -> unit
+  val signal_asset_type_purchased : Instance.t -> AssetType.t -> unit
   val signal_client_purchase_success : string -> int -> int -> unit
   val signal_mock_purchase_premium : unit -> unit
   val signal_prompt_bundle_purchase_finished : Instance.t -> int -> bool -> unit
@@ -3132,14 +3132,14 @@ and MarketplaceService : sig
   val signal_prompt_subscription_purchase_finished : string -> bool -> unit
   val signal_server_lua_dialog_closed : bool -> unit
   val get_developer_products_async : unit -> Instance.t
-  val get_product_info : int -> info_type -> (string * 'a) list
+  val get_product_info : int -> InfoType.t -> (string * 'a) list
   val get_robux_balance : unit -> int
   val get_subscription_product_info_async : string -> (string * 'a) list
   val get_subscription_purchase_info_async : string -> (string * 'a) list
   val get_user_subscription_payment_history_async : Player.t -> string -> 'a list
   val get_user_subscription_status_async : Player.t -> string -> (string * 'a) list
-  val perform_purchase : info_type -> int -> int -> string -> bool -> string -> string -> string -> string -> (string * 'a) list
-  val perform_purchase_v_2 : info_type -> int -> int -> string -> bool -> (string * 'a) list -> (string * 'a) list
+  val perform_purchase : InfoType.t -> int -> int -> string -> bool -> string -> string -> string -> string -> (string * 'a) list
+  val perform_purchase_v_2 : InfoType.t -> int -> int -> string -> bool -> (string * 'a) list -> (string * 'a) list
   val perform_subscription_purchase : string -> string
   val player_owns_asset : Instance.t -> int -> bool
   val player_owns_bundle : Player.t -> int -> bool
@@ -3203,18 +3203,18 @@ and MaterialService : sig
     wood_name : string;
     wood_planks_name : string;
   }
-  val get_base_material_override : material -> string
-  val get_material_override_changed : material -> rbx_script_signal
-  val get_material_variant : material -> string -> MaterialVariant.t
-  val get_override_status : material -> property_status
-  val set_base_material_override : material -> string -> unit
+  val get_base_material_override : Material.t -> string
+  val get_material_override_changed : Material.t -> rbx_script_signal
+  val get_material_variant : Material.t -> string -> MaterialVariant.t
+  val get_override_status : Material.t -> PropertyStatus.t
+  val set_base_material_override : Material.t -> string -> unit
 end
 and MaterialVariant : sig
   type t = {
-    base_material : material;
+    base_material : Material.t;
     color_map : string;
     custom_physical_properties : physical_properties;
-    material_pattern : material_pattern;
+    material_pattern : MaterialPattern.t;
     metalness_map : string;
     normal_map : string;
     roughness_map : string;
@@ -3244,7 +3244,7 @@ end
 and MemoryStoreSortedMap : sig
   type t
   val get_async : string -> 'a list
-  val get_range_async : sort_direction -> int -> 'a -> 'a -> 'a list
+  val get_range_async : SortDirection.t -> int -> 'a -> 'a -> 'a list
   val remove_async : string -> unit
   val set_async : string -> 'a -> int -> 'a -> bool
   val update_async : string -> (unit -> unit) -> int -> 'a list
@@ -3312,7 +3312,7 @@ and Mouse : sig
     origin : cframe;
     target : BasePart.t;
     target_filter : Instance.t;
-    target_surface : normal_id;
+    target_surface : NormalId.t;
     unit_ray : ray;
     view_size_x : int;
     view_size_y : int;
@@ -3369,8 +3369,8 @@ and BasePart : sig
     assembly_linear_velocity : vector3;
     assembly_mass : float;
     assembly_root_part : t;
-    back_surface : surface_type;
-    bottom_surface : surface_type;
+    back_surface : SurfaceType.t;
+    bottom_surface : SurfaceType.t;
     brick_color : brick_color;
     c_frame : cframe;
     can_collide : bool;
@@ -3385,13 +3385,13 @@ and BasePart : sig
     enable_fluid_forces : bool;
     extents_c_frame : cframe;
     extents_size : vector3;
-    front_surface : surface_type;
-    left_surface : surface_type;
+    front_surface : SurfaceType.t;
+    left_surface : SurfaceType.t;
     local_transparency_modifier : float;
     locked : bool;
     mass : float;
     massless : bool;
-    material : material;
+    material : Material.t;
     material_variant : string;
     orientation : vector3;
     pivot_offset : cframe;
@@ -3400,11 +3400,11 @@ and BasePart : sig
     reflectance : float;
     resize_increment : int;
     resizeable_faces : faces;
-    right_surface : surface_type;
+    right_surface : SurfaceType.t;
     root_priority : int;
     rotation : vector3;
     size : vector3;
-    top_surface : surface_type;
+    top_surface : SurfaceType.t;
     transparency : float;
   }
   val angular_acceleration_to_torque : vector3 -> vector3 -> vector3
@@ -3424,13 +3424,13 @@ and BasePart : sig
   val get_touching_parts : unit -> Instance.t list
   val get_velocity_at_position : vector3 -> vector3
   val is_grounded : unit -> bool
-  val resize : normal_id -> int -> bool
+  val resize : NormalId.t -> int -> bool
   val set_network_owner : Player.t -> unit
   val set_network_ownership_auto : unit -> unit
   val torque_to_angular_acceleration : vector3 -> vector3 -> vector3
-  val intersect_async : Instance.t list -> collision_fidelity -> render_fidelity -> Instance.t
-  val subtract_async : Instance.t list -> collision_fidelity -> render_fidelity -> Instance.t
-  val union_async : Instance.t list -> collision_fidelity -> render_fidelity -> Instance.t
+  val intersect_async : Instance.t list -> CollisionFidelity.t -> RenderFidelity.t -> Instance.t
+  val subtract_async : Instance.t list -> CollisionFidelity.t -> RenderFidelity.t -> Instance.t
+  val union_async : Instance.t list -> CollisionFidelity.t -> RenderFidelity.t -> Instance.t
 end
 and CornerWedgePart : sig
   type t
@@ -3440,7 +3440,7 @@ and FormFactorPart : sig
 end
 and Part : sig
   type t = {
-    shape : part_type;
+    shape : PartType.t;
   }
 end
 and Platform : sig
@@ -3479,7 +3479,7 @@ and Terrain : sig
   type t = {
     decoration : bool;
     grass_length : float;
-    last_used_modification_method : terrain_acquisition_method;
+    last_used_modification_method : TerrainAcquisitionMethod.t;
     material_colors : binary_string;
     max_extents : region3_int16;
     shorelines_upgraded : bool;
@@ -3497,22 +3497,22 @@ and Terrain : sig
   val clear : unit -> unit
   val copy_region : region3_int16 -> TerrainRegion.t
   val count_cells : unit -> int
-  val fill_ball : vector3 -> float -> material -> unit
-  val fill_block : cframe -> vector3 -> material -> unit
-  val fill_cylinder : cframe -> float -> float -> material -> unit
-  val fill_region : region3 -> float -> material -> unit
-  val fill_wedge : cframe -> vector3 -> material -> unit
-  val get_material_color : material -> color3
+  val fill_ball : vector3 -> float -> Material.t -> unit
+  val fill_block : cframe -> vector3 -> Material.t -> unit
+  val fill_cylinder : cframe -> float -> float -> Material.t -> unit
+  val fill_region : region3 -> float -> Material.t -> unit
+  val fill_wedge : cframe -> vector3 -> Material.t -> unit
+  val get_material_color : Material.t -> color3
   val get_terrain_wireframe : cframe -> vector3 -> 'a list
   val paste_region : TerrainRegion.t -> vector3_int16 -> bool -> unit
   val read_voxel_channels : region3 -> float -> 'a list -> (string * 'a) list
   val read_voxels : region3 -> float -> 'a list
-  val replace_material : region3 -> float -> material -> material -> unit
-  val replace_material_in_transform : cframe -> vector3 -> material -> material -> unit
-  val replace_material_in_transform_subregion : cframe -> vector3 -> material -> material -> region3_int16 -> unit
-  val set_material_color : material -> color3 -> unit
-  val set_material_in_transform : cframe -> vector3 -> material -> unit
-  val set_material_in_transform_subregion : cframe -> vector3 -> material -> region3_int16 -> unit
+  val replace_material : region3 -> float -> Material.t -> Material.t -> unit
+  val replace_material_in_transform : cframe -> vector3 -> Material.t -> Material.t -> unit
+  val replace_material_in_transform_subregion : cframe -> vector3 -> Material.t -> Material.t -> region3_int16 -> unit
+  val set_material_color : Material.t -> color3 -> unit
+  val set_material_in_transform : cframe -> vector3 -> Material.t -> unit
+  val set_material_in_transform_subregion : cframe -> vector3 -> Material.t -> region3_int16 -> unit
   val smooth_region : region3 -> float -> float -> 'a list
   val world_to_cell : vector3 -> vector3
   val world_to_cell_prefer_empty : vector3 -> vector3
@@ -3522,8 +3522,8 @@ and Terrain : sig
 end
 and TriangleMeshPart : sig
   type t = {
-    collision_fidelity : collision_fidelity;
-    fluid_fidelity : fluid_fidelity;
+    collision_fidelity : CollisionFidelity.t;
+    fluid_fidelity : FluidFidelity.t;
     mesh_size : vector3;
   }
 end
@@ -3534,14 +3534,14 @@ and MeshPart : sig
     has_skinned_mesh : bool;
     joint_offset : vector3;
     mesh_id : string;
-    render_fidelity : render_fidelity;
+    render_fidelity : RenderFidelity.t;
     texture_id : string;
   }
   val apply_mesh : Instance.t -> unit
 end
 and PartOperation : sig
   type t = {
-    render_fidelity : render_fidelity;
+    render_fidelity : RenderFidelity.t;
     smoothing_angle : float;
     triangle_count : int;
     use_part_color : bool;
@@ -3559,7 +3559,7 @@ and UnionOperation : sig
 end
 and TrussPart : sig
   type t = {
-    style : style;
+    style : Style.t;
   }
 end
 and VehicleSeat : sig
@@ -3580,8 +3580,8 @@ and VehicleSeat : sig
 end
 and Model : sig
   type t = {
-    level_of_detail : model_level_of_detail;
-    model_streaming_mode : model_streaming_mode;
+    level_of_detail : ModelLevelOfDetail.t;
+    model_streaming_mode : ModelStreamingMode.t;
     primary_part : BasePart.t;
     scale : float;
     world_pivot : cframe;
@@ -3627,13 +3627,13 @@ and WorldRoot : sig
   type t
   val are_parts_touching_others : Instance.t list -> float -> bool
   val blockcast : cframe -> vector3 -> vector3 -> raycast_params -> raycast_result
-  val bulk_move_to : Instance.t list -> 'a list -> bulk_move_mode -> unit
+  val bulk_move_to : Instance.t list -> 'a list -> BulkMoveMode.t -> unit
   val cache_current_terrain : string -> vector3 -> float -> string
   val clear_cached_terrain : string -> bool
   val get_part_bounds_in_box : cframe -> vector3 -> overlap_params -> Instance.t list
   val get_part_bounds_in_radius : vector3 -> float -> overlap_params -> Instance.t list
   val get_parts_in_part : BasePart.t -> overlap_params -> Instance.t list
-  val ik_move_to : BasePart.t -> cframe -> float -> float -> ik_collisions_mode -> unit
+  val ik_move_to : BasePart.t -> cframe -> float -> float -> IKCollisionsMode.t -> unit
   val raycast : vector3 -> vector3 -> raycast_params -> raycast_result
   val raycast_cached_terrain : string -> vector3 -> vector3 -> bool -> raycast_result
   val set_insert_point : vector3 -> bool -> unit
@@ -3644,29 +3644,29 @@ and Workspace : sig
   type t = {
     air_density : float;
     allow_third_party_sales : bool;
-    avatar_unification_mode : avatar_unification_mode;
-    client_animator_throttling : client_animator_throttling_mode;
+    avatar_unification_mode : AvatarUnificationMode.t;
+    client_animator_throttling : ClientAnimatorThrottlingMode.t;
     current_camera : Camera.t;
     distributed_game_time : float;
-    editor_live_scripting : editor_live_scripting;
+    editor_live_scripting : EditorLiveScripting.t;
     fallen_parts_destroy_height : float;
-    fluid_forces : fluid_forces;
+    fluid_forces : FluidForces.t;
     global_wind : vector3;
     gravity : float;
-    ik_control_constraint_support : ik_control_constraint_support;
-    interpolation_throttling : interpolation_throttling_mode;
-    mesh_part_heads_and_accessories : mesh_part_heads_and_accessories;
-    model_streaming_behavior : model_streaming_behavior;
-    physics_stepping_method : physics_stepping_method;
-    player_character_destroy_behavior : player_character_destroy_behavior;
-    primal_physics_solver : primal_physics_solver;
-    reject_character_deletions : reject_character_deletions;
-    replicate_instance_destroy_setting : replicate_instance_destroy_setting;
-    retargeting : animator_retargeting_mode;
-    signal_behavior : signal_behavior;
-    stream_out_behavior : stream_out_behavior;
+    ik_control_constraint_support : IKControlConstraintSupport.t;
+    interpolation_throttling : InterpolationThrottlingMode.t;
+    mesh_part_heads_and_accessories : MeshPartHeadsAndAccessories.t;
+    model_streaming_behavior : ModelStreamingBehavior.t;
+    physics_stepping_method : PhysicsSteppingMethod.t;
+    player_character_destroy_behavior : PlayerCharacterDestroyBehavior.t;
+    primal_physics_solver : PrimalPhysicsSolver.t;
+    reject_character_deletions : RejectCharacterDeletions.t;
+    replicate_instance_destroy_setting : ReplicateInstanceDestroySetting.t;
+    retargeting : AnimatorRetargetingMode.t;
+    signal_behavior : SignalBehavior.t;
+    stream_out_behavior : StreamOutBehavior.t;
     streaming_enabled : bool;
-    streaming_integrity_mode : streaming_integrity_mode;
+    streaming_integrity_mode : StreamingIntegrityMode.t;
     streaming_min_radius : int;
     streaming_target_radius : int;
     terrain : Terrain.t;
@@ -3680,10 +3680,10 @@ and Workspace : sig
   val get_physics_throttling : unit -> int
   val get_real_physics_fps : unit -> float
   val get_server_time_now : unit -> float
-  val join_to_outsiders : Instance.t list -> joint_creation_mode -> unit
+  val join_to_outsiders : Instance.t list -> JointCreationMode.t -> unit
   val pgs_is_enabled : unit -> bool
-  val set_avatar_unification_mode : avatar_unification_mode -> unit
-  val set_mesh_part_heads_and_accessories : mesh_part_heads_and_accessories -> unit
+  val set_avatar_unification_mode : AvatarUnificationMode.t -> unit
+  val set_mesh_part_heads_and_accessories : MeshPartHeadsAndAccessories.t -> unit
   val set_physics_throttle_enabled : bool -> unit
   val unjoin_from_outsiders : Instance.t list -> unit
   val zoom_to_extents : unit -> unit
@@ -3698,7 +3698,7 @@ and PackageLink : sig
     default_name : string;
     package_asset_name : string;
     package_id : string;
-    permission_level : package_permission;
+    permission_level : PackagePermission.t;
     serialized_default_attributes : binary_string;
     status : string;
     version_number : int;
@@ -3764,25 +3764,25 @@ and ParticleEmitter : sig
     brightness : float;
     color : color_sequence;
     drag : float;
-    emission_direction : normal_id;
+    emission_direction : NormalId.t;
     enabled : bool;
     flipbook_framerate : number_range;
     flipbook_incompatible : string;
-    flipbook_layout : particle_flipbook_layout;
-    flipbook_mode : particle_flipbook_mode;
+    flipbook_layout : ParticleFlipbookLayout.t;
+    flipbook_mode : ParticleFlipbookMode.t;
     flipbook_start_random : bool;
     lifetime : number_range;
     light_emission : float;
     light_influence : float;
     locked_to_part : bool;
-    orientation : particle_orientation;
+    orientation : ParticleOrientation.t;
     rate : float;
     rot_speed : number_range;
     rotation : number_range;
-    shape : particle_emitter_shape;
-    shape_in_out : particle_emitter_shape_in_out;
+    shape : ParticleEmitterShape.t;
+    shape_in_out : ParticleEmitterShapeInOut.t;
     shape_partial : float;
-    shape_style : particle_emitter_shape_style;
+    shape_style : ParticleEmitterShapeStyle.t;
     size : number_sequence;
     speed : number_range;
     spread_angle : vector2;
@@ -3810,7 +3810,7 @@ and PatchMapping : sig
 end
 and Path : sig
   type t = {
-    status : path_status;
+    status : PathStatus.t;
   }
   val get_waypoints : unit -> 'a list
   val check_occlusion_async : int -> int
@@ -3838,7 +3838,7 @@ end
 and PausedState : sig
   type t = {
     all_threads_paused : bool;
-    reason : debugger_pause_reason;
+    reason : DebuggerPauseReason.t;
     thread_id : int;
   }
 end
@@ -3893,17 +3893,17 @@ and Player : sig
     auto_jump_enabled : bool;
     camera_max_zoom_distance : float;
     camera_min_zoom_distance : float;
-    camera_mode : camera_mode;
+    camera_mode : CameraMode.t;
     can_load_character_appearance : bool;
     character : Model.t;
     character_appearance_id : int;
-    chat_mode : chat_mode;
-    dev_camera_occlusion_mode : dev_camera_occlusion_mode;
-    dev_computer_camera_mode : dev_computer_camera_movement_mode;
-    dev_computer_movement_mode : dev_computer_movement_mode;
+    chat_mode : ChatMode.t;
+    dev_camera_occlusion_mode : DevCameraOcclusionMode.t;
+    dev_computer_camera_mode : DevComputerCameraMovementMode.t;
+    dev_computer_movement_mode : DevComputerMovementMode.t;
     dev_enable_mouse_lock : bool;
-    dev_touch_camera_mode : dev_touch_camera_movement_mode;
-    dev_touch_movement_mode : dev_touch_movement_mode;
+    dev_touch_camera_mode : DevTouchCameraMovementMode.t;
+    dev_touch_movement_mode : DevTouchMovementMode.t;
     display_name : string;
     follow_user_id : int;
     gameplay_paused : bool;
@@ -3912,7 +3912,7 @@ and Player : sig
     health_display_distance : float;
     locale_id : string;
     maximum_simulation_radius : float;
-    membership_type : membership_type;
+    membership_type : MembershipType.t;
     name_display_distance : float;
     neutral : bool;
     os_platform : string;
@@ -3932,7 +3932,7 @@ and Player : sig
   val add_to_block_list : 'a list -> unit
   val clear_character_appearance : unit -> unit
   val distance_from_character : vector3 -> float
-  val get_friend_status : t -> friend_status
+  val get_friend_status : t -> FriendStatus.t
   val get_game_session_id : unit -> string
   val get_join_data : unit -> (string * 'a) list
   val get_mouse : unit -> Mouse.t
@@ -3949,7 +3949,7 @@ and Player : sig
   val set_block_list_initialized : unit -> unit
   val set_character_appearance_json : string -> unit
   val set_experience_settings_locale_id : string -> unit
-  val set_membership_type : membership_type -> unit
+  val set_membership_type : MembershipType.t -> unit
   val set_moderation_access_key : string -> unit
   val set_super_safe_chat : bool -> unit
   val update_player_blocked : int -> bool -> unit
@@ -3973,10 +3973,10 @@ and PlayerScripts : sig
   val get_registered_computer_movement_modes : unit -> 'a list
   val get_registered_touch_camera_movement_modes : unit -> 'a list
   val get_registered_touch_movement_modes : unit -> 'a list
-  val register_computer_camera_movement_mode : computer_camera_movement_mode -> unit
-  val register_computer_movement_mode : computer_movement_mode -> unit
-  val register_touch_camera_movement_mode : touch_camera_movement_mode -> unit
-  val register_touch_movement_mode : touch_movement_mode -> unit
+  val register_computer_camera_movement_mode : ComputerCameraMovementMode.t -> unit
+  val register_computer_movement_mode : ComputerMovementMode.t -> unit
+  val register_touch_camera_movement_mode : TouchCameraMovementMode.t -> unit
+  val register_touch_movement_mode : TouchMovementMode.t -> unit
 end
 and PlayerViewService : sig
   type t
@@ -4003,11 +4003,11 @@ and Players : sig
   val report_abuse : Player.t -> string -> string -> unit
   val report_abuse_v_3 : Player.t -> string -> unit
   val reset_local_player : unit -> unit
-  val set_chat_style : chat_style -> unit
-  val set_local_player_info : int -> string -> string -> membership_type -> bool -> unit
+  val set_chat_style : ChatStyle.t -> unit
+  val set_local_player_info : int -> string -> string -> MembershipType.t -> bool -> unit
   val team_chat : string -> unit
   val whisper_chat : string -> Instance.t -> unit
-  val create_humanoid_model_from_description : HumanoidDescription.t -> humanoid_rig_type -> asset_type_verification -> Model.t
+  val create_humanoid_model_from_description : HumanoidDescription.t -> HumanoidRigType.t -> AssetTypeVerification.t -> Model.t
   val create_humanoid_model_from_user_id : int -> Model.t
   val get_character_appearance_info_async : int -> (string * 'a) list
   val get_friends_async : int -> FriendPages.t
@@ -4015,7 +4015,7 @@ and Players : sig
   val get_humanoid_description_from_user_id : int -> HumanoidDescription.t
   val get_name_from_user_id_async : int -> string
   val get_user_id_from_name_async : string -> int
-  val get_user_thumbnail_async : int -> thumbnail_type -> thumbnail_size -> 'a list
+  val get_user_thumbnail_async : int -> ThumbnailType.t -> ThumbnailSize.t -> 'a list
 end
 and PluginCapabilities : sig
   type t = {
@@ -4038,16 +4038,16 @@ and PluginPolicyService : sig
 end
 and PolicyService : sig
   type t = {
-    is_luobu_server : tri_state_boolean;
-    luobu_whitelisted : tri_state_boolean;
+    is_luobu_server : TriStateBoolean.t;
+    luobu_whitelisted : TriStateBoolean.t;
   }
   val get_policy_info_for_player_async : Instance.t -> (string * 'a) list
   val get_policy_info_for_server_roblox_only_async : unit -> (string * 'a) list
 end
 and PoseBase : sig
   type t = {
-    easing_direction : pose_easing_direction;
-    easing_style : pose_easing_style;
+    easing_direction : PoseEasingDirection.t;
+    easing_style : PoseEasingStyle.t;
     weight : float;
   }
 end
@@ -4112,15 +4112,15 @@ and ProximityPrompt : sig
     auto_localize : bool;
     clickable_prompt : bool;
     enabled : bool;
-    exclusivity : proximity_prompt_exclusivity;
-    gamepad_key_code : key_code;
+    exclusivity : ProximityPromptExclusivity.t;
+    gamepad_key_code : KeyCode.t;
     hold_duration : float;
-    keyboard_key_code : key_code;
+    keyboard_key_code : KeyCode.t;
     max_activation_distance : float;
     object_text : string;
     requires_line_of_sight : bool;
     root_localization_table : LocalizationTable.t;
-    style : proximity_prompt_style;
+    style : ProximityPromptStyle.t;
     ui_offset : vector2;
   }
   val input_hold_begin : unit -> unit
@@ -4135,8 +4135,8 @@ end
 and PublishService : sig
   type t
   val publish_descendant_assets : Instance.t -> bool
-  val create_asset_and_wait_for_asset_id : Instance.t list -> string -> asset_creator_type -> int -> string -> string -> string -> int -> int
-  val publish_cage_mesh_async : Instance.t -> cage_type -> string
+  val create_asset_and_wait_for_asset_id : Instance.t list -> string -> AssetCreatorType.t -> int -> string -> string -> string -> int -> int
+  val publish_cage_mesh_async : Instance.t -> CageType.t -> string
 end
 and ReflectionMetadataClass : sig
   type t = {
@@ -4144,7 +4144,7 @@ and ReflectionMetadataClass : sig
     explorer_order : int;
     insertable : bool;
     preferred_parent : string;
-    service_visibility : service_visibility;
+    service_visibility : ServiceVisibility.t;
   }
 end
 and ReflectionMetadataEnum : sig
@@ -4242,7 +4242,7 @@ and ScreenshotHud : sig
     experience_name_overlay_enabled : bool;
     hide_core_gui_for_captures : bool;
     hide_player_gui_for_captures : bool;
-    overlay_font : font;
+    overlay_font : Font.t;
     username_overlay_enabled : bool;
     visible : bool;
   }
@@ -4252,7 +4252,7 @@ and ScriptBuilder : sig
 end
 and SyncScriptBuilder : sig
   type t = {
-    compile_target : compile_target;
+    compile_target : CompileTarget.t;
     coverage_info : bool;
     debug_info : bool;
     pack_as_source : bool;
@@ -4329,7 +4329,7 @@ and SelectionHighlightManager : sig
 end
 and SensorBase : sig
   type t = {
-    update_type : sensor_update_type;
+    update_type : SensorUpdateType.t;
   }
 end
 and BuoyancySensor : sig
@@ -4347,7 +4347,7 @@ and ControllerPartSensor : sig
     hit_normal : vector3;
     search_distance : float;
     sensed_part : BasePart.t;
-    sensor_mode : sensor_mode;
+    sensor_mode : SensorMode.t;
   }
 end
 and ServerScriptService : sig
@@ -4366,9 +4366,9 @@ end
 and DataModel : sig
   type t = {
     creator_id : int;
-    creator_type : creator_type;
+    creator_type : CreatorType.t;
     game_id : int;
-    genre : genre;
+    genre : Genre.t;
     is_sf_flags_loaded : bool;
     job_id : string;
     place_id : int;
@@ -4406,8 +4406,8 @@ and DataModel : sig
   val set_universe_id : int -> unit
   val shutdown : unit -> unit
   val get_objects_async : string -> Instance.t list
-  val http_get_async : string -> http_request_type -> string
-  val http_post_async : string -> string -> string -> http_request_type -> string
+  val http_get_async : string -> HttpRequestType.t -> string
+  val http_post_async : string -> string -> string -> HttpRequestType.t -> string
   val insert_objects_and_join_if_legacy_async : string -> Instance.t list
 end
 and GenericSettings : sig
@@ -4496,7 +4496,7 @@ and SocialService : sig
   val invoke_iris_invite_prompt_closed : Instance.t -> unit
   val prompt_game_invite : Instance.t -> Instance.t -> unit
   val prompt_phone_book : Instance.t -> string -> unit
-  val show_self_view : self_view_position -> unit
+  val show_self_view : SelfViewPosition.t -> unit
   val can_send_call_invite_async : Instance.t -> bool
   val can_send_game_invite_async : Instance.t -> int -> bool
 end
@@ -4518,12 +4518,12 @@ and Sound : sig
     roll_off_gain : float;
     roll_off_max_distance : float;
     roll_off_min_distance : float;
-    roll_off_mode : roll_off_mode;
+    roll_off_mode : RollOffMode.t;
     sound_group : SoundGroup.t;
     sound_id : string;
     time_length : float;
     time_position : float;
-    usage_context_permission : usage_context;
+    usage_context_permission : UsageContext.t;
     volume : float;
   }
   val pause : unit -> unit
@@ -4620,12 +4620,12 @@ and SoundGroup : sig
 end
 and SoundService : sig
   type t = {
-    ambient_reverb : reverb_type;
+    ambient_reverb : ReverbType.t;
     distance_factor : float;
     doppler_scale : float;
     respect_filtering_enabled : bool;
     rolloff_scale : float;
-    volumetric_audio : volumetric_audio;
+    volumetric_audio : VolumetricAudio.t;
   }
   val begin_recording : unit -> bool
   val get_input_device : unit -> 'a list
@@ -4636,7 +4636,7 @@ and SoundService : sig
   val get_sound_memory_data : unit -> (string * 'a) list
   val play_local_sound : Instance.t -> unit
   val set_input_device : string -> string -> unit
-  val set_listener : listener_type -> 'a list -> unit
+  val set_listener : ListenerType.t -> 'a list -> unit
   val set_output_device : string -> string -> unit
   val set_recording_device : int -> bool
   val end_recording : unit -> (string * 'a) list
@@ -4655,7 +4655,7 @@ and StackFrame : sig
   type t = {
     frame_id : int;
     frame_name : string;
-    frame_type : debugger_frame_type;
+    frame_type : DebuggerFrameType.t;
     globals : DebuggerVariable.t;
     line : int;
     locals : DebuggerVariable.t;
@@ -4673,24 +4673,24 @@ end
 and StarterPlayer : sig
   type t = {
     allow_custom_animations : bool;
-    animation_compositor_mode : animation_compositor_mode;
+    animation_compositor_mode : AnimationCompositorMode.t;
     auto_jump_enabled : bool;
-    avatar_joint_upgrade : avatar_joint_upgrade;
+    avatar_joint_upgrade : AvatarJointUpgrade.t;
     camera_max_zoom_distance : float;
     camera_min_zoom_distance : float;
-    camera_mode : camera_mode;
+    camera_mode : CameraMode.t;
     character_jump_height : float;
     character_jump_power : float;
     character_max_slope_angle : float;
     character_use_jump_power : bool;
     character_walk_speed : float;
-    death_style : death_style;
-    dev_camera_occlusion_mode : dev_camera_occlusion_mode;
-    dev_computer_camera_movement_mode : dev_computer_camera_movement_mode;
-    dev_computer_movement_mode : dev_computer_movement_mode;
-    dev_touch_camera_movement_mode : dev_touch_camera_movement_mode;
-    dev_touch_movement_mode : dev_touch_movement_mode;
-    enable_dynamic_heads : load_dynamic_heads;
+    death_style : DeathStyle.t;
+    dev_camera_occlusion_mode : DevCameraOcclusionMode.t;
+    dev_computer_camera_movement_mode : DevComputerCameraMovementMode.t;
+    dev_computer_movement_mode : DevComputerMovementMode.t;
+    dev_touch_camera_movement_mode : DevTouchCameraMovementMode.t;
+    dev_touch_movement_mode : DevTouchMovementMode.t;
+    enable_dynamic_heads : LoadDynamicHeads.t;
     enable_mouse_lock_option : bool;
     game_settings_asset_id_face : int;
     game_settings_asset_id_head : int;
@@ -4702,18 +4702,18 @@ and StarterPlayer : sig
     game_settings_asset_id_shirt : int;
     game_settings_asset_id_tee_shirt : int;
     game_settings_asset_id_torso : int;
-    game_settings_avatar : game_avatar_type;
-    game_settings_r_15_collision : r_15_collision_type;
+    game_settings_avatar : GameAvatarType.t;
+    game_settings_r_15_collision : R15CollisionType.t;
     game_settings_scale_range_body_type : number_range;
     game_settings_scale_range_head : number_range;
     game_settings_scale_range_height : number_range;
     game_settings_scale_range_proportion : number_range;
     game_settings_scale_range_width : number_range;
     health_display_distance : float;
-    humanoid_state_machine_mode : humanoid_state_machine_mode;
+    humanoid_state_machine_mode : HumanoidStateMachineMode.t;
     load_character_appearance : bool;
-    load_character_layered_clothing : load_character_layered_clothing;
-    lua_character_controller : character_control_mode;
+    load_character_layered_clothing : LoadCharacterLayeredClothing.t;
+    lua_character_controller : CharacterControlMode.t;
     name_display_distance : float;
     user_emotes_enabled : bool;
   }
@@ -4739,9 +4739,9 @@ and Stats : sig
     primitives_count : int;
   }
   val get_browser_tracker_id : unit -> string
-  val get_memory_usage_mb_for_tag : developer_memory_tag -> float
+  val get_memory_usage_mb_for_tag : DeveloperMemoryTag.t -> float
   val get_total_memory_usage_mb : unit -> float
-  val get_paginated_memory_by_texture : texture_query_type -> int -> int -> (string * 'a) list
+  val get_paginated_memory_by_texture : TextureQueryType.t -> int -> int -> (string * 'a) list
 end
 and RunningAverageItemDouble : sig
   type t
@@ -4811,7 +4811,7 @@ and StylingService : sig
 end
 and SurfaceAppearance : sig
   type t = {
-    alpha_mode : alpha_mode;
+    alpha_mode : AlphaMode.t;
     color_map : string;
     metalness_map : string;
     normal_map : string;
@@ -4884,8 +4884,8 @@ end
 and TerrainDetail : sig
   type t = {
     color_map : string;
-    face : terrain_face;
-    material_pattern : material_pattern;
+    face : TerrainFace.t;
+    material_pattern : MaterialPattern.t;
     metalness_map : string;
     normal_map : string;
     roughness_map : string;
@@ -4928,8 +4928,8 @@ and BubbleChatConfiguration : sig
     bubble_duration : float;
     bubbles_spacing : float;
     enabled : bool;
-    font : font;
-    font_face : font;
+    font : Font.t;
+    font_face : Font.t;
     local_player_studs_offset : vector3;
     max_bubbles : float;
     max_distance : float;
@@ -4950,10 +4950,10 @@ and ChatInputBarConfiguration : sig
     background_color_3 : color3;
     background_transparency : float;
     enabled : bool;
-    font_face : font;
+    font_face : Font.t;
     is_focused : bool;
     is_focused_write : bool;
-    keyboard_key_code : key_code;
+    keyboard_key_code : KeyCode.t;
     placeholder_color_3 : color3;
     target_text_channel : TextChannel.t;
     text_box : TextBox.t;
@@ -4972,14 +4972,14 @@ and ChatWindowConfiguration : sig
     background_color_3 : color3;
     background_transparency : float;
     enabled : bool;
-    font_face : font;
+    font_face : Font.t;
     height_scale : float;
-    horizontal_alignment : horizontal_alignment;
+    horizontal_alignment : HorizontalAlignment.t;
     text_color_3 : color3;
     text_size : int;
     text_stroke_color_3 : color3;
     text_stroke_transparency : float;
-    vertical_alignment : vertical_alignment;
+    vertical_alignment : VerticalAlignment.t;
     width_scale : float;
   }
 end
@@ -4989,7 +4989,7 @@ and TextChatMessage : sig
     message_id : string;
     metadata : string;
     prefix_text : string;
-    status : text_chat_message_status;
+    status : TextChatMessageStatus.t;
     text : string;
     text_channel : TextChannel.t;
     text_source : TextSource.t;
@@ -5009,7 +5009,7 @@ and TextChatService : sig
     chat_translation_enabled : bool;
     chat_translation_ftux_shown : bool;
     chat_translation_toggle_enabled : bool;
-    chat_version : chat_version;
+    chat_version : ChatVersion.t;
     create_default_commands : bool;
     create_default_text_channels : bool;
   }
@@ -5034,10 +5034,10 @@ end
 and TextService : sig
   type t
   val get_font_memory_data : unit -> (string * 'a) list
-  val get_text_size : string -> int -> font -> vector2 -> vector2
+  val get_text_size : string -> int -> Font.t -> vector2 -> vector2
   val set_resolution_scale : float -> unit
-  val filter_and_translate_string_async : string -> int -> 'a list -> text_filter_context -> Instance.t
-  val filter_string_async : string -> int -> text_filter_context -> Instance.t
+  val filter_and_translate_string_async : string -> int -> 'a list -> TextFilterContext.t -> Instance.t
+  val filter_string_async : string -> int -> TextFilterContext.t -> Instance.t
   val get_family_info_async : string -> (string * 'a) list
   val get_text_bounds_async : GetTextBoundsParams.t -> vector2
 end
@@ -5049,7 +5049,7 @@ and TextSource : sig
 end
 and TextureGenerationMeshHandler : sig
   type t
-  val prepare_instances_for_texturing_async : Instance.t list -> texture_generation_mesh_handler_unwrap_mode -> string
+  val prepare_instances_for_texturing_async : Instance.t list -> TextureGenerationMeshHandlerUnwrapMode.t -> string
 end
 and ThreadState : sig
   type t = {
@@ -5075,10 +5075,10 @@ and TracerService : sig
 end
 and TrackerLodController : sig
   type t = {
-    audio_mode : tracker_lod_flag_mode;
-    video_extrapolation_mode : tracker_extrapolation_flag_mode;
-    video_lod_mode : tracker_lod_value_mode;
-    video_mode : tracker_lod_flag_mode;
+    audio_mode : TrackerLodFlagMode.t;
+    video_extrapolation_mode : TrackerExtrapolationFlagMode.t;
+    video_lod_mode : TrackerLodValueMode.t;
+    video_mode : TrackerLodFlagMode.t;
   }
   val get_extrapolation : unit -> int
   val get_video_lod : unit -> int
@@ -5103,7 +5103,7 @@ and Trail : sig
     min_length : float;
     texture : string;
     texture_length : float;
-    texture_mode : texture_mode;
+    texture_mode : TextureMode.t;
     transparency : number_sequence;
     width_scale : number_sequence;
   }
@@ -5119,7 +5119,7 @@ and Translator : sig
 end
 and TweenBase : sig
   type t = {
-    playback_state : playback_state;
+    playback_state : PlaybackState.t;
   }
   val cancel : unit -> unit
   val pause : unit -> unit
@@ -5134,7 +5134,7 @@ end
 and TweenService : sig
   type t
   val create : Instance.t -> tween_info -> (string * 'a) list -> Tween.t
-  val get_value : float -> easing_style -> easing_direction -> float
+  val get_value : float -> EasingStyle.t -> EasingDirection.t -> float
 end
 and UGCAvatarService : sig
   type t
@@ -5151,8 +5151,8 @@ end
 and UIAspectRatioConstraint : sig
   type t = {
     aspect_ratio : float;
-    aspect_type : aspect_type;
-    dominant_axis : dominant_axis;
+    aspect_type : AspectType.t;
+    dominant_axis : DominantAxis.t;
   }
 end
 and UISizeConstraint : sig
@@ -5174,9 +5174,9 @@ and UICorner : sig
 end
 and UIFlexItem : sig
   type t = {
-    flex_mode : ui_flex_mode;
+    flex_mode : UIFlexMode.t;
     grow_ratio : float;
-    item_line_alignment : item_line_alignment;
+    item_line_alignment : ItemLineAlignment.t;
     shrink_ratio : float;
   }
 end
@@ -5195,10 +5195,10 @@ end
 and UIGridStyleLayout : sig
   type t = {
     absolute_content_size : vector2;
-    fill_direction : fill_direction;
-    horizontal_alignment : horizontal_alignment;
-    sort_order : sort_order;
-    vertical_alignment : vertical_alignment;
+    fill_direction : FillDirection.t;
+    horizontal_alignment : HorizontalAlignment.t;
+    sort_order : SortOrder.t;
+    vertical_alignment : VerticalAlignment.t;
   }
 end
 and UIGridLayout : sig
@@ -5208,15 +5208,15 @@ and UIGridLayout : sig
     cell_padding : udim2;
     cell_size : udim2;
     fill_direction_max_cells : int;
-    start_corner : start_corner;
+    start_corner : StartCorner.t;
   }
 end
 and UIListLayout : sig
   type t = {
-    horizontal_flex : ui_flex_alignment;
-    item_line_alignment : item_line_alignment;
+    horizontal_flex : UIFlexAlignment.t;
+    item_line_alignment : ItemLineAlignment.t;
     padding : udim;
-    vertical_flex : ui_flex_alignment;
+    vertical_flex : UIFlexAlignment.t;
     wraps : bool;
   }
 end
@@ -5225,8 +5225,8 @@ and UIPageLayout : sig
     animated : bool;
     circular : bool;
     current_page : GuiObject.t;
-    easing_direction : easing_direction;
-    easing_style : easing_style;
+    easing_direction : EasingDirection.t;
+    easing_style : EasingStyle.t;
     gamepad_input_enabled : bool;
     padding : udim;
     scroll_wheel_input_enabled : bool;
@@ -5242,7 +5242,7 @@ and UITableLayout : sig
   type t = {
     fill_empty_space_columns : bool;
     fill_empty_space_rows : bool;
-    major_axis : table_major_axis;
+    major_axis : TableMajorAxis.t;
     padding : udim2;
   }
 end
@@ -5261,10 +5261,10 @@ and UIScale : sig
 end
 and UIStroke : sig
   type t = {
-    apply_stroke_mode : apply_stroke_mode;
+    apply_stroke_mode : ApplyStrokeMode.t;
     color : color3;
     enabled : bool;
-    line_join_mode : line_join_mode;
+    line_join_mode : LineJoinMode.t;
     thickness : float;
     transparency : float;
   }
@@ -5278,15 +5278,15 @@ end
 and UserGameSettings : sig
   type t = {
     all_tutorials_disabled : bool;
-    camera_mode : custom_camera_mode;
+    camera_mode : CustomCameraMode.t;
     camera_y_inverted : bool;
     chat_translation_enabled : bool;
     chat_translation_ftux_shown : bool;
     chat_translation_toggle_enabled : bool;
     chat_visible : bool;
-    computer_camera_movement_mode : computer_camera_movement_mode;
-    computer_movement_mode : computer_movement_mode;
-    control_mode : control_mode;
+    computer_camera_movement_mode : ComputerCameraMovementMode.t;
+    computer_movement_mode : ComputerMovementMode.t;
+    control_mode : ControlMode.t;
     default_camera_id : string;
     fullscreen : bool;
     gamepad_camera_sensitivity : float;
@@ -5309,21 +5309,21 @@ and UserGameSettings : sig
     rcc_profiler_record_frame_rate : int;
     rcc_profiler_record_time_frame : int;
     reduced_motion : bool;
-    rotation_type : rotation_type;
-    saved_quality_level : saved_quality_setting;
+    rotation_type : RotationType.t;
+    saved_quality_level : SavedQualitySetting.t;
     start_maximized : bool;
     start_screen_position : vector2;
     start_screen_size : vector2;
-    touch_camera_movement_mode : touch_camera_movement_mode;
-    touch_movement_mode : touch_movement_mode;
+    touch_camera_movement_mode : TouchCameraMovementMode.t;
+    touch_movement_mode : TouchMovementMode.t;
     ui_navigation_key_bind_enabled : bool;
     used_core_gui_is_visible_toggle : bool;
     used_custom_gui_is_visible_toggle : bool;
     used_hide_hud_shortcut : bool;
-    vr_comfort_setting : vr_comfort_setting;
+    vr_comfort_setting : VRComfortSetting.t;
     vr_enabled : bool;
     vr_rotation_intensity : int;
-    vr_safety_bubble_mode : vr_safety_bubble_mode;
+    vr_safety_bubble_mode : VRSafetyBubbleMode.t;
     vr_smooth_rotation_enabled : bool;
     vr_smooth_rotation_enabled_custom_option : bool;
     vr_third_person_follow_cam_enabled : bool;
@@ -5350,7 +5350,7 @@ and UserInputService : sig
     gyroscope_enabled : bool;
     keyboard_enabled : bool;
     legacy_input_events_enabled : bool;
-    mouse_behavior : mouse_behavior;
+    mouse_behavior : MouseBehavior.t;
     mouse_delta_sensitivity : float;
     mouse_enabled : bool;
     mouse_icon : string;
@@ -5360,38 +5360,38 @@ and UserInputService : sig
     on_screen_keyboard_position : vector2;
     on_screen_keyboard_size : vector2;
     on_screen_keyboard_visible : bool;
-    override_mouse_icon_behavior : override_mouse_icon_behavior;
+    override_mouse_icon_behavior : OverrideMouseIconBehavior.t;
     right_bar_size : vector2;
     status_bar_size : vector2;
     touch_enabled : bool;
     vr_enabled : bool;
   }
-  val gamepad_supports : user_input_type -> key_code -> bool
+  val gamepad_supports : UserInputType.t -> KeyCode.t -> bool
   val get_connected_gamepads : unit -> 'a list
   val get_device_acceleration : unit -> InputObject.t
   val get_device_gravity : unit -> InputObject.t
   val get_device_rotation : unit -> 'a list
-  val get_device_type : unit -> device_type
+  val get_device_type : unit -> DeviceType.t
   val get_focused_text_box : unit -> TextBox.t
-  val get_gamepad_connected : user_input_type -> bool
-  val get_gamepad_state : user_input_type -> 'a list
-  val get_image_for_key_code : key_code -> string
+  val get_gamepad_connected : UserInputType.t -> bool
+  val get_gamepad_state : UserInputType.t -> 'a list
+  val get_image_for_key_code : KeyCode.t -> string
   val get_keys_pressed : unit -> 'a list
-  val get_last_input_type : unit -> user_input_type
+  val get_last_input_type : unit -> UserInputType.t
   val get_mouse_buttons_pressed : unit -> 'a list
   val get_mouse_delta : unit -> vector2
   val get_mouse_location : unit -> vector2
   val get_navigation_gamepads : unit -> 'a list
-  val get_platform : unit -> platform
-  val get_string_for_key_code : key_code -> string
-  val get_supported_gamepad_key_codes : user_input_type -> 'a list
-  val is_gamepad_button_down : user_input_type -> key_code -> bool
-  val is_key_down : key_code -> bool
-  val is_mouse_button_pressed : user_input_type -> bool
-  val is_navigation_gamepad : user_input_type -> bool
+  val get_platform : unit -> Platform.t
+  val get_string_for_key_code : KeyCode.t -> string
+  val get_supported_gamepad_key_codes : UserInputType.t -> 'a list
+  val is_gamepad_button_down : UserInputType.t -> KeyCode.t -> bool
+  val is_key_down : KeyCode.t -> bool
+  val is_mouse_button_pressed : UserInputType.t -> bool
+  val is_navigation_gamepad : UserInputType.t -> bool
   val recenter_user_head_c_frame : unit -> unit
   val send_app_ui_sizes : vector2 -> vector2 -> vector2 -> vector2 -> unit
-  val set_navigation_gamepad : user_input_type -> bool -> unit
+  val set_navigation_gamepad : UserInputType.t -> bool -> unit
 end
 and UserNotification : sig
   type t = {
@@ -5431,10 +5431,10 @@ and UserService : sig
 end
 and VRService : sig
   type t = {
-    automatic_scaling : vr_scaling;
+    automatic_scaling : VRScaling.t;
     did_pointer_hit : bool;
     fade_out_view_on_collision : bool;
-    gui_input_user_c_frame : user_c_frame;
+    gui_input_user_c_frame : UserCFrame.t;
     laser_distance : float;
     pointer_hit_c_frame : cframe;
     quest_asw_state : bool;
@@ -5443,16 +5443,16 @@ and VRService : sig
     vr_device_available : bool;
     vr_device_name : string;
     vr_enabled : bool;
-    vr_session_state : vr_session_state;
+    vr_session_state : VRSessionState.t;
   }
-  val get_touchpad_mode : vr_touchpad -> vr_touchpad_mode
-  val get_user_c_frame : user_c_frame -> cframe
-  val get_user_c_frame_enabled : user_c_frame -> bool
+  val get_touchpad_mode : VRTouchpad.t -> VRTouchpadMode.t
+  val get_user_c_frame : UserCFrame.t -> cframe
+  val get_user_c_frame_enabled : UserCFrame.t -> bool
   val is_maquettes : unit -> bool
   val is_vr_app_build : unit -> bool
   val recenter_user_head_c_frame : unit -> unit
-  val request_navigation : cframe -> user_c_frame -> unit
-  val set_touchpad_mode : vr_touchpad -> vr_touchpad_mode -> unit
+  val request_navigation : cframe -> UserCFrame.t -> unit
+  val set_touchpad_mode : VRTouchpad.t -> VRTouchpadMode.t -> unit
 end
 and VRStatusService : sig
   type t
@@ -5566,7 +5566,7 @@ end
 and VoiceChatService : sig
   type t = {
     enable_default_voice : bool;
-    use_audio_api : audio_api_rollout;
+    use_audio_api : AudioApiRollout.t;
     use_new_audio_api : bool;
     use_new_control_paths : bool;
     use_new_join_flow : bool;

@@ -1,16 +1,12 @@
 local _Include = game.ReplicatedStorage.include
 
-local Classes = require("Classes")
+local Rbxlib = require("Rbxlib")
 
-local Enums = require("Enums")
+type test = {
+	input: Enum.UserInputType,
+}
 
-local pressed = UserInputService.gamepad_supports({
-	tag = "MouseButton1",
-	value = nil,
-}, {
-	tag = "E",
-	value = nil,
-})
+local pressed = Classes.UserInputService.gamepad_supports(Enum.UserInputType.MouseButton1, Enum.KeyCode.E)
 local _3
 if pressed then
 	_3 = print("true")

@@ -154,7 +154,16 @@ fn map_type(cat: &ValueTypeCategory, ty: String, class_name: &str) -> String {
                 ty + ".t"
             }
         }
+        Enum => {
+            if ty.contains('?') {
+                let type_name = ty.split('?').collect::<Vec<&str>>()[0];
+                format!("{}.t option", type_name)
+            } else {
+                format!("{ty}.t")
+            }
+        }
         _ => match ty.as_str() {
+            "Font" => "Font.t".to_string(),
             "null" => "unit".to_string(),
             "int64" => "int".to_string(),
             "double" => "float".to_string(),
@@ -274,7 +283,7 @@ pub fn generate_class_module(class: &Class) -> String {
 }
 
 pub fn generate_classes(classes: &Vec<Class>) {
-    let imports = String::from("open Types\nopen Enums\n\n[@@@warning \"-67\"]");
+    let imports = String::from("open Types\nopen Enum\n\n[@@@warning \"-67\"]");
 
     let blacklist = class_blacklist();
     let mut writer = BufWriter::new(File::create("rbx/classes.mli").unwrap());

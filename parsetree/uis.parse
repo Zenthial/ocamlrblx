@@ -7,59 +7,80 @@
     Pstr_open Fresh
     module_expr (uis.ml[2,20+5]..[2,20+17])
       Pmod_ident "Rbxlib.Enums" (uis.ml[2,20+5]..[2,20+17])
-  structure_item (uis.ml[4,39+0]..[6,115+65])
+  structure_item (uis.ml[4,39+0]..[4,39+39])
+    Pstr_type Rec
+    [
+      type_declaration "test" (uis.ml[4,39+5]..[4,39+9]) (uis.ml[4,39+0]..[4,39+39])
+        ptype_params =
+          []
+        ptype_cstrs =
+          []
+        ptype_kind =
+          Ptype_record
+            [
+              (uis.ml[4,39+14]..[4,39+37])
+                Immutable
+                "input" (uis.ml[4,39+14]..[4,39+19])                core_type (uis.ml[4,39+22]..[4,39+37])
+                  Ptyp_constr "UserInputType.t" (uis.ml[4,39+22]..[4,39+37])
+                  []
+            ]
+        ptype_private = Public
+        ptype_manifest =
+          None
+    ]
+  structure_item (uis.ml[6,80+0]..[8,178+65])
     Pstr_value Nonrec
     [
       <def>
-        pattern (uis.ml[4,39+4]..[4,39+5])
+        pattern (uis.ml[6,80+4]..[6,80+5])
           Ppat_any
-        expression (uis.ml[5,47+2]..[6,115+65])
+        expression (uis.ml[7,88+2]..[8,178+65])
           Pexp_let Nonrec
           [
             <def>
-              pattern (uis.ml[5,47+6]..[5,47+13])
-                Ppat_var "pressed" (uis.ml[5,47+6]..[5,47+13])
-              expression (uis.ml[5,47+16]..[5,47+64])
+              pattern (uis.ml[7,88+6]..[7,88+13])
+                Ppat_var "pressed" (uis.ml[7,88+6]..[7,88+13])
+              expression (uis.ml[7,88+16]..[7,88+86])
                 Pexp_apply
-                expression (uis.ml[5,47+16]..[5,47+49])
-                  Pexp_ident "UserInputService.gamepad_supports" (uis.ml[5,47+16]..[5,47+49])
+                expression (uis.ml[7,88+16]..[7,88+49])
+                  Pexp_ident "UserInputService.gamepad_supports" (uis.ml[7,88+16]..[7,88+49])
                 [
                   <arg>
                   Nolabel
-                    expression (uis.ml[5,47+50]..[5,47+62])
-                      Pexp_construct "MouseButton1" (uis.ml[5,47+50]..[5,47+62])
+                    expression (uis.ml[7,88+50]..[7,88+76])
+                      Pexp_construct "UserInputType.MouseButton1" (uis.ml[7,88+50]..[7,88+76])
                       None
                   <arg>
                   Nolabel
-                    expression (uis.ml[5,47+63]..[5,47+64])
-                      Pexp_construct "E" (uis.ml[5,47+63]..[5,47+64])
+                    expression (uis.ml[7,88+77]..[7,88+86])
+                      Pexp_construct "KeyCode.E" (uis.ml[7,88+77]..[7,88+86])
                       None
                 ]
           ]
-          expression (uis.ml[6,115+2]..[6,115+65])
+          expression (uis.ml[8,178+2]..[8,178+65])
             Pexp_ifthenelse
-            expression (uis.ml[6,115+5]..[6,115+12])
-              Pexp_ident "pressed" (uis.ml[6,115+5]..[6,115+12])
-            expression (uis.ml[6,115+18]..[6,115+38])
+            expression (uis.ml[8,178+5]..[8,178+12])
+              Pexp_ident "pressed" (uis.ml[8,178+5]..[8,178+12])
+            expression (uis.ml[8,178+18]..[8,178+38])
               Pexp_apply
-              expression (uis.ml[6,115+18]..[6,115+31])
-                Pexp_ident "print_endline" (uis.ml[6,115+18]..[6,115+31])
+              expression (uis.ml[8,178+18]..[8,178+31])
+                Pexp_ident "print_endline" (uis.ml[8,178+18]..[8,178+31])
               [
                 <arg>
                 Nolabel
-                  expression (uis.ml[6,115+32]..[6,115+38])
-                    Pexp_constant PConst_string("true",(uis.ml[6,115+33]..[6,115+37]),None)
+                  expression (uis.ml[8,178+32]..[8,178+38])
+                    Pexp_constant PConst_string("true",(uis.ml[8,178+33]..[8,178+37]),None)
               ]
             Some
-              expression (uis.ml[6,115+44]..[6,115+65])
+              expression (uis.ml[8,178+44]..[8,178+65])
                 Pexp_apply
-                expression (uis.ml[6,115+44]..[6,115+57])
-                  Pexp_ident "print_endline" (uis.ml[6,115+44]..[6,115+57])
+                expression (uis.ml[8,178+44]..[8,178+57])
+                  Pexp_ident "print_endline" (uis.ml[8,178+44]..[8,178+57])
                 [
                   <arg>
                   Nolabel
-                    expression (uis.ml[6,115+58]..[6,115+65])
-                      Pexp_constant PConst_string("false",(uis.ml[6,115+59]..[6,115+64]),None)
+                    expression (uis.ml[8,178+58]..[8,178+65])
+                      Pexp_constant PConst_string("false",(uis.ml[8,178+59]..[8,178+64]),None)
                 ]
     ]
 ]

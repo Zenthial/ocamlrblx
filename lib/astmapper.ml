@@ -20,27 +20,34 @@ let parse_ident (ident : Longident.t) =
   | None -> i
 ;;
 
-let unwrap_ident ident = String.concat " " (Longident.flatten ident.txt)
-
 (* https://ocaml.org/manual/5.1/api/compilerlibref/Parsetree.html#TYPEcore_type *)
 let rec map_coretype (c : Parsetree.core_type) =
   match c.ptyp_desc with
   | Ptyp_constr (ident, l) ->
-    let ty = Type_map.ocaml_to_luau (unwrap_ident ident) in
+    let flattened = Longident.flatten ident.txt in
+    let tys =
+      if List.length flattened = 1
+      then [ Type_map.ocaml_to_luau (List.hd flattened) ]
+      else flattened
+    in
     (match l with
      | [ ty' ] ->
-       let ty_param = Type_map.ocaml_to_luau (map_coretype ty') in
-       if ty = "table" then "{" ^ ty_param ^ "}" else ty ^ "<" ^ ty_param ^ ">"
-     | [] -> ty
+       (* if List.hd tys = "table" *)
+       (* then [ "{"; ty_param; "}" ] *)
+       (* else [ List.hd tys; "<"; ty_param; ">" ] *)
+       let mapped_ty = map_coretype ty' in
+       let type_param = Type_map.ocaml_to_luau (List.hd mapped_ty) in
+       if List.hd tys = "table" then [ "{"; type_param; "}" ] else [ type_param ]
+     | [] -> tys
      | _ ->
        print_endline "unhandled";
        assert false)
   | Ptyp_tuple tys ->
     let tys = List.map map_coretype tys in
-    String.concat "|" tys
+    List.flatten tys
   | _ ->
     print_endline "coretype";
-    "unknown"
+    [ "unknown" ]
 ;;
 
 (* match ident with *)
@@ -175,7 +182,8 @@ let rec parse_expression (expression : Parsetree.expression) =
       | Some exp -> parse_expression exp
       | None -> Ast.Literal Ast.Nil
     in
-    let ident = Longident.last ident.txt in
+    let ident_split = Longident.flatten ident.txt in
+    let ident = String.concat "." ident_split in
     (* print_endline ident; *)
     (match ident with
      | "::" ->
@@ -183,7 +191,10 @@ let rec parse_expression (expression : Parsetree.expression) =
         | Ast.Tuple exps ->
           Ast.FuncCall { ident = "table.insert"; cparameters = List.rev exps }
         | _ -> assert false)
-     | _ -> Ast.TypeConstruct (Ast.CVariant { variant = ident; vvalue = value }))
+     | _ ->
+       if List.length ident_split > 1 && Option.is_none exp_opt
+       then Ast.RobloxEnum ident
+       else Ast.TypeConstruct (Ast.CVariant { variant = ident; vvalue = value }))
   | Pexp_record (fields, _) ->
     let mapped_fields =
       List.map (fun (ident, exp) -> Longident.last ident.txt, parse_expression exp) fields

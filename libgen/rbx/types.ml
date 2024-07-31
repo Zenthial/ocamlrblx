@@ -1,4 +1,4 @@
-open Enums
+open Enum
 
 type rbx_script_signal = { connect : (unit -> unit) -> unit }
 
@@ -118,8 +118,8 @@ type date_time
 
 type tween_info =
   { time : float
-  ; easing_style : easing_style
-  ; easing_direction : easing_direction
+  ; easing_style : EasingStyle.t
+  ; easing_direction : EasingDirection.t
   ; repeat_count : float
   ; reverses : bool
   ; delay_time : float

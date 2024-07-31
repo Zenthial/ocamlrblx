@@ -17,6 +17,7 @@ type expression =
   | TypeDef of type_def (* A type that is defined for later usage *)
   | TypeConstruct of type_construct (* A type that is assigned *)
   | EnumMatch of enum_def (* An enum *)
+  | RobloxEnum of identifier
   | FuncDef of func_definition (* This is not a concrete type *)
   | Block of expression list (* This is not a concrete type *)
   | Tuple of expression list (* Same typedef as block, but comma separated *)
@@ -61,7 +62,7 @@ and enum_def =
 and type_def =
   | Variant of variant_def
   | Record of record_def
-  | CoreType of string
+  | CoreType of string list
 
 and type_construct =
   | CVariant of variant
@@ -79,7 +80,7 @@ and variant =
 
 and record_def =
   { rdname : string
-  ; rdfields : (string * string) list
+  ; rdfields : (string * string list) list
   }
 
 and record =
